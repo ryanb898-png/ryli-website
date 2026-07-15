@@ -511,27 +511,31 @@ section { padding: 96px 0; position: relative; }
 .showcase-panel { display: none; }
 .showcase-panel.is-active { display: block; }
 
-.store-swatch {
+.store-highlights {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 24px;
+}
+.store-highlight {
+  text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  padding-top: 16px;
 }
-.store-swatch__thumb {
-  width: 100%;
-  aspect-ratio: 1;
-  object-fit: cover;
-  border-radius: 10px;
-  margin-bottom: 4px;
-  border: 1px solid var(--line);
+.store-highlight .icon-badge {
+  margin-bottom: 14px;
+  font-size: 18px;
 }
-
-.showcase-note {
-  text-align: center;
-  margin-top: 24px;
-  color: var(--ink-faint);
+.store-highlight .name {
+  font-family: var(--display);
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.store-highlight p {
+  color: var(--ink-dim);
   font-size: 14px;
+  max-width: 22ch;
 }
 
 /* ---------- how it works ---------- */
