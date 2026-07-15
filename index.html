@@ -37,16 +37,16 @@
   <section class="hero">
     <div class="container hero__grid">
       <div>
-        <span class="eyebrow-badge"><span class="dot"></span>Live Overlay · AI Co-Host · Built for Whatnot</span>
+        <span class="eyebrow-badge"><span class="dot"></span>Interactive Co-Host for Live Sellers</span>
         <h1>You go live.<br /><span class="grad-text">RYLI's</span> got the rest.</h1>
-        <p class="lede">The desktop co-host for Whatnot sellers — cards, clothing, sneakers, candy, coins, collectibles, anything you sell live. Reactive OBS overlays, real-time leaderboards, milestone celebrations, and a hands-free voice co-host that knows your show.</p>
+        <p class="lede">RYLI is the desktop companion for live sellers, bringing reactive OBS overlays, real-time insights, milestone celebrations, and a voice co-host that keeps your show engaging—so you can focus on selling.</p>
         <div class="hero__ctas">
           <!-- TODO: swap for real download link once packaging ships -->
           <a class="btn btn-primary" href="#pricing">Get Early Access</a>
           <a class="btn btn-outline" href="#how-it-works">See How It Works</a>
         </div>
         <div class="hero__trust">
-          <span>🔒 No payment collected today</span>
+          <span>🔒 No Payment Required</span>
           <span>⚡ Setup in under 5 minutes</span>
           <span>🖥️ Windows desktop app</span>
         </div>
@@ -61,21 +61,42 @@
     Built for livestream sellers on <strong>Whatnot</strong> &nbsp;·&nbsp; Streams via <strong>OBS</strong>
   </div>
 
-  <!-- FEATURE 1: overlay -->
+  <!-- FEATURE 1: jumbotron -->
   <section id="features">
     <div class="container feature reveal">
       <div class="feature__copy">
         <div class="feature__eyebrow"><span class="icon-badge">📡</span>Live Overlay</div>
-        <h2>Turn your stream into a jumbotron.</h2>
-        <p class="desc">Real-time leaderboards, bid-pop animations, and milestone celebrations — dropped straight into OBS. Your chat feels the energy the second a hammer drops.</p>
+        <h2>Add an interactive Jumbotron to your shows.</h2>
+        <p class="desc">Your OBS canvas becomes a live jumbotron that reacts in real time — dropped straight into your stream, no scene-building required.</p>
         <ul class="checklist">
-          <li>Live top-buyer leaderboard, today's and lifetime</li>
-          <li>Bid-pop animations and milestone confetti at your own dollar thresholds</li>
-          <li>Broadcast-grade themes, tuned for mobile viewers</li>
+          <li>Bid battle animations that escalate as buyers go back and forth</li>
+          <li>Milestone celebrations — confetti and coin bursts at your own dollar thresholds</li>
+          <li>A live hype meter that visualizes the energy of the room</li>
+          <li>Your own camera feed, framed right inside the jumbotron <span class="tag pro">PRO</span></li>
+          <li>Rotating promotional banners between lots <span class="tag pro">PRO</span></li>
         </ul>
       </div>
-      <div class="feature__media">
-        <img src="assets/images/screenshot-dashboard.png" alt="RYLI dashboard showing live show controls" />
+      <!-- Carousel: swipeable on touch, arrow/dot navigation on desktop.
+           Real app screenshots, shown in full (object-fit: contain) so
+           nothing is ever cropped. -->
+      <div class="carousel reveal" data-carousel>
+        <div class="carousel__track">
+          <div class="carousel__slide">
+            <img src="assets/images/carousel-1-lotwon.png" alt="RYLI overlay showing a LOT WON celebration card with confetti" />
+          </div>
+          <div class="carousel__slide">
+            <img src="assets/images/carousel-2-livecamera.png" alt="RYLI overlay showing the seller's live camera feed inside the jumbotron" />
+          </div>
+          <div class="carousel__slide">
+            <img src="assets/images/carousel-3-recentwins.png" alt="RYLI overlay showing the Recent Winners board" />
+          </div>
+          <div class="carousel__slide">
+            <img src="assets/images/carousel-4-taphearts.png" alt="RYLI overlay showing today's top bidder and a tap-for-hearts prompt" />
+          </div>
+        </div>
+        <div class="carousel__dots"></div>
+        <button class="carousel__arrow carousel__arrow--prev" aria-label="Previous">‹</button>
+        <button class="carousel__arrow carousel__arrow--next" aria-label="Next">›</button>
       </div>
     </div>
   </section>
@@ -84,7 +105,7 @@
   <section>
     <div class="container feature flip reveal">
       <div class="feature__copy">
-        <div class="feature__eyebrow"><span class="icon-badge">🎙️</span>Ryli · AI Co-Host</div>
+        <div class="feature__eyebrow"><span class="icon-badge">🎙️</span>Ryli · Audible Intelligence</div>
         <h2>Hands-free show intel, <span class="grad-text">on command.</span></h2>
         <p class="desc">Press a hotkey and ask Ryli anything about tonight's show — she answers instantly from your real tracked data, not a guess. She'll also save a spoken note ("remind me to...") and read it back whenever you ask.</p>
         <ul class="checklist">
@@ -118,13 +139,13 @@
     <div class="container feature reveal">
       <div class="feature__copy">
         <div class="feature__eyebrow"><span class="icon-badge">📊</span>Insights</div>
-        <h2>Know who to <span class="grad-text">bring back.</span></h2>
-        <p class="desc">After every show, RYLI turns raw sales into a plan. See your top buyers, lifetime spenders, and a suggested-outreach list so nobody great slips through — all computed locally from your own show history.</p>
+        <h2>Real Time <span class="grad-text">Progress Tracking</span></h2>
+        <p class="desc">After every show, RYLI turns raw sales into a plan — so you can stay connected to your community, not just track a number. All-time performance and live show stats are free forever; the people behind those numbers are a Pro upgrade away.</p>
         <ul class="checklist">
-          <li>Top buyers and lifetime spender leaderboards</li>
-          <li>Suggested outreach: VIPs who've gone quiet, loyal light spenders worth a nudge, new fans worth a thank-you</li>
-          <li>Stream-by-stream trends — sales, peak viewers, chatters, best-ever streaks</li>
-          <li>Fully free — no Pro subscription required</li>
+          <li>All-time performance and live show stats — free, always</li>
+          <li>Top buyers and lifetime spender leaderboards — Pro</li>
+          <li>Suggested outreach: VIPs who've gone quiet, loyal light spenders worth a nudge, new fans worth a thank-you — Pro</li>
+          <li>Computed locally from your own show history — nothing leaves your PC</li>
         </ul>
       </div>
       <div class="feature__media">
@@ -149,26 +170,16 @@
         </div>
         <div class="step">
           <span class="num">02</span>
-          <h3>Mic &amp; camera</h3>
-          <p>Grant permissions once — RYLI handles the rest.</p>
-        </div>
-        <div class="step">
-          <span class="num">03</span>
           <h3>Connect OBS</h3>
           <p>One tap auto-creates the RYLI overlay source in OBS for you.</p>
         </div>
         <div class="step">
-          <span class="num">04</span>
-          <h3>Open Whatnot</h3>
-          <p>One tap opens your stream, ready to be watched.</p>
-        </div>
-        <div class="step">
-          <span class="num">05</span>
+          <span class="num">03</span>
           <h3>Pick a theme</h3>
           <p>Visual quality and voice auto-tune to your PC's hardware.</p>
         </div>
         <div class="step">
-          <span class="num">06</span>
+          <span class="num">04</span>
           <h3>Go live</h3>
           <p>RYLI reacts to your show in real time from here on out.</p>
         </div>
@@ -181,45 +192,34 @@
     <div class="container">
       <div class="section-head reveal">
         <span class="eyebrow-badge"><span class="dot"></span>Themes &amp; FX</span>
-        <h2>A whole broadcast team, <span class="grad-text">in one glowing ring.</span></h2>
+        <h2>A whole broadcast team, <span class="grad-text">in one interactive space.</span></h2>
         <p>Three free themes to get your first show looking sharp. Four premium themes and top-tier FX for sellers who want the full jumbotron treatment.</p>
       </div>
       <div class="feature__media reveal" style="margin-bottom: 40px;">
         <img src="assets/images/screenshot-themes.png" alt="RYLI theme picker showing free and premium themes" />
       </div>
-      <div class="theme-grid reveal">
-        <div class="theme-swatch">
-          <div class="swatch-dot" style="background:#f5c518;"></div>
-          <div class="name">Whatnot</div>
-          <span class="tag free">FREE</span>
+      <div class="theme-grid theme-grid--compact reveal">
+        <div class="theme-swatch theme-swatch--bundle">
+          <div class="name">×3 Free</div>
+          <div class="sub">Whatnot, Blue, Pink</div>
         </div>
         <div class="theme-swatch">
-          <div class="swatch-dot" style="background:#6AAEFF;"></div>
-          <div class="name">Blue</div>
-          <span class="tag free">FREE</span>
-        </div>
-        <div class="theme-swatch">
-          <div class="swatch-dot" style="background:#ff6fae;"></div>
-          <div class="name">Pink</div>
-          <span class="tag free">FREE</span>
-        </div>
-        <div class="theme-swatch">
-          <div class="swatch-dot" style="background:linear-gradient(135deg,#6AAEFF,#7DE7FF);"></div>
+          <div class="swatch-dot" style="background:linear-gradient(120deg, #9370ff 0%, #6aaeff 46%, #2dd9ef 100%);"></div>
           <div class="name">Ryli's Pulse</div>
           <span class="tag pro">PRO</span>
         </div>
         <div class="theme-swatch">
-          <div class="swatch-dot" style="background:linear-gradient(135deg,#f7c9dd,#c99a6c);"></div>
+          <div class="swatch-dot" style="background:linear-gradient(120deg, #ff7eb0 0%, #ffa7c4 46%, #f7d0ac 100%);"></div>
           <div class="name">Rose</div>
           <span class="tag pro">PRO</span>
         </div>
         <div class="theme-swatch">
-          <div class="swatch-dot" style="background:linear-gradient(135deg,#0d5c46,#d4af37);"></div>
+          <div class="swatch-dot" style="background:linear-gradient(120deg, #1fd198 0%, #3fe0b0 40%, #ffd166 100%);"></div>
           <div class="name">Emerald</div>
           <span class="tag pro">PRO</span>
         </div>
         <div class="theme-swatch">
-          <div class="swatch-dot" style="background:linear-gradient(135deg,#8a1f1f,#d99a3d);"></div>
+          <div class="swatch-dot" style="background:linear-gradient(120deg, #ff4d3d 0%, #ff6a3d 40%, #ffb020 100%);"></div>
           <div class="name">Amber</div>
           <span class="tag pro">PRO</span>
         </div>
@@ -232,7 +232,7 @@
     <div class="container">
       <div class="section-head reveal">
         <span class="eyebrow-badge"><span class="dot"></span>Pricing · 30-Day Free Trial</span>
-        <h2>Free to try. <span class="grad-text">Loud when it counts.</span></h2>
+        <h2>Free forever. <span class="grad-text">Pro when you're ready.</span></h2>
         <p>Every plan starts with a 30-day free trial. No credit card gymnastics.</p>
       </div>
       <div class="pricing-grid reveal">
@@ -242,10 +242,11 @@
           <div class="amount">$0<span class="period">/forever</span></div>
           <p class="blurb">Everything you need to get your first show looking sharp — stays free, no trial clock.</p>
           <ul class="checklist">
+            <li>Ryli announces your bids, milestones, and wins automatically</li>
             <li>Live leaderboard overlay + milestone celebrations</li>
             <li>3 base themes (Whatnot, Blue, Pink)</li>
             <li>One-tap OBS auto-connect wizard</li>
-            <li>Full Insights page, including Suggested outreach</li>
+            <li>Live show stats and all-time performance in Insights</li>
             <li>Stream Store browsing</li>
           </ul>
           <!-- TODO: swap for real download link once packaging ships -->
@@ -258,7 +259,8 @@
           <div class="amount">Revealed<span class="period"> at launch</span></div>
           <p class="blurb">Ryli, your full voice co-host, premium themes, top-tier FX, and everything a serious seller runs on.</p>
           <ul class="checklist">
-            <li>Ryli: hands-free Q&amp;A, voice notes, optional AI research</li>
+            <li>Talk to Ryli — hands-free Q&amp;A, voice notes, optional AI research</li>
+            <li>Top buyers, Your People, and Suggested outreach in Insights</li>
             <li>4 premium themes (Ryli's Pulse, Rose, Emerald, Amber) + Ultra FX</li>
             <li>Webcam picture-in-picture inside your overlay</li>
             <li>Premium TTS voices</li>
@@ -303,7 +305,7 @@
         </details>
         <details class="faq-item">
           <summary>What happens after my free trial?</summary>
-          <div class="faq-body">Your core overlay — themes, leaderboards, milestone celebrations, and the full Insights page — stays free forever. Pro-only features (Ryli, premium themes, Ultra FX, webcam, premium voices, custom banners) require a subscription to keep using after the 30-day trial.</div>
+          <div class="faq-body">Your core overlay — themes, leaderboards, milestone celebrations, the announcer, and your all-time/live Insights stats — stays free forever. Pro-only features (talking to Ryli, your Top buyers &amp; Suggested outreach boards, premium themes, Ultra FX, webcam, premium voices, custom banners) require a subscription to keep using after the 30-day trial.</div>
         </details>
       </div>
     </div>

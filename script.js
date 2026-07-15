@@ -10,6 +10,62 @@ if (nav && navToggle) {
   });
 }
 
+// Carousels — native scroll-snap for touch swipe, JS only drives the
+// dots/arrows and keeps the active dot in sync with manual swiping.
+document.querySelectorAll('[data-carousel]').forEach((carousel) => {
+  const track = carousel.querySelector('.carousel__track');
+  const slides = Array.from(track.children);
+  const dotsWrap = carousel.querySelector('.carousel__dots');
+  const prevBtn = carousel.querySelector('.carousel__arrow--prev');
+  const nextBtn = carousel.querySelector('.carousel__arrow--next');
+
+  if (slides.length <= 1) {
+    carousel.setAttribute('data-single', '');
+    return;
+  }
+
+  const dots = slides.map((_, i) => {
+    const dot = document.createElement('button');
+    dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
+    dot.addEventListener('click', () => {
+      slides[i].scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
+    });
+    dotsWrap.appendChild(dot);
+    return dot;
+  });
+
+  function setActive(index) {
+    dots.forEach((d, i) => d.classList.toggle('is-active', i === index));
+  }
+  setActive(0);
+
+  function currentIndex() {
+    const scrollLeft = track.scrollLeft;
+    let closest = 0;
+    let closestDist = Infinity;
+    slides.forEach((slide, i) => {
+      const dist = Math.abs(slide.offsetLeft - scrollLeft);
+      if (dist < closestDist) { closestDist = dist; closest = i; }
+    });
+    return closest;
+  }
+
+  let scrollTimeout;
+  track.addEventListener('scroll', () => {
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(() => setActive(currentIndex()), 80);
+  });
+
+  prevBtn.addEventListener('click', () => {
+    const idx = Math.max(0, currentIndex() - 1);
+    slides[idx].scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
+  });
+  nextBtn.addEventListener('click', () => {
+    const idx = Math.min(slides.length - 1, currentIndex() + 1);
+    slides[idx].scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
+  });
+});
+
 // Scroll-reveal
 const revealEls = document.querySelectorAll('.reveal');
 if ('IntersectionObserver' in window && revealEls.length) {

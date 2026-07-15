@@ -346,6 +346,69 @@ section { padding: 96px 0; position: relative; }
   .feature { grid-template-columns: 1fr; gap: 32px; }
 }
 
+/* ---------- carousel ---------- */
+
+.carousel {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  background: var(--slate-2);
+}
+.carousel__track {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+.carousel__track::-webkit-scrollbar { display: none; }
+.carousel__slide {
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+  aspect-ratio: 1560 / 1000; /* matches the real app screenshots' native ratio */
+  background: #000;
+}
+/* object-fit: contain — these are real app screenshots; nothing gets cropped */
+.carousel__slide img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.carousel__dots {
+  position: absolute;
+  bottom: 16px;
+  left: 0; right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+.carousel__dots button {
+  width: 8px; height: 8px; border-radius: 50%;
+  border: none; padding: 0; cursor: pointer;
+  background: rgba(255,255,255,0.35);
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.carousel__dots button.is-active { background: var(--white); transform: scale(1.2); }
+.carousel__arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: rgba(13,17,23,0.55);
+  backdrop-filter: blur(6px);
+  color: var(--white);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.carousel__arrow--prev { left: 12px; }
+.carousel__arrow--next { right: 12px; }
+.carousel__arrow:hover { border-color: var(--line-hot); }
+.carousel[data-single] .carousel__arrow,
+.carousel[data-single] .carousel__dots { display: none; }
+
 .section-head { text-align: center; max-width: 640px; margin: 0 auto 56px; }
 .section-head .eyebrow-badge { margin-bottom: 20px; }
 .section-head h2 { font-size: clamp(28px, 4vw, 44px); }
@@ -381,6 +444,42 @@ section { padding: 96px 0; position: relative; }
 }
 .theme-swatch .tag.free { background: rgba(125,231,255,0.15); color: var(--cyan); }
 .theme-swatch .tag.pro { background: var(--gradient); color: #0a0e14; }
+
+/* Standalone inline tag — e.g. marking a Pro-only line inside a checklist */
+.tag.pro {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: var(--gradient);
+  color: #0a0e14;
+}
+
+.theme-grid--compact { grid-template-columns: repeat(5, 1fr); }
+@media (max-width: 720px) {
+  .theme-grid--compact { grid-template-columns: repeat(2, 1fr); }
+}
+.theme-swatch--bundle {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: rgba(255,255,255,0.03);
+}
+.theme-swatch--bundle .name {
+  font-family: var(--display);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--cyan);
+}
+.theme-swatch--bundle .sub {
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--ink-faint);
+}
 
 /* ---------- how it works ---------- */
 
