@@ -50,20 +50,55 @@ document.querySelectorAll('[data-carousel]').forEach((carousel) => {
     return closest;
   }
 
+  function goTo(idx) {
+    const clamped = Math.max(0, Math.min(slides.length - 1, idx));
+    slides[clamped].scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
+  }
+
   let scrollTimeout;
   track.addEventListener('scroll', () => {
     clearTimeout(scrollTimeout);
     scrollTimeout = setTimeout(() => setActive(currentIndex()), 80);
   });
 
-  prevBtn.addEventListener('click', () => {
-    const idx = Math.max(0, currentIndex() - 1);
-    slides[idx].scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
-  });
-  nextBtn.addEventListener('click', () => {
-    const idx = Math.min(slides.length - 1, currentIndex() + 1);
-    slides[idx].scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
-  });
+  prevBtn.addEventListener('click', () => { goTo(currentIndex() - 1); restartAutoplay(); });
+  nextBtn.addEventListener('click', () => { goTo(currentIndex() + 1); restartAutoplay(); });
+  dots.forEach((dot) => dot.addEventListener('click', restartAutoplay));
+
+  // Auto-advance — loops forever, but any manual interaction (arrow, dot,
+  // or a real touch swipe on the track) resets the timer so it never fights
+  // the user mid-browse. Pauses while the tab/section isn't visible.
+  const autoplayMs = Number(carousel.dataset.autoplay);
+  let autoplayTimer = null;
+  function tickAutoplay() {
+    const next = currentIndex() + 1 >= slides.length ? 0 : currentIndex() + 1;
+    goTo(next);
+  }
+  function startAutoplay() {
+    if (!autoplayMs || autoplayTimer) return;
+    autoplayTimer = setInterval(tickAutoplay, autoplayMs);
+  }
+  function stopAutoplay() {
+    clearInterval(autoplayTimer);
+    autoplayTimer = null;
+  }
+  function restartAutoplay() { stopAutoplay(); startAutoplay(); }
+
+  if (autoplayMs) {
+    let userInteracting = false;
+    track.addEventListener('pointerdown', () => { userInteracting = true; stopAutoplay(); });
+    track.addEventListener('pointerup', () => { userInteracting = false; restartAutoplay(); });
+    carousel.addEventListener('mouseenter', stopAutoplay);
+    carousel.addEventListener('mouseleave', () => { if (!userInteracting) startAutoplay(); });
+
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver((entries) => {
+        entries.forEach((entry) => (entry.isIntersecting ? startAutoplay() : stopAutoplay()));
+      }, { threshold: 0.3 }).observe(carousel);
+    } else {
+      startAutoplay();
+    }
+  }
 });
 
 // Showcase toggle (Stream Store / Themes & FX)
