@@ -187,41 +187,88 @@
     </div>
   </section>
 
-  <!-- THEMES -->
+  <!-- THEMES + STREAM STORE -->
   <section id="themes">
     <div class="container">
       <div class="section-head reveal">
-        <span class="eyebrow-badge"><span class="dot"></span>Themes &amp; FX</span>
+        <span class="eyebrow-badge"><span class="dot"></span>Themes &amp; Stream Store</span>
         <h2>A whole broadcast team, <span class="grad-text">in one interactive space.</span></h2>
-        <p>Three free themes to get your first show looking sharp. Four premium themes and top-tier FX for sellers who want the full jumbotron treatment.</p>
+        <p>Three free themes to get your first show looking sharp, four premium themes for the full jumbotron treatment — plus a growing Stream Store of overlay effects and Stream Deck packs, one click from live.</p>
       </div>
-      <div class="feature__media reveal" style="margin-bottom: 40px;">
-        <img src="assets/images/screenshot-themes.png" alt="RYLI theme picker showing free and premium themes" />
+
+      <div class="showcase-toggle reveal">
+        <button class="showcase-toggle__btn is-active" data-show-panel="store">Stream Store</button>
+        <button class="showcase-toggle__btn" data-show-panel="themes">Themes &amp; FX</button>
       </div>
-      <div class="theme-grid theme-grid--compact reveal">
-        <div class="theme-swatch theme-swatch--bundle">
-          <div class="name">×3 Free</div>
-          <div class="sub">Whatnot, Blue, Pink</div>
+
+      <div class="showcase-panel is-active" data-panel="store">
+        <div class="feature__media" style="margin-bottom: 40px;">
+          <img src="assets/images/store-screenshot.png" alt="RYLI Stream Store showing overlay effects and Stream Deck icon packs" />
         </div>
-        <div class="theme-swatch">
-          <div class="swatch-dot" style="background:linear-gradient(120deg, #9370ff 0%, #6aaeff 46%, #2dd9ef 100%);"></div>
-          <div class="name">Ryli's Pulse</div>
-          <span class="tag pro">PRO</span>
+        <div class="theme-grid reveal">
+          <div class="theme-swatch store-swatch">
+            <img class="store-swatch__thumb" src="assets/images/store-confetti.png" alt="" />
+            <div class="name">Confetti Celebration</div>
+            <span class="tag pro">PRO</span>
+          </div>
+          <div class="theme-swatch store-swatch">
+            <img class="store-swatch__thumb" src="assets/images/store-fireworks.png" alt="" />
+            <div class="name">Firework Show</div>
+            <span class="tag pro">PRO</span>
+          </div>
+          <div class="theme-swatch store-swatch">
+            <img class="store-swatch__thumb" src="assets/images/store-discoball.png" alt="" />
+            <div class="name">Disco Ball</div>
+            <span class="tag pro">PRO</span>
+          </div>
+          <div class="theme-swatch store-swatch">
+            <img class="store-swatch__thumb" src="assets/images/store-321go.png" alt="" />
+            <div class="name">3-2-1 Countdown</div>
+            <span class="tag pro">PRO</span>
+          </div>
+          <div class="theme-swatch store-swatch">
+            <img class="store-swatch__thumb" src="assets/images/store-flames.png" alt="" />
+            <div class="name">Bidding's On Fire</div>
+            <span class="tag pro">PRO</span>
+          </div>
+          <div class="theme-swatch store-swatch">
+            <img class="store-swatch__thumb" src="assets/images/store-dancingcat.png" alt="" />
+            <div class="name">Dancing Cat</div>
+            <span class="tag pro">PRO</span>
+          </div>
         </div>
-        <div class="theme-swatch">
-          <div class="swatch-dot" style="background:linear-gradient(120deg, #ff7eb0 0%, #ffa7c4 46%, #f7d0ac 100%);"></div>
-          <div class="name">Rose</div>
-          <span class="tag pro">PRO</span>
+        <p class="showcase-note">Plus a growing pack of RYLI-branded Stream Deck icons for your hotkeys. New drops added over time — no app update required.</p>
+      </div>
+
+      <div class="showcase-panel" data-panel="themes">
+        <div class="feature__media" style="margin-bottom: 40px;">
+          <img src="assets/images/screenshot-themes.png" alt="RYLI theme picker showing free and premium themes" />
         </div>
-        <div class="theme-swatch">
-          <div class="swatch-dot" style="background:linear-gradient(120deg, #1fd198 0%, #3fe0b0 40%, #ffd166 100%);"></div>
-          <div class="name">Emerald</div>
-          <span class="tag pro">PRO</span>
-        </div>
-        <div class="theme-swatch">
-          <div class="swatch-dot" style="background:linear-gradient(120deg, #ff4d3d 0%, #ff6a3d 40%, #ffb020 100%);"></div>
-          <div class="name">Amber</div>
-          <span class="tag pro">PRO</span>
+        <div class="theme-grid theme-grid--compact reveal">
+          <div class="theme-swatch theme-swatch--bundle">
+            <div class="name">×3 Free</div>
+            <div class="sub">Whatnot, Blue, Pink</div>
+          </div>
+          <div class="theme-swatch">
+            <div class="swatch-dot" style="background:linear-gradient(120deg, #9370ff 0%, #6aaeff 46%, #2dd9ef 100%);"></div>
+            <div class="name">Ryli's Pulse</div>
+            <span class="tag pro">PRO</span>
+          </div>
+          <div class="theme-swatch">
+            <div class="swatch-dot" style="background:linear-gradient(120deg, #ff7eb0 0%, #ffa7c4 46%, #f7d0ac 100%);"></div>
+            <div class="name">Rose</div>
+            <span class="tag pro">PRO</span>
+          </div>
+          <div class="theme-swatch">
+            <div class="swatch-dot" style="background:linear-gradient(120deg, #1fd198 0%, #3fe0b0 40%, #ffd166 100%);"></div>
+            <div class="name">Emerald</div>
+            <span class="tag pro">PRO</span>
+          </div>
+          <div class="theme-swatch">
+            <div class="swatch-dot" style="background:linear-gradient(120deg, #ff4d3d 0%, #ff6a3d 40%, #ffb020 100%);"></div>
+            <div class="name">Amber</div>
+            <span class="tag pro">PRO</span>
+          </div>
         </div>
       </div>
     </div>

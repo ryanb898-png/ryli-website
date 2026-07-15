@@ -66,6 +66,15 @@ document.querySelectorAll('[data-carousel]').forEach((carousel) => {
   });
 });
 
+// Showcase toggle (Stream Store / Themes & FX)
+document.querySelectorAll('.showcase-toggle__btn').forEach((btn) => {
+  btn.addEventListener('click', () => {
+    const target = btn.dataset.showPanel;
+    document.querySelectorAll('.showcase-toggle__btn').forEach((b) => b.classList.toggle('is-active', b === btn));
+    document.querySelectorAll('.showcase-panel').forEach((p) => p.classList.toggle('is-active', p.dataset.panel === target));
+  });
+});
+
 // Scroll-reveal
 const revealEls = document.querySelectorAll('.reveal');
 if ('IntersectionObserver' in window && revealEls.length) {
