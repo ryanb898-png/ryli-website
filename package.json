@@ -1,0 +1,12 @@
+{
+  "name": "ryli-website",
+  "private": true,
+  "description": "RYLI marketing site (static HTML/CSS/JS, no build step). package.json exists only to run the one-time favicon generator script.",
+  "scripts": {
+    "favicons": "node scripts/generate-favicons.mjs"
+  },
+  "dependencies": {
+    "png-to-ico": "^3.0.2",
+    "sharp": "^0.35.3"
+  }
+}
