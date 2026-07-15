@@ -372,21 +372,23 @@ section { padding: 96px 0; position: relative; }
 /* object-fit: contain — these are real app screenshots; nothing gets cropped */
 .carousel__slide img { width: 100%; height: 100%; object-fit: contain; display: block; }
 
-/* Phone hero slide — real alpha transparency, so drop-shadow hugs the
-   actual phone silhouette instead of a rectangle. Padded so the shadow
-   has room to breathe against the slide edges. */
-.carousel__slide--phone {
+/* Standalone phone hero — NOT boxed like the carousel slides. Real alpha
+   transparency on the source image, so drop-shadow hugs the actual phone
+   silhouette and it reads as a free-floating object on the page. */
+.phone-hero {
   display: flex;
-  align-items: center;
   justify-content: center;
-  padding: 24px 0;
-  background: radial-gradient(ellipse at center, rgba(106,174,255,0.10), transparent 65%), #000;
+  margin-bottom: 28px;
 }
-.carousel__slide--phone .phone-cutout {
-  width: auto;
-  height: 100%;
-  max-width: 82%;
-  filter: drop-shadow(0 24px 40px rgba(0,0,0,0.6)) drop-shadow(0 4px 14px rgba(106,174,255,0.15));
+.phone-hero .phone-cutout {
+  width: 66%;
+  max-width: 360px;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 32px 46px rgba(0,0,0,0.55)) drop-shadow(0 8px 20px rgba(106,174,255,0.2));
+}
+@media (min-width: 720px) {
+  .phone-hero .phone-cutout { max-width: 400px; }
 }
 .carousel__dots {
   position: absolute;
