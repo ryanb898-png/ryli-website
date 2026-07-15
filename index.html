@@ -95,8 +95,20 @@
           <li>Experimental spoken "Hey Ryli" wake word, layered on top of the hotkey — currently in beta</li>
         </ul>
       </div>
-      <div class="feature__media">
-        <img src="assets/images/screenshot-dashboard.png" alt="RYLI voice co-host controls" />
+      <div class="feature__media waveform-media">
+        <svg viewBox="0 0 500 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Voice waveform">
+          <defs>
+            <linearGradient id="wave-grad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#6AAEFF" />
+              <stop offset="50%" stop-color="#7DE7FF" />
+              <stop offset="100%" stop-color="#B388FF" />
+            </linearGradient>
+          </defs>
+          <path d="M0,150 C40,80 70,220 110,150 C140,100 160,200 190,150 C220,60 250,240 280,150 C310,90 340,210 370,150 C400,110 430,190 460,150 C480,130 490,150 500,150"
+                fill="none" stroke="url(#wave-grad)" stroke-width="4" stroke-linecap="round" opacity="0.9" />
+          <path d="M0,150 C50,120 90,180 130,150 C170,120 210,180 250,150 C290,120 330,180 370,150 C410,120 450,180 500,150"
+                fill="none" stroke="url(#wave-grad)" stroke-width="2" stroke-linecap="round" opacity="0.4" />
+        </svg>
       </div>
     </div>
   </section>
