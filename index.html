@@ -80,18 +80,14 @@
           <li>Rotating promotional banners between lots <span class="tag pro">PRO</span></li>
         </ul>
       </div>
-      <!-- Standalone hero phone shot — deliberately NOT part of the carousel's
-           uniform slide box, so it can render large and float freely with
-           just a drop-shadow, instead of being shrunk to match the
-           screenshots' fixed aspect ratio. -->
-      <div class="phone-hero reveal">
-        <img class="phone-cutout" src="assets/images/hero-phone.png" alt="RYLI overlay running live on a Whatnot stream, viewed on a phone" />
-      </div>
-      <!-- Carousel: swipeable on touch, arrow/dot navigation on desktop.
-           Real app screenshots, shown in full (object-fit: contain) so
-           nothing is ever cropped. -->
-      <div class="carousel reveal" data-carousel data-autoplay="4500">
+      <!-- One unified carousel, all 5 slides in the same spot, same
+           unboxed floating treatment (drop-shadow, no card background) —
+           phone first (real alpha cutout), then the 4 screenshots. -->
+      <div class="carousel carousel--tall reveal" data-carousel data-autoplay="4500">
         <div class="carousel__track">
+          <div class="carousel__slide">
+            <img class="phone-cutout" src="assets/images/hero-phone.png" alt="RYLI overlay running live on a Whatnot stream, viewed on a phone" />
+          </div>
           <div class="carousel__slide">
             <img src="assets/images/carousel-1-lotwon.png" alt="RYLI overlay showing a LOT WON celebration card with confetti" />
           </div>

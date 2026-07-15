@@ -372,23 +372,26 @@ section { padding: 96px 0; position: relative; }
 /* object-fit: contain — these are real app screenshots; nothing gets cropped */
 .carousel__slide img { width: 100%; height: 100%; object-fit: contain; display: block; }
 
-/* Standalone phone hero — NOT boxed like the carousel slides. Real alpha
-   transparency on the source image, so drop-shadow hugs the actual phone
-   silhouette and it reads as a free-floating object on the page. */
-.phone-hero {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 28px;
+/* Tall variant: one unified, unboxed carousel — phone + screenshots share
+   the same spot and the same floating (drop-shadow, no card bg) treatment,
+   instead of the phone standing alone above a separately-boxed carousel.
+   object-fit: contain (base rule) handles portrait vs. landscape slides
+   correctly within one shared height — no per-image sizing needed. */
+.carousel--tall {
+  background: transparent;
+  border: none;
+  box-shadow: none;
 }
-.phone-hero .phone-cutout {
-  width: 66%;
-  max-width: 360px;
-  height: auto;
-  display: block;
-  filter: drop-shadow(0 32px 46px rgba(0,0,0,0.55)) drop-shadow(0 8px 20px rgba(106,174,255,0.2));
+.carousel--tall .carousel__slide {
+  aspect-ratio: unset;
+  height: 580px;
+  background: transparent;
 }
-@media (min-width: 720px) {
-  .phone-hero .phone-cutout { max-width: 400px; }
+.carousel--tall .carousel__slide img {
+  filter: drop-shadow(0 26px 42px rgba(0,0,0,0.5)) drop-shadow(0 6px 16px rgba(106,174,255,0.15));
+}
+@media (max-width: 720px) {
+  .carousel--tall .carousel__slide { height: 440px; }
 }
 .carousel__dots {
   position: absolute;
