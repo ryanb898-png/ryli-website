@@ -1,0 +1,17 @@
+# What Cloudflare Workers uploads/serves as static assets — separate from
+# .gitignore, which only controls what git tracks. wrangler.jsonc's assets
+# directory is "./" (the whole project root), so without this file EVERYTHING
+# here — including .git internals and node_modules — is publicly fetchable
+# at the live URL. Confirmed and fixed 2026-07-16 after .git/config turned
+# out to be genuinely reachable at the deployed site.
+.git/
+.gitignore
+.assetsignore
+node_modules/
+node_modules/**
+node_modules/.*
+package.json
+package-lock.json
+README.md
+wrangler.jsonc
+scripts/
