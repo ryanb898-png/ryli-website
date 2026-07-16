@@ -705,6 +705,33 @@ section { padding: 96px 0; position: relative; }
 .footer__brand span { font-family: var(--display); font-weight: 700; font-size: 18px; }
 .footer__tagline { color: var(--ink-faint); font-size: 13px; margin-top: 8px; max-width: 32ch; }
 .footer__links { display: flex; gap: 28px; font-size: 14px; color: var(--ink-dim); flex-wrap: wrap; }
+/* ---------- legal pages (privacy / terms) ---------- */
+
+.legal { padding: 56px 0 40px; }
+.legal__updated { color: var(--ink-faint); font-size: 13px; margin-top: 10px; }
+.legal__body { max-width: 760px; margin: 40px auto 0; }
+.legal__body h2 {
+  font-size: 22px;
+  margin: 44px 0 14px;
+  padding-top: 4px;
+}
+.legal__body h2:first-child { margin-top: 0; }
+.legal__body p {
+  color: var(--ink-dim);
+  font-size: 15px;
+  line-height: 1.7;
+  margin-bottom: 14px;
+}
+.legal__body ul {
+  color: var(--ink-dim);
+  font-size: 15px;
+  line-height: 1.7;
+  margin: 0 0 14px 22px;
+}
+.legal__body li { margin-bottom: 6px; }
+.legal__body a { color: var(--blue); text-decoration: underline; text-underline-offset: 2px; }
+.legal__body strong { color: var(--ink); }
+
 .footer__bottom {
   border-top: 1px solid var(--line);
   padding-top: 24px;
