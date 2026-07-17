@@ -732,6 +732,77 @@ section { padding: 96px 0; position: relative; }
 .legal__body a { color: var(--blue); text-decoration: underline; text-underline-offset: 2px; }
 .legal__body strong { color: var(--ink); }
 
+/* ---------- thank-you (post-checkout) ---------- */
+
+.thankyou { padding: 72px 0 60px; text-align: center; }
+.thankyou h1 { font-size: clamp(32px, 4.5vw, 48px); margin-top: 14px; }
+.thankyou__sub { color: var(--ink-dim); font-size: 17px; max-width: 52ch; margin: 14px auto 0; }
+.thankyou__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  max-width: 900px;
+  margin: 44px auto 0;
+  text-align: left;
+}
+@media (max-width: 760px) { .thankyou__grid { grid-template-columns: 1fr; } }
+.thankyou__keycard, .thankyou__stepscard { padding: 28px; display: flex; flex-direction: column; }
+.thankyou__keylabel {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-bottom: 14px;
+}
+/* An unconditional `display` here would beat the browser's own
+   [hidden]{display:none} (same specificity tier, author rule wins) — scope
+   to :not([hidden]) or the "no key in the link" fallback silently stops
+   working, same lesson as .onboarding-overlay in the desktop app. */
+.thankyou__keybox:not([hidden]) {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--line-hot);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+}
+.thankyou__keybox code {
+  flex: 1;
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: 14px;
+  color: var(--cyan);
+  word-break: break-all;
+}
+.thankyou__keybox .btn { padding: 8px 16px; font-size: 13px; flex-shrink: 0; }
+.thankyou__hint { color: var(--ink-faint); font-size: 13px; line-height: 1.6; margin-top: 14px; }
+.thankyou__steps { list-style: none; counter-reset: step; display: flex; flex-direction: column; gap: 14px; margin-bottom: 22px; flex: 1; }
+.thankyou__steps li {
+  counter-increment: step;
+  display: flex;
+  gap: 12px;
+  color: var(--ink-dim);
+  font-size: 15px;
+  line-height: 1.5;
+}
+.thankyou__steps li::before {
+  content: counter(step);
+  flex-shrink: 0;
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: var(--gradient);
+  color: #0a0e14;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 13px;
+  display: flex; align-items: center; justify-content: center;
+}
+.thankyou__steps strong { color: var(--ink); }
+.thankyou__support { color: var(--ink-faint); font-size: 14px; margin-top: 36px; }
+.thankyou__support a { color: var(--blue); text-decoration: underline; text-underline-offset: 2px; }
+
 .footer__bottom {
   border-top: 1px solid var(--line);
   padding-top: 24px;
