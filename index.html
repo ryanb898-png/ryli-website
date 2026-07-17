@@ -9,6 +9,11 @@
 <link rel="manifest" href="assets/favicon/site.webmanifest" />
 <meta name="theme-color" content="#0D1117" />
 <link rel="stylesheet" href="styles.css" />
+<!-- Lemon.js — turns the "Subscribe & Save" checkout link into an overlay
+     modal on top of this page instead of a full navigation away. Linked
+     directly from Lemon Squeezy's CDN (not self-hosted) per their own
+     guidance, so security patches/updates apply automatically. -->
+<script src="https://app.lemonsqueezy.com/js/lemon.js" defer></script>
 
 <header class="nav">
   <div class="nav__inner">
@@ -305,7 +310,7 @@
             <li>Custom ad-banner uploads</li>
             <li>Stream Store downloads, one-click add to OBS</li>
           </ul>
-          <a class="btn btn-primary btn-block" href="https://ryli.lemonsqueezy.com/checkout/buy/f304ccfe-bb5d-4ec6-a1af-eecca8df78a0?checkout[discount_code]=SAVE20">Subscribe &amp; Save</a>
+          <a class="btn btn-primary btn-block lemonsqueezy-button" href="https://ryli.lemonsqueezy.com/checkout/buy/f304ccfe-bb5d-4ec6-a1af-eecca8df78a0?checkout[discount_code]=SAVE20&amp;embed=1">Subscribe &amp; Save</a>
           <p class="card-note">20% off your first month · card charged after day 30</p>
         </div>
       </div>
