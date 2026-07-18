@@ -625,6 +625,7 @@ section { padding: 96px 0; position: relative; }
 .price-card h3 { font-size: 24px; margin: 8px 0 18px; }
 .price-card .amount { font-family: var(--display); font-size: 44px; font-weight: 700; }
 .price-card .amount .period { font-family: var(--body); font-size: 14px; font-weight: 500; color: var(--ink-faint); }
+.price-card .amount .strike { font-size: 24px; font-weight: 500; color: var(--ink-faint); text-decoration: line-through; margin-right: 6px; }
 .price-card .blurb { color: var(--ink-dim); font-size: 14px; margin: 14px 0 4px; }
 .price-card .checklist { flex-grow: 1; }
 .price-card .btn { margin-top: 26px; }
