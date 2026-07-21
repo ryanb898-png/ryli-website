@@ -1,8 +1,16 @@
 {
   "name": "ryli-website",
   "compatibility_date": "2025-01-01",
+  "main": "src/index.js",
   "assets": {
     "directory": "./",
-    "not_found_handling": "404-page"
-  }
+    "not_found_handling": "404-page",
+    "binding": "ASSETS"
+  },
+  "kv_namespaces": [
+    {
+      "binding": "USAGE_KV",
+      "id": "5c7ae15287af4cff9e3bfd9dcdc0bbfb"
+    }
+  ]
 }

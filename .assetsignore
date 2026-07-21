@@ -15,3 +15,11 @@ package-lock.json
 README.md
 wrangler.jsonc
 scripts/
+# Added 2026-07-20 when the site moved from static-only to a real Worker
+# script (src/index.js, for the anonymous usage-ping endpoints) — without
+# these, the Worker's own source code and build temp files get uploaded
+# and served as PUBLIC static files, exactly the same leak class as the
+# .git incident above. Confirmed live: /src/index.js was reachable before
+# this fix.
+src/
+.wrangler/
