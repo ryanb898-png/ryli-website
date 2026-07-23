@@ -864,6 +864,7 @@ section { padding: 96px 0; position: relative; }
 .stack-layer { transition: opacity 0.2s ease, filter 0.2s ease; }
 .camera-stack__diagram.has-active .stack-layer:not(.is-active) { opacity: 0.4; }
 .stack-layer.is-active { filter: drop-shadow(0 0 8px rgba(106,174,255,0.55)); }
+.stack-layer[data-layer="facecam"].is-active rect { stroke-opacity: 1; }
 
 .camera-stack__legend { display: flex; flex-direction: column; gap: 10px; }
 .camera-layer-btn {
