@@ -1,0 +1,256 @@
+<title>Complete Setup Guide — RYLI</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="A beginner-friendly, step-by-step guide to installing OBS, adding a phone camera with DroidCam, and layering RYLI's overlay on top — for Whatnot livestream sellers." />
+<link rel="icon" type="image/x-icon" href="assets/favicon/favicon.ico" />
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png" />
+<link rel="apple-touch-icon" href="assets/favicon/apple-touch-icon.png" />
+<link rel="manifest" href="assets/favicon/site.webmanifest" />
+<meta name="theme-color" content="#0D1117" />
+<link rel="stylesheet" href="styles.css" />
+
+<header class="nav">
+  <div class="nav__inner">
+    <a class="nav__brand" href="index.html#top">
+      <img src="assets/images/ryliring.png" alt="RYLI" />
+      <span>RYLI</span>
+    </a>
+    <nav class="nav__links">
+      <a href="index.html#features">Features</a>
+      <a href="index.html#how-it-works">How It Works</a>
+      <a href="index.html#themes">Themes</a>
+      <a href="index.html#pricing">Pricing</a>
+      <a href="index.html#faq">FAQ</a>
+    </nav>
+    <div class="nav__cta">
+      <a class="btn btn-primary" href="index.html#pricing">Download Now</a>
+    </div>
+    <button class="nav__toggle" aria-label="Toggle menu">☰</button>
+  </div>
+</header>
+
+<main id="top">
+  <section class="guide">
+    <div class="container">
+      <span class="eyebrow-badge"><span class="dot"></span>Setup Guide</span>
+      <h1>Your camera &amp; overlay, <span class="grad-text">set up right.</span></h1>
+      <p class="guide__intro">Never used OBS before? Start here. This guide covers three things, in order: getting OBS running, adding a phone camera as your product cam with DroidCam, and layering RYLI's face cam and overlay on top of that. Follow it top to bottom your first time — about 15–20 minutes, no experience required.</p>
+
+      <ul class="checklist" style="max-width: 520px;">
+        <li>A Windows PC — RYLI is a Windows desktop app today</li>
+        <li>A smartphone with a camera (Android or iPhone)</li>
+        <li>Same Wi-Fi for phone + PC, or a USB cable (more reliable — recommended)</li>
+        <li>About 15–20 minutes, start to finish</li>
+      </ul>
+
+      <nav class="guide-nav" aria-label="Jump to a step">
+        <a href="#step-obs">1. Install OBS</a>
+        <a href="#step-droidcam">2. Add DroidCam</a>
+        <a href="#step-layers">3. How it layers</a>
+        <a href="#step-ryli">4. Install RYLI</a>
+      </nav>
+
+      <!-- STEP 1 -->
+      <section class="guide-step-section" id="step-obs">
+        <div class="feature__eyebrow"><span class="icon-badge">🎥</span>Step 1 of 4 — Install OBS Studio</div>
+        <h2>Get the free broadcast software running</h2>
+        <p class="desc">OBS (Open Broadcaster Software) is the free program that actually sends your stream to Whatnot. Everything else in this guide — your phone camera, RYLI's overlay — plugs into OBS. If you don't have it yet, get it first.</p>
+        <div class="guide-steps">
+          <details class="faq-item guide-step" open>
+            <summary>Download OBS Studio</summary>
+            <div class="faq-body">Go to <a href="https://obsproject.com/download" target="_blank" rel="noopener">obsproject.com/download</a> and grab the Windows installer — it's free, official, and takes under a minute.</div>
+          </details>
+          <details class="faq-item guide-step">
+            <summary>Run the installer</summary>
+            <div class="faq-body">Open the downloaded file and click through with the default options — there's nothing to configure yet. Leave "Launch OBS Studio" checked when it finishes.</div>
+          </details>
+          <details class="faq-item guide-step">
+            <summary>Skip the Auto-Configuration Wizard</summary>
+            <div class="faq-body">OBS may offer to auto-configure your stream on first launch. Click "Cancel" — RYLI's own onboarding handles the settings that matter later in this guide.</div>
+          </details>
+          <details class="faq-item guide-step">
+            <summary>Confirm OBS opens to an empty scene</summary>
+            <div class="faq-body">You'll see a blank black canvas with empty "Scene" and "Sources" panels. That's normal — you haven't added any cameras yet. That's Step 2.</div>
+          </details>
+        </div>
+      </section>
+
+      <!-- STEP 2 -->
+      <section class="guide-step-section" id="step-droidcam">
+        <div class="feature__eyebrow"><span class="icon-badge">📱</span>Step 2 of 4 — Add DroidCam</div>
+        <h2>Turn your phone into your product cam</h2>
+        <p class="desc">DroidCam turns your phone into a wireless camera OBS can use — most live sellers point it forward at the table so viewers see the product, not just a face. It has two halves — an app on your phone, and a plugin on this PC — you need both.</p>
+        <div class="guide-steps">
+          <details class="faq-item guide-step" open>
+            <summary>Install DroidCam on your phone</summary>
+            <div class="faq-body">Get it from <a href="https://play.google.com/store/apps/details?id=com.dev47apps.obsdroidcam" target="_blank" rel="noopener">Google Play</a> or the <a href="https://apps.apple.com/us/app/droidcam-webcam-obs-camera/id1510258102" target="_blank" rel="noopener">Apple App Store</a>. Open it once so it can ask for camera permission.</div>
+          </details>
+          <details class="faq-item guide-step">
+            <summary>Install the DroidCam client on this PC</summary>
+            <div class="faq-body">Download it from <a href="https://droidcam.app/windows/" target="_blank" rel="noopener">droidcam.app/windows</a> and run it with the default options. This is the program that receives your phone's video on this computer.</div>
+          </details>
+          <details class="faq-item guide-step">
+            <summary>Install the DroidCam OBS plugin</summary>
+            <div class="faq-body">This is a separate small installer from <a href="https://droidcam.app/obs/" target="_blank" rel="noopener">droidcam.app/obs</a> that adds DroidCam as an option inside OBS's own source list. Without it, OBS can't see your phone. Run it, then fully close and reopen OBS.</div>
+          </details>
+          <details class="faq-item guide-step">
+            <summary>Connect your phone to the PC client</summary>
+            <div class="faq-body">Open the PC client and the phone app together. Both on the same Wi-Fi works, but a USB cable gives the most stable, lowest-lag feed — that's what we recommend for live selling.</div>
+          </details>
+          <details class="faq-item guide-step">
+            <summary>Add DroidCam as an OBS source, pointed at your product</summary>
+            <div class="faq-body">In OBS, click the <strong>+</strong> under Sources → <strong>DroidCam Source</strong> → select your phone. Prop it facing forward at your product or table. This feed is your show's main camera — your <strong>product cam</strong> — for the rest of this guide.</div>
+          </details>
+        </div>
+      </section>
+
+      <!-- STEP 3 -->
+      <section class="guide-step-section" id="step-layers">
+        <div class="feature__eyebrow"><span class="icon-badge">🗂️</span>Step 3 of 4 — How it all layers</div>
+        <h2>Three cameras, one scene</h2>
+        <p class="desc">This is the part that trips people up, so let's make it visual. Your OBS scene ends up with three layers stacked on top of each other — hover or tap each one below to see what it does.</p>
+
+        <div class="camera-stack">
+          <div class="camera-stack__diagram">
+            <svg viewBox="0 0 520 320" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <defs>
+                <linearGradient id="layer-grad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#6AAEFF" />
+                  <stop offset="100%" stop-color="#B388FF" />
+                </linearGradient>
+              </defs>
+
+              <!-- OBS canvas frame -->
+              <rect x="8" y="8" width="504" height="304" rx="14" fill="#0a0e14" stroke="rgba(242,246,255,0.14)" stroke-width="2" />
+
+              <!-- Layer 1: DroidCam product cam (full-bleed base) -->
+              <g class="stack-layer" data-layer="product">
+                <rect x="8" y="8" width="504" height="304" rx="14" fill="rgba(106,174,255,0.08)" />
+                <rect x="170" y="110" width="180" height="120" rx="10" fill="rgba(106,174,255,0.18)" stroke="url(#layer-grad)" stroke-width="2" />
+                <text x="260" y="178" text-anchor="middle" font-size="34">📦</text>
+                <text x="260" y="252" text-anchor="middle" font-size="12" fill="rgba(242,246,255,0.5)" font-family="Inter, sans-serif">Product / table view</text>
+              </g>
+
+              <!-- Layer 2: RYLI face-cam PiP -->
+              <g class="stack-layer" data-layer="facecam">
+                <circle cx="90" cy="252" r="46" fill="#131a24" stroke="url(#layer-grad)" stroke-width="3" />
+                <text x="90" y="264" text-anchor="middle" font-size="30">🙂</text>
+              </g>
+
+              <!-- Layer 3: RYLI jumbotron overlay graphics -->
+              <g class="stack-layer" data-layer="overlay">
+                <rect x="360" y="30" width="130" height="56" rx="10" fill="rgba(179,136,255,0.14)" stroke="rgba(179,136,255,0.5)" stroke-width="1.5" />
+                <text x="425" y="64" text-anchor="middle" font-size="22">🏆</text>
+                <rect x="30" y="30" width="120" height="40" rx="10" fill="rgba(125,231,255,0.14)" stroke="rgba(125,231,255,0.5)" stroke-width="1.5" />
+                <text x="90" y="56" text-anchor="middle" font-size="16">🎉 Lot Won!</text>
+                <rect x="150" y="270" width="220" height="24" rx="12" fill="rgba(106,174,255,0.18)" stroke="url(#layer-grad)" stroke-width="1.5" />
+                <text x="260" y="287" text-anchor="middle" font-size="12" fill="#F2F6FF" font-family="Inter, sans-serif">⚡ Hype Meter</text>
+              </g>
+            </svg>
+          </div>
+
+          <div class="camera-stack__legend">
+            <button type="button" class="camera-layer-btn" data-layer="product">
+              <span class="num">1</span>
+              <span><span class="title">DroidCam — your product cam</span><span class="sub">Your phone, propped forward on the table. The full-frame base layer everything else sits on top of.</span></span>
+            </button>
+            <button type="button" class="camera-layer-btn" data-layer="facecam">
+              <span class="num">2</span>
+              <span><span class="title">RYLI's webcam — your face cam</span><span class="sub">A small PiP bubble from your PC's webcam. It can point anywhere, but we recommend your face — so buyers see you reacting live.</span></span>
+            </button>
+            <button type="button" class="camera-layer-btn" data-layer="overlay">
+              <span class="num">3</span>
+              <span><span class="title">RYLI's jumbotron overlay</span><span class="sub">The interactive graphics layer on top — leaderboards, milestone celebrations, and the hype meter, reacting to your show live.</span></span>
+            </button>
+          </div>
+        </div>
+
+        <p class="desc">One thing worth saying plainly: RYLI's own webcam feed can technically show anything you point it at — but it's built and recommended as your <strong>face cam</strong>, a small bubble in the corner so buyers see you reacting live, while DroidCam stays locked on the product below. Two different cameras, two different jobs, one scene.</p>
+      </section>
+
+      <!-- STEP 4 -->
+      <section class="guide-step-section" id="step-ryli">
+        <div class="feature__eyebrow"><span class="icon-badge">✨</span>Step 4 of 4 — Install &amp; onboard RYLI</div>
+        <h2>Layer RYLI on top</h2>
+        <p class="desc">With OBS and DroidCam already working, RYLI layers on top in a few minutes — its setup wizard finds your OBS install and adds the overlay for you.</p>
+        <div class="guide-steps">
+          <details class="faq-item guide-step" open>
+            <summary>Download RYLI</summary>
+            <div class="faq-body">Grab the free installer — <a href="https://github.com/ryanb898-png/ryli-releases/releases/latest/download/RYLI-Setup.exe">same one used everywhere else on this site</a>.</div>
+          </details>
+          <details class="faq-item guide-step">
+            <summary>Run the onboarding wizard</summary>
+            <div class="faq-body">RYLI opens straight into a short wizard. Choose Whatnot and let it auto-detect OBS — it adds the RYLI overlay as a new browser source for you, no manual scene-building.</div>
+          </details>
+          <details class="faq-item guide-step">
+            <summary>Pick your webcam (optional, recommended)</summary>
+            <div class="faq-body">In Settings → Camera, choose the webcam you'd like RYLI to show inside the jumbotron. We recommend pointing it at your face — that's Layer 2 from Step 3. Skip this if you'd rather not show your face; the overlay and your DroidCam product cam work fine without it.</div>
+          </details>
+          <details class="faq-item guide-step">
+            <summary>Pick a theme and go live</summary>
+            <div class="faq-body">Choose any of the 3 free themes, hit Go Live in RYLI, then start your stream in OBS as usual. RYLI reacts to your show from here on out.</div>
+          </details>
+        </div>
+      </section>
+
+      <div class="guide-outro">
+        <h2>That's the whole stack.</h2>
+        <p>OBS runs the broadcast, DroidCam shows your product, RYLI shows your face and reacts live on top. Questions along the way? Email <a href="mailto:hello@ryli.app">hello@ryli.app</a> — happy to help.</p>
+        <a class="btn btn-primary" href="https://github.com/ryanb898-png/ryli-releases/releases/latest/download/RYLI-Setup.exe">Download RYLI</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer__top">
+      <div>
+        <div class="footer__brand">
+          <img src="assets/images/ryliring.png" alt="RYLI" />
+          <span>RYLI</span>
+        </div>
+        <p class="footer__tagline">Run your live intelligently.</p>
+      </div>
+      <div class="footer__links">
+        <a href="index.html#features">Features</a>
+        <a href="index.html#pricing">Pricing</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="mailto:hello@ryli.app">Contact</a>
+      </div>
+    </div>
+    <div class="footer__bottom">© 2026 RYLI. Built for the people behind the stream.</div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+<script>
+  (function () {
+    var stack = document.querySelector('.camera-stack');
+    if (!stack) return;
+    var diagram = stack.querySelector('.camera-stack__diagram');
+    var buttons = stack.querySelectorAll('.camera-layer-btn');
+    var svgLayers = stack.querySelectorAll('.stack-layer');
+    var pinned = null;
+
+    function setActive(name) {
+      var active = name || pinned;
+      diagram.classList.toggle('has-active', !!active);
+      buttons.forEach(function (b) { b.classList.toggle('is-active', b.dataset.layer === active); });
+      svgLayers.forEach(function (g) { g.classList.toggle('is-active', g.dataset.layer === active); });
+    }
+
+    buttons.forEach(function (btn) {
+      btn.addEventListener('mouseenter', function () { setActive(btn.dataset.layer); });
+      btn.addEventListener('mouseleave', function () { setActive(null); });
+      btn.addEventListener('focus', function () { setActive(btn.dataset.layer); });
+      btn.addEventListener('blur', function () { setActive(null); });
+      btn.addEventListener('click', function () {
+        pinned = pinned === btn.dataset.layer ? null : btn.dataset.layer;
+        setActive(null);
+      });
+    });
+  })();
+</script>
