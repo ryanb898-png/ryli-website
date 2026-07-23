@@ -861,7 +861,7 @@ section { padding: 96px 0; position: relative; }
   background: var(--slate-2); box-shadow: var(--shadow); padding: 20px;
 }
 .camera-stack__diagram svg { width: 100%; height: auto; display: block; }
-.stack-layer { transition: opacity 0.2s ease, filter 0.2s ease; }
+.stack-layer { transition: opacity 0.2s ease, filter 0.2s ease; cursor: pointer; }
 .camera-stack__diagram.has-active .stack-layer:not(.is-active) { opacity: 0.4; }
 .stack-layer.is-active { filter: drop-shadow(0 0 8px rgba(106,174,255,0.55)); }
 .stack-layer[data-layer="facecam"].is-active rect { stroke-opacity: 1; }

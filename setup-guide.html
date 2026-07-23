@@ -110,7 +110,7 @@
       <section class="guide-step-section" id="step-layers">
         <div class="feature__eyebrow"><span class="icon-badge">🗂️</span>Step 3 of 5 — How it all layers</div>
         <h2>Two things in OBS — RYLI does double duty</h2>
-        <p class="desc">Any OBS livestream setup already has its own camera — that's DroidCam, from Step 2. RYLI only ever adds ONE more thing to OBS on top of it: a single "RYLI Overlay" browser source. Hover or tap each piece below to see what it does.</p>
+        <p class="desc">Any OBS livestream setup already has its own camera — that's DroidCam, from Step 2. RYLI only ever adds ONE more thing to OBS on top of it: a single "RYLI Overlay" browser source. Hover (or tap) the picture itself, or the list beside it — either one highlights what each piece does.</p>
 
         <div class="camera-stack">
           <div class="camera-stack__diagram">
@@ -154,9 +154,11 @@
                 <text x="260" y="113" text-anchor="middle" font-size="10" fill="rgba(242,246,255,0.55)" font-family="Inter, sans-serif">Jumbotron — graphics or your face</text>
               </g>
 
-              <!-- Face cam highlight ring — same box as "overlay" above, calling out the right (face) half specifically -->
+              <!-- Face cam highlight ring — same box as "overlay" above, calling out the right (face) half specifically.
+                   fill="transparent" (not "none") so this rect is still hoverable — SVG excludes fill="none"
+                   shapes from hit-testing entirely, which would make this whole region unclickable/unhoverable. -->
               <g class="stack-layer" data-layer="facecam">
-                <rect x="262" y="38" width="94" height="66" rx="10" fill="none" stroke="#7DE7FF" stroke-width="2.5" stroke-opacity="0.35" />
+                <rect x="262" y="38" width="94" height="66" rx="10" fill="transparent" stroke="#7DE7FF" stroke-width="2.5" stroke-opacity="0.35" />
               </g>
             </svg>
           </div>
@@ -296,6 +298,19 @@
       btn.addEventListener('blur', function () { setActive(null); });
       btn.addEventListener('click', function () {
         pinned = pinned === btn.dataset.layer ? null : btn.dataset.layer;
+        setActive(null);
+      });
+    });
+
+    // The picture itself is also directly hoverable/tappable, not just the
+    // text list beside it — "hover over it" should work on the diagram a
+    // reader is actually looking at, not only on a separate legend.
+    svgLayers.forEach(function (g) {
+      var layer = g.dataset.layer;
+      g.addEventListener('mouseenter', function () { setActive(layer); });
+      g.addEventListener('mouseleave', function () { setActive(null); });
+      g.addEventListener('click', function () {
+        pinned = pinned === layer ? null : layer;
         setActive(null);
       });
     });
