@@ -332,6 +332,20 @@ section { padding: 96px 0; position: relative; }
   padding: 24px;
 }
 .waveform-media svg { width: 100%; height: auto; }
+.thermalflow-media {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 340px;
+  background: radial-gradient(420px 280px at 50% 50%, rgba(106,174,255,0.10), transparent 70%), var(--slate-2);
+  padding: 32px;
+}
+.thermalflow-media svg {
+  width: 100%;
+  max-width: 260px;
+  height: auto;
+  filter: drop-shadow(0 24px 48px rgba(0,0,0,0.55));
+}
 .feature__note {
   margin-top: 16px;
   font-size: 13px;
