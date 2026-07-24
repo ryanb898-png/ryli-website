@@ -344,7 +344,7 @@ section { padding: 96px 0; position: relative; }
   width: 100%;
   max-width: 260px;
   height: auto;
-  filter: drop-shadow(0 24px 48px rgba(0,0,0,0.55));
+  filter: drop-shadow(0 18px 40px rgba(106,174,255,0.28)) drop-shadow(0 10px 26px rgba(0,0,0,0.4));
 }
 .feature__note {
   margin-top: 16px;
