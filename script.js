@@ -1,5 +1,18 @@
 // RYLI marketing site — vanilla JS, no build step, no framework.
 
+// Anonymous pageview beacon — one fire-and-forget call per real page load.
+// Loaded on every HTML page in this site (index/privacy/terms/setup-guide/
+// thank-you), so this covers the whole site from one place. Counts raw
+// pageviews only: no cookie, no fingerprint, no visitor id is ever created
+// or read, no third-party analytics service — matching the same "anonymous,
+// aggregate only" stance already documented for the desktop app's own usage
+// ping (see /api/ping in the Worker). keepalive:true so the request isn't
+// dropped if the tab closes/navigates away before it completes; a failure
+// here must never be visible or block the page in any way.
+try {
+  fetch('/api/visit', { method: 'POST', keepalive: true }).catch(() => {});
+} catch {}
+
 // Mobile nav toggle
 const nav = document.querySelector('.nav');
 const navToggle = document.querySelector('.nav__toggle');

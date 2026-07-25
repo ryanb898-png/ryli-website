@@ -12,8 +12,9 @@
  * Cloudflare serves any request that matches a real static file WITHOUT
  * ever invoking this script at all — so index.html/privacy.html/etc. are
  * untouched by anything below. This script only runs for paths with no
- * matching file: /api/ping, /api/stats, and any genuinely missing URL
- * (which falls through to env.ASSETS.fetch() for the site's real 404 page).
+ * matching file: /api/ping, /api/visit, /api/stats, and any genuinely
+ * missing URL (which falls through to env.ASSETS.fetch() for the site's
+ * real 404 page).
  *
  * Anonymous usage ping — see CLAUDE.md's "Anonymous usage ping" section in
  * the main RYLI repo for the full design rationale. `id` is a random UUID
@@ -21,9 +22,18 @@
  * Whatnot handle.
  *
  * KV layout (binding: USAGE_KV):
- *   install:<id>              -> JSON { lastSeen: "YYYY-MM-DD", isPro, version }
- *   daily:<YYYY-MM-DD>:total  -> integer, unique installs seen that day
- *   daily:<YYYY-MM-DD>:pro    -> integer, unique Pro installs seen that day
+ *   install:<id>                 -> JSON { lastSeen: "YYYY-MM-DD", isPro, version },
+ *                                    ALSO written with the same fields as KV metadata
+ *                                    (see handlePing) so handleStats can compute a
+ *                                    version breakdown and a real unique-active count
+ *                                    from a single list() sweep, with no per-key GET.
+ *   daily:<YYYY-MM-DD>:total     -> integer, unique installs seen that day
+ *   daily:<YYYY-MM-DD>:pro       -> integer, unique Pro installs seen that day
+ *   daily:<YYYY-MM-DD>:new       -> integer, installs seen for the very first time ever, that day
+ *   daily:<YYYY-MM-DD>:visits    -> integer, website pageviews that day (see handleVisit) —
+ *                                    a raw pageview counter, NOT unique visitors: no cookie,
+ *                                    no fingerprint, no visitor id is ever set, matching this
+ *                                    site's existing no-tracking privacy stance.
  */
 
 async function handlePing(request, env) {
@@ -52,10 +62,19 @@ async function handlePing(request, env) {
     existing = null;
   }
   const alreadyCountedToday = existing && existing.lastSeen === today;
+  const isBrandNewInstall = !existing;
 
-  await env.USAGE_KV.put(key, JSON.stringify({ lastSeen: today, isPro, version }));
+  // `metadata` is returned inline by KV's list() for every key, with no
+  // per-key GET needed — that's what lets handleStats compute a version
+  // breakdown and a real (de-duped) active-install count cheaply, even
+  // across many thousands of installs. Keep this in sync with the value
+  // body above; they're the same three fields, just also mirrored where
+  // list() can see them without fetching each value.
+  await env.USAGE_KV.put(key, JSON.stringify({ lastSeen: today, isPro, version }), {
+    metadata: { lastSeen: today, isPro, version },
+  });
 
-  // Only bump the daily aggregate the FIRST time this install is seen on a
+  // Only bump the daily aggregates the FIRST time this install is seen on a
   // given day — the app already throttles to one ping/day client-side, but
   // don't trust that alone (a retried/duplicate request must not double-count).
   if (!alreadyCountedToday) {
@@ -67,9 +86,37 @@ async function handlePing(request, env) {
       const proRaw = await env.USAGE_KV.get(proKey);
       await env.USAGE_KV.put(proKey, String(parseInt(proRaw || '0', 10) + 1));
     }
+    // Distinct from "total" above — this is the growth signal (a genuinely
+    // new install, never pinged before at all), not just "someone was
+    // active today" (which is dominated by returning installs on any
+    // established day).
+    if (isBrandNewInstall) {
+      const newKey = `daily:${today}:new`;
+      const newRaw = await env.USAGE_KV.get(newKey);
+      await env.USAGE_KV.put(newKey, String(parseInt(newRaw || '0', 10) + 1));
+    }
   }
 
   return new Response('ok', { status: 200 });
+}
+
+// Website pageview beacon — fired once per page load from script.js (loaded
+// on every real page: index/privacy/terms/setup-guide/thank-you). Counts
+// raw pageviews, not unique visitors: no cookie, no fingerprint, no visitor
+// id is ever created or read, matching the same "anonymous, aggregate only"
+// stance already documented for the app's own usage ping. Answers "is
+// anyone actually looking at the site" without adding any real tracking.
+async function handleVisit(request, env) {
+  if (request.method !== 'POST') return new Response('method not allowed', { status: 405 });
+  const today = new Date().toISOString().slice(0, 10);
+  const key = `daily:${today}:visits`;
+  try {
+    const raw = await env.USAGE_KV.get(key);
+    await env.USAGE_KV.put(key, String(parseInt(raw || '0', 10) + 1));
+  } catch {
+    // Never fail the page load over a missed count.
+  }
+  return new Response(null, { status: 204 });
 }
 
 function escapeHtml(str) {
@@ -82,7 +129,10 @@ function escapeHtml(str) {
 // changes presentation, not the trust model. Raw JSON is still available via
 // &format=json for anything that wants to script against it later.
 function renderStatsHtml(data, token) {
-  const { rangeDays, pingsInRange, proPingsInRange, installsEverSeen, perDay } = data;
+  const {
+    rangeDays, pingsInRange, proPingsInRange, newInRange, visitsInRange,
+    installsEverSeen, uniqueActiveInRange, uniqueActiveProInRange, versionBreakdown, perDay,
+  } = data;
   const freeInRange = pingsInRange - proPingsInRange;
   const maxTotal = Math.max(1, ...perDay.map((d) => d.total));
   const dayLink = (n) => `/api/stats?token=${encodeURIComponent(token)}&days=${n}`;
@@ -102,7 +152,14 @@ function renderStatsHtml(data, token) {
   const rows = perDay
     .slice()
     .reverse()
-    .map((d) => `<tr><td>${escapeHtml(d.day)}</td><td>${d.total}</td><td>${d.pro}</td><td>${d.total - d.pro}</td></tr>`)
+    .map((d) => `<tr><td>${escapeHtml(d.day)}</td><td>${d.total}</td><td>${d.pro}</td><td>${d.total - d.pro}</td><td>${d.newInstalls}</td><td>${d.visits}</td></tr>`)
+    .join('');
+
+  const versionRows = versionBreakdown
+    .map((v) => {
+      const pct = installsEverSeen > 0 ? Math.round((v.count / installsEverSeen) * 1000) / 10 : 0;
+      return `<tr><td>${escapeHtml(v.version)}</td><td>${v.count.toLocaleString()}</td><td>${pct}%</td></tr>`;
+    })
     .join('');
 
   return `<!doctype html>
@@ -151,10 +208,12 @@ function renderStatsHtml(data, token) {
   .dot.pro { background: var(--purple); }
   .footer { color: #556; font-size: 12px; margin-top: 30px; text-align: center; }
   .footer a { color: #667; }
+  .hint { color: #556; font-size: 12px; margin-top: 14px; line-height: 1.5; }
   @media (prefers-color-scheme: light) {
     body { background: radial-gradient(ellipse at top, #eef2fb 0%, #fff 60%); color: #0D1117; }
     .card, .panel { background: rgba(0,0,0,0.03); border-color: rgba(0,0,0,0.08); }
     .sub, .card__label, th { color: #5b6472; }
+    .hint { color: #7b8492; }
   }
 </style>
 </head><body>
@@ -164,14 +223,15 @@ function renderStatsHtml(data, token) {
 
   <div class="cards">
     <div class="card"><div class="card__label">Installs ever seen</div><div class="card__value">${installsEverSeen.toLocaleString()}</div></div>
-    <div class="card"><div class="card__label">Active in range</div><div class="card__value blue">${pingsInRange.toLocaleString()}</div></div>
-    <div class="card"><div class="card__label">Pro in range</div><div class="card__value purple">${proPingsInRange.toLocaleString()}</div></div>
-    <div class="card"><div class="card__label">Free in range</div><div class="card__value cyan">${freeInRange.toLocaleString()}</div></div>
+    <div class="card"><div class="card__label">Unique active (${rangeDays}d)</div><div class="card__value blue">${uniqueActiveInRange.toLocaleString()}</div></div>
+    <div class="card"><div class="card__label">...of those, Pro</div><div class="card__value purple">${uniqueActiveProInRange.toLocaleString()}</div></div>
+    <div class="card"><div class="card__label">New installs (${rangeDays}d)</div><div class="card__value cyan">${newInRange.toLocaleString()}</div></div>
+    <div class="card"><div class="card__label">Website pageviews (${rangeDays}d)</div><div class="card__value">${visitsInRange.toLocaleString()}</div></div>
   </div>
 
   <div class="panel">
     <div class="panel__head">
-      <div class="panel__title">Daily active installs</div>
+      <div class="panel__title">Daily pings</div>
       <div class="range-links">
         <a href="${dayLink(7)}" class="${rangeDays === 7 ? 'active' : ''}">7d</a>
         <a href="${dayLink(30)}" class="${rangeDays === 30 ? 'active' : ''}">30d</a>
@@ -179,14 +239,24 @@ function renderStatsHtml(data, token) {
       </div>
     </div>
     <div class="chart">${bars || '<span style="color:#556;font-size:13px;">No data yet</span>'}</div>
-    <div class="legend"><span><i class="dot total"></i>Total</span><span><i class="dot pro"></i>Pro</span></div>
+    <div class="legend"><span><i class="dot total"></i>Total pings</span><span><i class="dot pro"></i>Pro</span></div>
+    <div class="hint">"Total pings" sums each day's activity — an install that opens RYLI on 10 different days in this range adds 10 here. See "Unique active" above for the real de-duped headcount.</div>
+  </div>
+
+  <div class="panel">
+    <div class="panel__title" style="margin-bottom:16px;">By version</div>
+    <table>
+      <thead><tr><th>Version</th><th>Installs</th><th>Share</th></tr></thead>
+      <tbody>${versionRows || '<tr><td colspan="3" style="color:#556;">No data yet</td></tr>'}</tbody>
+    </table>
+    <div class="hint">Every install ever seen, by the version it last pinged from — a stale version share here is the real signal for "people aren't updating."</div>
   </div>
 
   <div class="panel">
     <div class="panel__title" style="margin-bottom:16px;">By day</div>
     <table>
-      <thead><tr><th>Date</th><th>Total</th><th>Pro</th><th>Free</th></tr></thead>
-      <tbody>${rows || '<tr><td colspan="4" style="color:#556;">No data yet</td></tr>'}</tbody>
+      <thead><tr><th>Date</th><th>Total</th><th>Pro</th><th>Free</th><th>New</th><th>Pageviews</th></tr></thead>
+      <tbody>${rows || '<tr><td colspan="6" style="color:#556;">No data yet</td></tr>'}</tbody>
     </table>
   </div>
 
@@ -222,34 +292,74 @@ async function handleStats(request, env) {
 
   let periodTotal = 0;
   let periodPro = 0;
+  let periodNew = 0;
+  let periodVisits = 0;
   const perDay = [];
   for (const day of dayStrings) {
-    const [totalRaw, proRaw] = await Promise.all([
+    const [totalRaw, proRaw, newRaw, visitsRaw] = await Promise.all([
       env.USAGE_KV.get(`daily:${day}:total`),
       env.USAGE_KV.get(`daily:${day}:pro`),
+      env.USAGE_KV.get(`daily:${day}:new`),
+      env.USAGE_KV.get(`daily:${day}:visits`),
     ]);
     const total = parseInt(totalRaw || '0', 10);
     const pro = parseInt(proRaw || '0', 10);
+    const newInstalls = parseInt(newRaw || '0', 10);
+    const visits = parseInt(visitsRaw || '0', 10);
     periodTotal += total;
     periodPro += pro;
-    perDay.push({ day, total, pro });
+    periodNew += newInstalls;
+    periodVisits += visits;
+    perDay.push({ day, total, pro, newInstalls, visits });
   }
   perDay.reverse(); // oldest first
 
-  // Total unique installs ever seen (cheap — just counts key names, not values).
+  // One list() sweep over every install:* key covers three things at once,
+  // using the metadata each key already carries (see handlePing) — no
+  // per-key GET needed even with many thousands of installs:
+  //   1. installsEverSeen   — just the key count, as before.
+  //   2. uniqueActiveInRange — a REAL de-duped count of installs whose
+  //      lastSeen falls within the selected range. This is the number
+  //      pingsInRange (below) is NOT: that one sums each day's count, so
+  //      the same install pinging on 10 different days counts 10 times.
+  //      This one counts it once, however many days it showed up.
+  //   3. versionCounts      — how many active-ever installs report each
+  //      app version, letting you see real update uptake.
+  const cutoff = dayStrings[dayStrings.length - 1]; // oldest day string in range (YYYY-MM-DD sorts lexically)
   let installsEverSeen = 0;
+  let uniqueActiveInRange = 0;
+  let uniqueActiveProInRange = 0;
+  const versionCounts = new Map();
   let cursor;
   do {
     const page = await env.USAGE_KV.list({ prefix: 'install:', cursor });
-    installsEverSeen += page.keys.length;
+    for (const k of page.keys) {
+      installsEverSeen++;
+      const meta = k.metadata;
+      if (!meta) continue; // installs written before this metadata field existed — harmless, just excluded from the two breakdowns below until they ping again
+      if (meta.lastSeen >= cutoff) {
+        uniqueActiveInRange++;
+        if (meta.isPro) uniqueActiveProInRange++;
+      }
+      const v = meta.version || 'unknown';
+      versionCounts.set(v, (versionCounts.get(v) || 0) + 1);
+    }
     cursor = page.cursor;
   } while (cursor);
+  const versionBreakdown = [...versionCounts.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .map(([version, count]) => ({ version, count }));
 
   const data = {
     rangeDays: days,
-    pingsInRange: periodTotal, // sum of unique-installs-seen-per-day, not de-duped across days
+    pingsInRange: periodTotal, // sum of unique-installs-seen-per-day, not de-duped across days — see uniqueActiveInRange for the real figure
     proPingsInRange: periodPro,
+    newInRange: periodNew,
+    visitsInRange: periodVisits,
     installsEverSeen,
+    uniqueActiveInRange,
+    uniqueActiveProInRange,
+    versionBreakdown,
     perDay,
   };
 
@@ -264,6 +374,7 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     if (url.pathname === '/api/ping') return handlePing(request, env);
+    if (url.pathname === '/api/visit') return handleVisit(request, env);
     if (url.pathname === '/api/stats') return handleStats(request, env);
     // Anything else reaching this script has no matching static file
     // (real pages are served automatically without ever invoking this
