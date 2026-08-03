@@ -370,12 +370,96 @@ async function handleStats(request, env) {
   return new Response(renderStatsHtml(data, token), { headers: { 'content-type': 'text/html; charset=utf-8' } });
 }
 
+function jsonResponse(obj, status = 200) {
+  return new Response(JSON.stringify(obj), { status, headers: { 'content-type': 'application/json' } });
+}
+
+// RYLI's own Polar organization id — same constant desktop/bridge/licenseStore.js
+// hardcodes for activate/validate/deactivate calls. Kept as an independent copy
+// here rather than a shared import (this is a separate repo/runtime), matching
+// this app's existing convention of not trusting a shared constant stays in
+// sync forever across separate codebases.
+const POLAR_ORG_ID = '9c6abd6b-a3d9-4de9-a0c2-02558b6c03aa';
+
+// Real, official Polar API calls, using env.POLAR_OAT — a narrowly-scoped
+// (checkouts:read + license_keys:read ONLY, no write/refund/product access)
+// Organization Access Token, set via `wrangler secret put POLAR_OAT` and never
+// exposed to the browser. Reconstructs the "show the license key on the
+// thank-you page" UX LemonSqueezy gave for free — Polar has no equivalent of
+// LemonSqueezy's `?key=` success-URL interpolation, so this does it server-side
+// instead: look up the checkout's resulting customer, then scan this org's
+// granted license keys for the one issued to that customer.
+async function handleCheckoutLicense(request, env) {
+  if (request.method !== 'GET') return new Response('method not allowed', { status: 405 });
+  const url = new URL(request.url);
+  const checkoutId = (url.searchParams.get('checkout_id') || '').trim();
+  if (!/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(checkoutId)) {
+    return jsonResponse({ ok: false, reason: 'invalid_checkout_id' }, 400);
+  }
+  const oat = env.POLAR_OAT;
+  if (!oat) return jsonResponse({ ok: false, reason: 'not_configured' }, 500);
+  const authHeaders = { Authorization: `Bearer ${oat}`, Accept: 'application/json' };
+
+  let checkout;
+  try {
+    const res = await fetch(`https://api.polar.sh/v1/checkouts/${checkoutId}`, { headers: authHeaders });
+    if (!res.ok) return jsonResponse({ ok: false, reason: 'checkout_lookup_failed' }, 502);
+    checkout = await res.json();
+  } catch {
+    return jsonResponse({ ok: false, reason: 'checkout_lookup_failed' }, 502);
+  }
+
+  // 'confirmed' = the customer clicked Pay but Polar hasn't fully settled the
+  // payment yet; 'succeeded' = done. Either way there may not be a customer_id
+  // (and definitely no granted license key) for a few seconds yet — treat both
+  // as "keep polling", never as an error, matching the checkout's own documented
+  // status semantics rather than guessing.
+  if (checkout.status !== 'succeeded' && checkout.status !== 'confirmed') {
+    return jsonResponse({ ok: false, reason: 'processing' });
+  }
+  const customerId = checkout.customer_id;
+  if (!customerId) return jsonResponse({ ok: false, reason: 'processing' });
+
+  // The List License Keys endpoint has no customer_id filter (per Polar's own
+  // API reference — only organization_id/benefit_id/status/page/limit), so this
+  // walks every granted key for the org looking for the one issued to this
+  // customer. Fine at this org's real scale (a handful of subscribers so far);
+  // revisit with a benefit_id filter or a different lookup if that ever grows
+  // into thousands of keys.
+  let page = 1;
+  const limit = 100;
+  for (;;) {
+    let data;
+    try {
+      const res = await fetch(
+        `https://api.polar.sh/v1/license-keys/?organization_id=${POLAR_ORG_ID}&status=granted&page=${page}&limit=${limit}`,
+        { headers: authHeaders }
+      );
+      if (!res.ok) return jsonResponse({ ok: false, reason: 'license_lookup_failed' }, 502);
+      data = await res.json();
+    } catch {
+      return jsonResponse({ ok: false, reason: 'license_lookup_failed' }, 502);
+    }
+    const match = (data.items || []).find((k) => k.customer_id === customerId);
+    if (match) return jsonResponse({ ok: true, key: match.key });
+    const maxPage = (data.pagination && data.pagination.max_page) || 1;
+    if (page >= maxPage) break;
+    page++;
+  }
+  // Checkout succeeded but Polar hasn't provisioned the license key yet (it's
+  // granted via webhook shortly after payment, not synchronously) — a real,
+  // expected race in the first few seconds. The client retries; this is never
+  // treated as a permanent failure.
+  return jsonResponse({ ok: false, reason: 'processing' });
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     if (url.pathname === '/api/ping') return handlePing(request, env);
     if (url.pathname === '/api/visit') return handleVisit(request, env);
     if (url.pathname === '/api/stats') return handleStats(request, env);
+    if (url.pathname === '/api/checkout-license') return handleCheckoutLicense(request, env);
     // Anything else reaching this script has no matching static file
     // (real pages are served automatically without ever invoking this
     // handler) — hand it to the asset server for the site's real 404 page.

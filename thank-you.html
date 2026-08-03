@@ -40,9 +40,14 @@
 
       <div class="thankyou__grid">
         <div class="card thankyou__keycard">
-          <div class="thankyou__keylabel">Find your license key</div>
-          <p class="thankyou__hint">Polar just emailed your receipt and license key to the address you checked out with — it usually lands within a minute or two.</p>
-          <p class="thankyou__hint">That same email includes a link to your Polar customer portal, where you can view or copy your key anytime, and manage or cancel your subscription.</p>
+          <div class="thankyou__keylabel">Your license key</div>
+          <div class="thankyou__keybox" id="key-wrap" hidden>
+            <code id="license-key">—</code>
+            <button class="btn btn-outline" type="button" id="copy-key-btn">Copy</button>
+          </div>
+          <p class="thankyou__hint" id="key-loading">Looking up your key — this takes a few seconds…</p>
+          <p class="thankyou__hint" id="key-found-hint" hidden>Also emailed to you as a backup, along with a link to your Polar customer portal to manage your subscription anytime.</p>
+          <p class="thankyou__hint" id="key-fallback" hidden>We couldn't pull it up automatically — no worries, Polar emailed your receipt and license key to the address you checked out with, along with a link to your customer portal where you can view or copy it anytime.</p>
         </div>
 
         <div class="card thankyou__stepscard">
@@ -84,3 +89,61 @@
 </footer>
 
 <script src="script.js"></script>
+<script>
+  (function () {
+    var params = new URLSearchParams(window.location.search);
+    var checkoutId = (params.get('checkout_id') || '').trim();
+    var keyEl = document.getElementById('license-key');
+    var keyWrap = document.getElementById('key-wrap');
+    var loading = document.getElementById('key-loading');
+    var foundHint = document.getElementById('key-found-hint');
+    var fallback = document.getElementById('key-fallback');
+    var copyBtn = document.getElementById('copy-key-btn');
+    var foundKey = '';
+
+    copyBtn.addEventListener('click', function () {
+      if (!foundKey) return;
+      navigator.clipboard.writeText(foundKey).then(function () {
+        copyBtn.textContent = 'Copied!';
+        setTimeout(function () { copyBtn.textContent = 'Copy'; }, 1800);
+      });
+    });
+
+    function showFound(key) {
+      foundKey = key;
+      keyEl.textContent = key;
+      keyWrap.hidden = false;
+      loading.hidden = true;
+      foundHint.hidden = false;
+    }
+    function showFallback() {
+      loading.hidden = true;
+      fallback.hidden = false;
+    }
+
+    if (!checkoutId) { showFallback(); return; }
+
+    // The license key is provisioned by Polar shortly after a successful
+    // checkout (webhook-driven, not instant) — a few short retries covers
+    // that normal race before honestly falling back to "check your email"
+    // rather than spinning forever or claiming something that isn't true.
+    var attempts = 0;
+    var maxAttempts = 5;
+    function tryFetch() {
+      attempts++;
+      fetch('/api/checkout-license?checkout_id=' + encodeURIComponent(checkoutId))
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+          if (data && data.ok && data.key) {
+            showFound(data.key);
+          } else if (data && data.reason === 'processing' && attempts < maxAttempts) {
+            setTimeout(tryFetch, 2500);
+          } else {
+            showFallback();
+          }
+        })
+        .catch(function () { showFallback(); });
+    }
+    tryFetch();
+  })();
+</script>
