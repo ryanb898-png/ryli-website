@@ -35,7 +35,7 @@
     <div class="container">
       <span class="eyebrow-badge"><span class="dot"></span>Legal</span>
       <h1>Privacy Policy</h1>
-      <p class="legal__updated">Last updated: July 21, 2026</p>
+      <p class="legal__updated">Last updated: July 29, 2026</p>
 
       <div class="legal__body">
         <p>This policy covers the RYLI desktop application and the ryli.app website (together, "RYLI," "we," or "us"). It explains what information we collect, where it lives, and who else ever sees it. If you have questions, reach us anytime at <a href="mailto:hello@ryli.app">hello@ryli.app</a>.</p>
@@ -45,7 +45,7 @@
 
         <h2>What the RYLI app collects</h2>
         <p><strong>Your show data stays on your PC.</strong> RYLI reads publicly visible information from the Whatnot browser tab you're already using to host your show — chat messages, bids, buyer usernames, sale amounts, viewer counts — and saves it to a file on your own computer so the app can show you leaderboards, celebrations, and Insights. This data is never uploaded to us. It's yours; if you delete it from your computer, it's gone.</p>
-        <p><strong>License and trial status.</strong> To run your 10-day free trial and validate a Pro subscription, RYLI communicates with our payment processor, Lemon Squeezy, sending only what's needed to check whether a license key is valid. See Lemon Squeezy's own privacy policy for how they handle that.</p>
+        <p><strong>License and trial status.</strong> Your 10-day free trial is tracked entirely on your own computer — nothing is sent anywhere to run it. To activate and validate a Pro subscription, RYLI communicates with our payment processor, Polar, sending only what's needed to check whether a license key is valid. See Polar's own privacy policy for how they handle that.</p>
         <p><strong>App updates and the Stream Store.</strong> RYLI checks GitHub to see if a newer version is available, and to download optional Stream Store content (overlay effects, Stream Deck icon packs) if you choose to use them. These are standard file-download requests and don't include your show data or personal information.</p>
         <p><strong>Optional research feature (Pro).</strong> If you choose to connect your own Claude or OpenAI API key so Ryli can look up product or market information live on air, your questions are sent directly from your computer to that provider using your own key — not through any RYLI server. This is entirely optional and off by default.</p>
         <p><strong>Optional Google Drive backup.</strong> RYLI can back up your show data to a private, hidden folder inside your own Google Drive, so a lost or crashed computer doesn't take your history with it. This is entirely optional and off until you connect your Google account. If you turn it on, your data is sent directly from your computer to Google's servers using your own Google sign-in — RYLI has no server of its own in this path, and no ability to see, access, or share what's stored there. Only the specific hidden app folder Google creates for RYLI is used; RYLI never requests access to the rest of your Drive. You can disconnect this at any time from Settings, which stops any further backups (it doesn't delete what's already been backed up — you can remove that yourself from your Google Account's connected-apps settings, or Google Drive directly).</p>
@@ -53,11 +53,12 @@
         <p><strong>What we don't do.</strong> Beyond the anonymous ping described above, RYLI does not run any other background analytics or telemetry, does not track which features you use or how, and does not access your microphone or webcam data beyond what's needed to run the features you've turned on, locally, in the moment. Nothing is sent to advertisers.</p>
 
         <h2>What the ryli.app website collects</h2>
-        <p>The website itself does not currently use any tracking or analytics scripts. If you submit an email address through a signup form on this site, that address is used only to contact you about RYLI (for example, a launch announcement) and is processed through our form provider, Formspree.</p>
+        <p>The website uses no third-party tracking or analytics scripts, sets no cookies, and never creates or reads a visitor ID or fingerprint. The one thing it does count: each page load sends a single anonymous signal to our own Cloudflare endpoint that increments a daily pageview total, so we can tell whether anyone is actually looking at the site. Nothing about who you are is recorded — no ID, no cookie, and no IP address is stored — so individual visits can't be told apart from each other or traced back to you. If you submit an email address through a signup form on this site, that address is used only to contact you about RYLI (for example, a launch announcement) and is processed through our form provider, Formspree.</p>
 
         <h2>Third parties we work with</h2>
         <ul>
-          <li><strong>Lemon Squeezy</strong> — handles subscription billing and license validation.</li>
+          <li><strong>Polar</strong> — handles subscription billing and license validation.</li>
+          <li><strong>jsDelivr</strong> — the public CDN that delivers Polar's checkout script used on this website; like any file your browser requests, it receives your IP address and browser type when the page loads.</li>
           <li><strong>GitHub</strong> — hosts app updates and optional Stream Store content.</li>
           <li><strong>Cloudflare</strong> — hosts this website and the anonymous usage-ping endpoint described above.</li>
           <li><strong>Anthropic / OpenAI</strong> — only if you personally connect your own API key for the optional research feature; your requests go directly to them using your own credentials.</li>
@@ -73,7 +74,7 @@
         <p>RYLI is not directed at children and isn't intended for use by anyone under 18. We don't knowingly collect information from children.</p>
 
         <h2>Your choices</h2>
-        <p>Since your show history lives on your own computer, you're always in control of it — you can view, back up, or delete it directly from your files at any time. To stop a Pro subscription or remove a license key, use Settings → About inside the app, or contact Lemon Squeezy directly for billing-related requests.</p>
+        <p>Since your show history lives on your own computer, you're always in control of it — you can view, back up, or delete it directly from your files at any time. To stop a Pro subscription, cancel through Polar's customer portal, linked in your checkout receipt email — that's also where billing requests go. To remove a license key from an install, use Settings → About inside the app; that releases the activation but doesn't cancel billing.</p>
 
         <h2>Changes to this policy</h2>
         <p>If we make material changes to this policy, we'll update the date at the top of this page. Continuing to use RYLI after a change means you accept the updated policy.</p>

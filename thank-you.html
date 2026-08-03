@@ -1,7 +1,7 @@
 <title>You're In — RYLI Pro</title>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta name="description" content="Thanks for subscribing to RYLI Pro — here's your license key and how to activate it." />
+<meta name="description" content="Thanks for subscribing to RYLI Pro — here's where to find your license key and how to activate it." />
 <meta name="robots" content="noindex" />
 <link rel="icon" type="image/x-icon" href="assets/favicon/favicon.ico" />
 <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png" />
@@ -36,31 +36,27 @@
     <div class="container">
       <span class="eyebrow-badge"><span class="dot"></span>You're In</span>
       <h1>Welcome to <span class="grad-text">RYLI Pro</span>.</h1>
-      <p class="thankyou__sub">Thanks for subscribing — here's your license key and the two steps to get it running.</p>
+      <p class="thankyou__sub">Thanks for subscribing — here's where to find your license key and the steps to get it running.</p>
 
       <div class="thankyou__grid">
         <div class="card thankyou__keycard">
-          <div class="thankyou__keylabel">Your license key</div>
-          <div class="thankyou__keybox" id="key-wrap">
-            <code id="license-key">—</code>
-            <button class="btn btn-outline" type="button" id="copy-key-btn">Copy</button>
-          </div>
-          <p class="thankyou__hint" id="key-fallback" hidden>We couldn't find your key in this link — no worries, it's also in the email receipt Lemon Squeezy just sent you.</p>
-          <p class="thankyou__hint">We also emailed this to you as a backup — worth saving it somewhere safe in case you switch computers.</p>
+          <div class="thankyou__keylabel">Find your license key</div>
+          <p class="thankyou__hint">Polar just emailed your receipt and license key to the address you checked out with — it usually lands within a minute or two.</p>
+          <p class="thankyou__hint">That same email includes a link to your Polar customer portal, where you can view or copy your key anytime, and manage or cancel your subscription.</p>
         </div>
 
         <div class="card thankyou__stepscard">
           <div class="thankyou__keylabel">Get it running</div>
           <ol class="thankyou__steps">
             <li><strong>Download RYLI</strong> — same installer as the free tier, just click below.</li>
-            <li><strong>Open Settings → License</strong> inside the app.</li>
-            <li><strong>Paste your key above and hit Activate.</strong> Pro unlocks instantly.</li>
+            <li><strong>Open Settings → About</strong> inside the app.</li>
+            <li><strong>Paste your key and hit Activate.</strong> Pro unlocks instantly.</li>
           </ol>
           <a class="btn btn-primary btn-block" href="https://github.com/ryanb898-png/ryli-releases/releases/latest/download/RYLI-Setup.exe">Download RYLI</a>
         </div>
       </div>
 
-      <p class="thankyou__support">Trouble with your key or the install? Email <a href="mailto:hello@ryli.app">hello@ryli.app</a> and we'll sort it out.</p>
+      <p class="thankyou__support">Can't find the email, or trouble with the install? Check spam, or email <a href="mailto:hello@ryli.app">hello@ryli.app</a> and we'll sort it out.</p>
     </div>
   </section>
 </main>
@@ -88,28 +84,3 @@
 </footer>
 
 <script src="script.js"></script>
-<script>
-  (function () {
-    var params = new URLSearchParams(window.location.search);
-    var key = (params.get('key') || '').trim();
-    var keyEl = document.getElementById('license-key');
-    var keyWrap = document.getElementById('key-wrap');
-    var fallback = document.getElementById('key-fallback');
-    var copyBtn = document.getElementById('copy-key-btn');
-
-    if (key) {
-      keyEl.textContent = key;
-    } else {
-      keyWrap.hidden = true;
-      fallback.hidden = false;
-    }
-
-    copyBtn.addEventListener('click', function () {
-      if (!key) return;
-      navigator.clipboard.writeText(key).then(function () {
-        copyBtn.textContent = 'Copied!';
-        setTimeout(function () { copyBtn.textContent = 'Copy'; }, 1800);
-      });
-    });
-  })();
-</script>
