@@ -36,6 +36,33 @@
  *                                    site's existing no-tracking privacy stance.
  */
 
+// Every `daily:` bucket is keyed to a calendar day in THIS timezone, not UTC.
+// Buckets were UTC until 2026-08-04, which meant the dashboard rolled over to
+// "tomorrow" at 8pm Eastern — an empty next-day row would appear while it was
+// still today, and an evening's activity landed on the following day's row.
+// Switched while the dataset was ~1 week old and tiny; the seam between the
+// old UTC days and these is negligible at that size and only gets more
+// expensive to fix later. Change this one constant to re-home the reporting
+// day; historical keys keep whatever boundary they were written under.
+const REPORT_TZ = 'America/New_York';
+
+// 'en-CA' formats as YYYY-MM-DD, which is what every KV key expects and what
+// sorts lexically (relied on by the range cutoff comparison in handleStats).
+// Intl handles DST on its own, so this stays correct across the spring/fall
+// changeover without any offset arithmetic here.
+function dayKey(date = new Date()) {
+  return date.toLocaleDateString('en-CA', { timeZone: REPORT_TZ });
+}
+
+// Walk back `n` calendar days from a YYYY-MM-DD string. Anchored at 12:00 UTC
+// rather than midnight so a DST shift can never bump the arithmetic across a
+// date boundary and duplicate or skip a day.
+function shiftDay(dayStr, n) {
+  const [y, m, d] = dayStr.split('-').map(Number);
+  const t = Date.UTC(y, m - 1, d, 12) + n * 86400000;
+  return new Date(t).toISOString().slice(0, 10);
+}
+
 async function handlePing(request, env) {
   if (request.method !== 'POST') return new Response('method not allowed', { status: 405 });
   let body;
@@ -51,7 +78,7 @@ async function handlePing(request, env) {
   }
   const isPro = !!body.isPro;
   const version = typeof body.version === 'string' ? body.version.slice(0, 32) : 'unknown';
-  const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD, UTC
+  const today = dayKey();
 
   const key = `install:${id}`;
   let existing = null;
@@ -108,7 +135,7 @@ async function handlePing(request, env) {
 // anyone actually looking at the site" without adding any real tracking.
 async function handleVisit(request, env) {
   if (request.method !== 'POST') return new Response('method not allowed', { status: 405 });
-  const today = new Date().toISOString().slice(0, 10);
+  const today = dayKey();
   const key = `daily:${today}:visits`;
   try {
     const raw = await env.USAGE_KV.get(key);
@@ -132,8 +159,48 @@ function renderStatsHtml(data, token) {
   const {
     rangeDays, pingsInRange, proPingsInRange, newInRange, visitsInRange,
     installsEverSeen, uniqueActiveInRange, uniqueActiveProInRange, versionBreakdown, perDay,
+    timezone, previous, retention,
   } = data;
   const freeInRange = pingsInRange - proPingsInRange;
+
+  // "vs previous period" chip. A jump from zero has no meaningful percentage,
+  // so say what actually happened instead of printing an infinity.
+  const delta = (now, before) => {
+    if (before === 0 && now === 0) return '<span class="d d--flat">no change</span>';
+    if (before === 0) return `<span class="d d--up">new this period</span>`;
+    const pct = Math.round(((now - before) / before) * 100);
+    if (pct === 0) return '<span class="d d--flat">flat</span>';
+    const cls = pct > 0 ? 'd--up' : 'd--down';
+    return `<span class="d ${cls}">${pct > 0 ? '▲' : '▼'} ${Math.abs(pct)}%</span>`;
+  };
+  const growthRows = [
+    ['Active days', pingsInRange, previous.pings, 'Days an install opened the app, summed. Same install on 3 days = 3.'],
+    ['New installs', newInRange, previous.newInstalls, 'Installs pinging for the very first time ever.'],
+    ['Pageviews', visitsInRange, previous.visits, 'Raw site pageviews — not unique visitors.'],
+  ].map(([label, now, before, note]) => `<tr>
+      <td>${escapeHtml(label)}<div class="note">${escapeHtml(note)}</div></td>
+      <td class="num">${now.toLocaleString()}</td>
+      <td class="num" style="color:#7c8aa8;">${before.toLocaleString()}</td>
+      <td>${delta(now, before)}</td>
+    </tr>`).join('');
+
+  const retTotal = retention.active7 + retention.active8to30 + retention.dormant + retention.unknown;
+  const retRow = (label, n, color, note) => {
+    const pct = retTotal > 0 ? Math.round((n / retTotal) * 100) : 0;
+    return `<tr>
+      <td><span class="dot" style="background:${color}"></span>${escapeHtml(label)}<div class="note">${escapeHtml(note)}</div></td>
+      <td class="num">${n.toLocaleString()}</td>
+      <td class="num" style="color:#7c8aa8;">${pct}%</td>
+    </tr>`;
+  };
+  const retentionRows = [
+    retRow('Still active', retention.active7, '#45e0a0', 'Opened the app in the last 7 days.'),
+    retRow('Drifting', retention.active8to30, '#f5c542', 'Last seen 8–30 days ago.'),
+    retRow('Gone quiet', retention.dormant, '#ff6b6b', "Nothing for 30+ days — installed, then stopped."),
+    retention.unknown > 0
+      ? retRow('Unknown', retention.unknown, '#556', 'Installed before this was tracked; will sort itself on their next launch.')
+      : '',
+  ].join('');
   const maxTotal = Math.max(1, ...perDay.map((d) => d.total));
   const dayLink = (n) => `/api/stats?token=${encodeURIComponent(token)}&days=${n}`;
 
@@ -207,6 +274,13 @@ function renderStatsHtml(data, token) {
   .dot.total { background: rgba(106,174,255,0.6); }
   .dot.pro { background: var(--purple); }
   .footer { color: #556; font-size: 12px; margin-top: 30px; text-align: center; }
+  .num { text-align: right; font-variant-numeric: tabular-nums; }
+  .note { color: #6f7b91; font-size: 11px; line-height: 1.45; margin-top: 3px; font-weight: 400; text-transform: none; letter-spacing: 0; }
+  .d { font-size: 11px; font-weight: 700; padding: 2px 7px; border-radius: 999px; white-space: nowrap; }
+  .d--up { color: #45e0a0; background: rgba(69,224,160,0.12); }
+  .d--down { color: #ff6b6b; background: rgba(255,107,107,0.12); }
+  .d--flat { color: #7c8aa8; background: rgba(124,138,168,0.12); }
+  .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 8px; vertical-align: middle; }
   .footer a { color: #667; }
   .hint { color: #556; font-size: 12px; margin-top: 14px; line-height: 1.5; }
   @media (prefers-color-scheme: light) {
@@ -253,14 +327,33 @@ function renderStatsHtml(data, token) {
   </div>
 
   <div class="panel">
-    <div class="panel__title" style="margin-bottom:16px;">By day</div>
+    <div class="panel__title" style="margin-bottom:6px;">Are people sticking around?</div>
+    <div class="note" style="margin-bottom:14px;">Every install that has ever run RYLI, grouped by how recently it last opened. This is the retention picture — the counts above can't show it.</div>
+    <table>
+      <thead><tr><th>Status</th><th class="num">Installs</th><th class="num">Share</th></tr></thead>
+      <tbody>${retentionRows || '<tr><td colspan="3" style="color:#556;">No installs yet</td></tr>'}</tbody>
+    </table>
+  </div>
+
+  <div class="panel">
+    <div class="panel__title" style="margin-bottom:6px;">Growth &mdash; last ${rangeDays}d vs the ${rangeDays}d before</div>
+    <div class="note" style="margin-bottom:14px;">Direction, not just a snapshot. Built from daily counters, so it compares like for like.</div>
+    <table>
+      <thead><tr><th>Measure</th><th class="num">This period</th><th class="num">Previous</th><th>Change</th></tr></thead>
+      <tbody>${growthRows}</tbody>
+    </table>
+  </div>
+
+  <div class="panel">
+    <div class="panel__title" style="margin-bottom:6px;">By day</div>
+    <div class="note" style="margin-bottom:14px;">Days run on ${escapeHtml(timezone)} time, so a day ends at your midnight &mdash; not UTC's.</div>
     <table>
       <thead><tr><th>Date</th><th>Total</th><th>Pro</th><th>Free</th><th>New</th><th>Pageviews</th></tr></thead>
       <tbody>${rows || '<tr><td colspan="6" style="color:#556;">No data yet</td></tr>'}</tbody>
     </table>
   </div>
 
-  <div class="footer">RYLI &middot; refreshes on every page load &middot; <a href="${dayLink(rangeDays)}&format=json">raw JSON</a></div>
+  <div class="footer">RYLI &middot; days in ${escapeHtml(timezone)} &middot; refreshes on every page load &middot; <a href="${dayLink(rangeDays)}&format=json">raw JSON</a></div>
 </div>
 </body></html>`;
 }
@@ -284,11 +377,18 @@ async function handleStats(request, env) {
   }
 
   const days = Math.max(1, Math.min(365, parseInt(url.searchParams.get('days') || '30', 10) || 30));
+  const todayKey = dayKey();
   const dayStrings = [];
-  for (let i = 0; i < days; i++) {
-    const d = new Date(Date.now() - i * 86400000);
-    dayStrings.push(d.toISOString().slice(0, 10));
-  }
+  for (let i = 0; i < days; i++) dayStrings.push(shiftDay(todayKey, -i));
+
+  // The equivalent window immediately before this one, for a like-for-like
+  // "vs previous period" comparison. Deliberately built from the same daily
+  // counters rather than from install metadata: an install stores only its
+  // LAST seen day, so a genuine unique-active count for a PAST window can't
+  // be reconstructed after the fact (anyone active in both windows now reads
+  // as current-only). Summed day counts are the honest comparable here.
+  const prevDayStrings = [];
+  for (let i = days; i < days * 2; i++) prevDayStrings.push(shiftDay(todayKey, -i));
 
   let periodTotal = 0;
   let periodPro = 0;
@@ -314,6 +414,20 @@ async function handleStats(request, env) {
   }
   perDay.reverse(); // oldest first
 
+  let prevTotal = 0;
+  let prevNew = 0;
+  let prevVisits = 0;
+  for (const day of prevDayStrings) {
+    const [t, n, v] = await Promise.all([
+      env.USAGE_KV.get(`daily:${day}:total`),
+      env.USAGE_KV.get(`daily:${day}:new`),
+      env.USAGE_KV.get(`daily:${day}:visits`),
+    ]);
+    prevTotal += parseInt(t || '0', 10);
+    prevNew += parseInt(n || '0', 10);
+    prevVisits += parseInt(v || '0', 10);
+  }
+
   // One list() sweep over every install:* key covers three things at once,
   // using the metadata each key already carries (see handlePing) — no
   // per-key GET needed even with many thousands of installs:
@@ -330,17 +444,31 @@ async function handleStats(request, env) {
   let uniqueActiveInRange = 0;
   let uniqueActiveProInRange = 0;
   const versionCounts = new Map();
+  // Retention, from the lastSeen each install already carries — no extra
+  // data collected, and it answers the question the raw counts above can't:
+  // are installs still running the app, or did they try it and stop? Bucket
+  // boundaries are fixed at 7/30 days regardless of the selected range, so
+  // the shape doesn't change meaning when you switch the range links.
+  const cutoff7 = shiftDay(todayKey, -6); // today plus the 6 before it
+  const cutoff30 = shiftDay(todayKey, -29);
+  let retActive7 = 0;
+  let retActive30 = 0; // active 8-30 days ago (drifting), NOT cumulative
+  let retDormant = 0; // nothing for 30+ days
+  let retUnknown = 0; // pre-metadata installs; can't be placed, counted honestly
   let cursor;
   do {
     const page = await env.USAGE_KV.list({ prefix: 'install:', cursor });
     for (const k of page.keys) {
       installsEverSeen++;
       const meta = k.metadata;
-      if (!meta) continue; // installs written before this metadata field existed — harmless, just excluded from the two breakdowns below until they ping again
+      if (!meta) { retUnknown++; continue; } // installs written before this metadata field existed — harmless, just excluded from the breakdowns below until they ping again
       if (meta.lastSeen >= cutoff) {
         uniqueActiveInRange++;
         if (meta.isPro) uniqueActiveProInRange++;
       }
+      if (meta.lastSeen >= cutoff7) retActive7++;
+      else if (meta.lastSeen >= cutoff30) retActive30++;
+      else retDormant++;
       const v = meta.version || 'unknown';
       versionCounts.set(v, (versionCounts.get(v) || 0) + 1);
     }
@@ -361,6 +489,9 @@ async function handleStats(request, env) {
     uniqueActiveProInRange,
     versionBreakdown,
     perDay,
+    timezone: REPORT_TZ,
+    previous: { pings: prevTotal, newInstalls: prevNew, visits: prevVisits },
+    retention: { active7: retActive7, active8to30: retActive30, dormant: retDormant, unknown: retUnknown },
   };
 
   if (url.searchParams.get('format') === 'json') {
