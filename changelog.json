@@ -1,5 +1,13 @@
 [
   {
+    "version": "1.0.19",
+    "date": "2026-08-06",
+    "highlights": [
+      "The ticker rail is bigger and easier to read at a glance, and the little diamond between messages now sits properly centred instead of riding high.",
+      "You can now read every release RYLI has ever shipped: there is a “What’s new” link beside the version in Settings → About, and a “See all changes” link in this popup."
+    ]
+  },
+  {
     "version": "1.0.18",
     "date": "2026-08-06",
     "highlights": [
