@@ -1,5 +1,14 @@
 [
   {
+    "version": "1.0.20",
+    "date": "2026-08-06",
+    "highlights": [
+      "Fixed: Ryli’s voice and your sound effects could go silent until you refreshed the overlay in OBS. RYLI now repairs its own audio whenever it reconnects, so restarting RYLI with OBS left open just works.",
+      "Fixed: you can finally hear sound in the browser window RYLI opens. It was being launched muted by mistake, which is why shows you were watching — and anything else in that window — were silent. Your own show still starts muted, the way Whatnot does it, so nothing echoes back to your viewers.",
+      "Auto-start auctions is a little more robust: the piece that captures your auction settings now re-arms on the same schedule as everything else."
+    ]
+  },
+  {
     "version": "1.0.19",
     "date": "2026-08-06",
     "highlights": [
