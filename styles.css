@@ -907,3 +907,88 @@ section { padding: 96px 0; position: relative; }
 @media (max-width: 720px) {
   .guide-step-section { padding: 36px 0; }
 }
+
+/* ── Changelog page ─────────────────────────────────────────────────────
+   Reuses .legal's page chrome (container + vertical rhythm); everything
+   below is specific to the release list. Rendered client-side from
+   changelog.json — the same file the desktop app ships. */
+.changelog__intro { max-width: 620px; }
+.changelog__list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 34px;
+}
+.changelog__loading { color: var(--ink-dim); }
+.changelog__entry {
+  background: var(--slate-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 22px 24px;
+}
+/* The newest release is what most visitors came for — lift it with the
+   brand gradient edge rather than a different card colour, matching the
+   treatment already used on the Insights hero inside the app. */
+.changelog__entry.is-latest {
+  border-color: var(--line-hot);
+  position: relative;
+  overflow: hidden;
+}
+.changelog__entry.is-latest::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 2px;
+  background: var(--gradient);
+}
+.changelog__meta {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.changelog__version {
+  font-family: var(--display);
+  font-size: 1.55rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  margin: 0;
+  color: var(--white);
+}
+.changelog__badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 999px;
+  color: var(--slate);
+  background: var(--gradient);
+}
+.changelog__date {
+  font-size: 0.85rem;
+  color: var(--ink-faint);
+  margin-left: auto;
+}
+.changelog__items {
+  margin: 0;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+.changelog__items li {
+  color: var(--ink-dim);
+  line-height: 1.6;
+}
+.changelog__items li::marker { color: var(--blue); }
+.changelog__footnote {
+  margin-top: 34px;
+  color: var(--ink-faint);
+  font-size: 0.9rem;
+}
+@media (max-width: 560px) {
+  .changelog__entry { padding: 18px 16px; }
+  .changelog__date { margin-left: 0; width: 100%; }
+}

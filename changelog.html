@@ -1,0 +1,140 @@
+<title>Changelog — RYLI</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Every RYLI release, what changed in it, and when it shipped." />
+<link rel="icon" type="image/x-icon" href="assets/favicon/favicon.ico" />
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png" />
+<link rel="apple-touch-icon" href="assets/favicon/apple-touch-icon.png" />
+<link rel="manifest" href="assets/favicon/site.webmanifest" />
+<meta name="theme-color" content="#0D1117" />
+<link rel="stylesheet" href="styles.css" />
+
+<header class="nav">
+  <div class="nav__inner">
+    <a class="nav__brand" href="index.html#top">
+      <img src="assets/images/ryliring.png" alt="RYLI" />
+      <span>RYLI</span>
+    </a>
+    <nav class="nav__links">
+      <a href="index.html#features">Features</a>
+      <a href="index.html#how-it-works">How It Works</a>
+      <a href="index.html#themes">Themes</a>
+      <a href="index.html#pricing">Pricing</a>
+      <a href="index.html#faq">FAQ</a>
+    </nav>
+    <div class="nav__cta">
+      <a class="btn btn-primary" href="index.html#pricing">Download Now</a>
+    </div>
+    <button class="nav__toggle" aria-label="Toggle menu">☰</button>
+  </div>
+</header>
+
+<main class="legal changelog">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow-badge"><span class="dot"></span>Changelog</span>
+      <h1>What's <span class="grad-text">changed.</span></h1>
+      <p class="changelog__intro">
+        Every RYLI release, newest first. RYLI updates itself automatically —
+        you'll see a short summary in the app the next time you open it after
+        an update lands.
+      </p>
+    </div>
+
+    <!-- Rendered from changelog.json, which is the SAME file the desktop app
+         ships and reads for its in-app "What's New" popup. Keeping one
+         authored source means the site can never quietly disagree with the
+         app about what a release contained. -->
+    <div id="changelog-list" class="changelog__list">
+      <p class="changelog__loading">Loading releases…</p>
+    </div>
+
+    <p class="changelog__footnote">
+      Running an older build? RYLI checks for updates on launch, or you can
+      check now from <strong>Settings → About</strong> inside the app.
+      <a href="https://github.com/ryanb898-png/ryli-releases/releases/latest/download/RYLI-Setup.exe">Download the latest installer</a>.
+    </p>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer__top">
+      <div>
+        <div class="footer__brand">
+          <img src="assets/images/ryliring.png" alt="RYLI" />
+          <span>RYLI</span>
+        </div>
+        <p class="footer__tagline">Run your live intelligently.</p>
+      </div>
+      <div class="footer__links">
+        <a href="index.html#features">Features</a>
+        <a href="index.html#pricing">Pricing</a>
+        <a href="changelog.html">Changelog</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="mailto:hello@ryli.app">Contact</a>
+      </div>
+    </div>
+    <div class="footer__bottom">© 2026 RYLI. Built for the people behind the stream.</div>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var list = document.getElementById('changelog-list');
+
+    function esc(s) {
+      return String(s).replace(/[&<>"]/g, function (c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+      });
+    }
+
+    // Dates in changelog.json are plain YYYY-MM-DD. Parsing that with the
+    // Date constructor treats it as UTC midnight, which renders as the
+    // PREVIOUS day for anyone west of Greenwich — so split the parts and
+    // build a local date instead.
+    function prettyDate(iso) {
+      var p = String(iso).split('-');
+      if (p.length !== 3) return esc(iso);
+      var d = new Date(+p[0], +p[1] - 1, +p[2]);
+      if (isNaN(d)) return esc(iso);
+      return d.toLocaleDateString(undefined, {
+        year: 'numeric', month: 'long', day: 'numeric',
+      });
+    }
+
+    fetch('changelog.json', { cache: 'no-cache' })
+      .then(function (r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      })
+      .then(function (entries) {
+        if (!Array.isArray(entries) || !entries.length) throw new Error('empty');
+        list.innerHTML = entries.map(function (e, i) {
+          var items = (e.highlights || []).map(function (h) {
+            return '<li>' + esc(h) + '</li>';
+          }).join('');
+          return '<article class="changelog__entry' + (i === 0 ? ' is-latest' : '') + '">' +
+            '<div class="changelog__meta">' +
+              '<h2 class="changelog__version">' + esc(e.version) + '</h2>' +
+              (i === 0 ? '<span class="changelog__badge">Latest</span>' : '') +
+              '<time class="changelog__date" datetime="' + esc(e.date) + '">' +
+                prettyDate(e.date) +
+              '</time>' +
+            '</div>' +
+            '<ul class="changelog__items">' + items + '</ul>' +
+          '</article>';
+        }).join('');
+      })
+      .catch(function () {
+        // Never leave a bare spinner on screen — give a real way forward.
+        list.innerHTML = '<p class="changelog__loading">' +
+          "Couldn't load the release list right now. " +
+          '<a href="https://github.com/ryanb898-png/ryli-releases/releases">' +
+          'View releases on GitHub</a>.</p>';
+      });
+  })();
+</script>
+<script src="script.js"></script>

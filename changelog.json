@@ -1,0 +1,103 @@
+[
+  {
+    "version": "1.0.18",
+    "date": "2026-08-06",
+    "highlights": [
+      "Your camera in the jumbotron is now FREE for everyone. It used to be a Pro feature — it isn't any more, on any plan. Turn it on in Settings → Appearance & FX.",
+      "Fixed the ad-banner size guidance. The slot is 2.94:1, so 1468 x 500 px fills it edge to edge — the old advice (1000 x 360) always left a small gap down each side.",
+      "The built-in RYLI Pro banner has been replaced with one that actually fits the slot properly."
+    ]
+  },
+  {
+    "version": "1.0.17",
+    "date": "2026-08-06",
+    "highlights": [
+      "New: Ryli Companion — a small control panel Ryli paints right into your Whatnot window. See at a glance what's running and flip things on or off without looking away from your show. Drag it anywhere, or shrink it to the orb. Only you can see it; viewers never do.",
+      "New: auto-start auctions (Pro). Ryli re-runs your listing after each sale so you're not clicking between every lot. She stops herself and says so out loud if a lot gets no bids.",
+      "Ryli can now tell you out loud when auto-auctions or auto-giveaways turn on or off, so you never have to check the app mid-show.",
+      "Offer alerts no longer read the dollar amount out loud — you get told an offer came in and on what, and the figure stays on your screen.",
+      "Fixed: on Windows, Ctrl+Alt is AltGr and such hotkeys silently never fire even though they save. Settings now warns you and suggests a function key instead.",
+      "Fixed: the overlay and Moment Zone now ship pre-positioned and locked, so they land in the right spot on a fresh install.",
+      "Plus a batch of fixes from a full pre-release audit — including mute buttons that needed two presses, notes showing the oldest entries instead of the newest, and several hotkeys that could not be cleared."
+    ]
+  },
+  {
+    "version": "1.0.16",
+    "date": "2026-08-04",
+    "highlights": [
+      "New Stream Store item: BRB Retro Screensaver — a transparent, bouncing \"Be Right Back\" sign for stepping away without ending your show.",
+      "The \"New\" badge on the Stream Store is now a gold pill that actually says how many items are waiting, instead of a plain dot.",
+      "The Stream Store's \"All\" view now mixes overlays and Stream Deck icons together, so you can see everything on offer at a glance instead of one type at a time."
+    ]
+  },
+  {
+    "version": "1.0.15",
+    "date": "2026-08-04",
+    "highlights": [
+      "New items in the Stream Store now show a badge on your dashboard and in Settings, so you'll know when something's been added without having to go look.",
+      "An update banner now appears on your dashboard when a new version of RYLI is ready. You can dismiss it — it stays available in Settings → About until you update.",
+      "Settings → About now tells you when an update is still downloading, instead of showing nothing until it finished."
+    ]
+  },
+  {
+    "version": "1.0.14",
+    "date": "2026-08-04",
+    "highlights": [
+      "Giveaway auto-restart now works. RYLI opens the next round on her own after a winner is drawn — confirmed live on a real show.",
+      "New: offer alerts. Ryli can tell you out loud when a viewer makes an offer on a shop listing, so you notice it mid-auction instead of finding it later. Off by default — turn it on in Settings → Configure Ryli.",
+      "Big speed improvement on busy shows: fixed a slowdown that got worse the more chat and reactions came in — exactly during bid wars and emote storms. Message handling is now about 11x faster and uses a third of the memory.",
+      "Auto Chat is more reliable — it now finds your live show correctly even with several Whatnot tabs open.",
+      "Verified compatible with OBS Studio 32.2."
+    ]
+  },
+  {
+    "version": "1.0.13",
+    "date": "2026-08-04",
+    "highlights": [
+      "Insights page: one clean sales chart that now shows whether you're trending up or down, in both the all-time and date-filtered views.",
+      "Settings toggles got a real on/off switch look, and dropdown menus now highlight in RYLI blue instead of an odd orange.",
+      "Fixed a rare license-check timing issue that could momentarily show Pro as off right after switching license keys.",
+      "Fixed a case where a voice note taken right as you closed RYLI could be lost.",
+      "Various under-the-hood reliability fixes."
+    ]
+  },
+  {
+    "version": "1.0.12",
+    "date": "2026-07-25",
+    "highlights": [
+      "New: Auto Chat (Pro) — have Ryli post a reminder message to your live chat on a hotkey press, an automatic timer (5–60 min presets), or both. Optionally have her say it out loud too. Find it in Settings → Configure Ryli → Talk and listen.",
+      "Fixed: Ryli's voice could occasionally overlap with another announcement playing at the same time — she now always waits her turn, and other announcements now correctly wait for her to finish instead of talking over her.",
+      "Fixed: pressing Ryli's hotkey right after an announcement could look like it did nothing — it now always works.",
+      "Various under-the-hood reliability fixes for hotkeys, timers, and overlay performance."
+    ]
+  },
+  {
+    "version": "1.0.11",
+    "date": "2026-07-24",
+    "highlights": [
+      "Fixed an important bug: if you left RYLI running and went live again without restarting the app, tracking could get stuck paused for the entire next show — no bids, chat, wins, or voice reacting at all. RYLI now always re-confirms your show correctly, even across multiple streams without a restart."
+    ]
+  },
+  {
+    "version": "1.0.10",
+    "date": "2026-07-24",
+    "highlights": [
+      "RYLI now lets you know it's still running in the tray after you close the window, with a \"don't show this again\" option.",
+      "Fixed: \"Go Live\" could silently fail to open Chrome on some Windows setups — it now finds Chrome more reliably and tells you clearly if it can't, instead of doing nothing.",
+      "New: Ticker Rail (Pro) — an optional scrolling stat/text band attached to the top or bottom of your overlay.",
+      "Clearer upgrade paths throughout the app — locked Pro features now show a real \"Upgrade to Pro\" link instead of just not working.",
+      "Various data-accuracy, stability, and performance fixes under the hood."
+    ]
+  },
+  {
+    "version": "1.0.9",
+    "date": "2026-07-22",
+    "highlights": [
+      "New: ThermalFlow (Pro) — print a label to a USB label printer the instant a lot sells.",
+      "The free trial is now 10 days.",
+      "RYLI now lives in your system tray — closing the window hides it instead of quitting, so an accidental click can't drop your overlay/OBS connection mid-show.",
+      "Fixed: a real tip now shows and announces as a tip instead of a generic shop purchase.",
+      "Various print-quality, performance, and stability fixes."
+    ]
+  }
+]
