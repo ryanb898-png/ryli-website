@@ -1,5 +1,13 @@
 [
   {
+    "version": "1.0.21",
+    "date": "2026-08-06",
+    "highlights": [
+      "The overlay in OBS now notices when RYLI has been updated and refreshes itself, once. Before this, OBS kept running the old overlay for as long as it stayed open — so fixes we shipped were invisible until you refreshed the layer by hand, with nothing to tell you that was the problem.",
+      "It only refreshes when the overlay files have genuinely changed. A normal RYLI restart leaves your overlay exactly as it is."
+    ]
+  },
+  {
     "version": "1.0.20",
     "date": "2026-08-06",
     "highlights": [
