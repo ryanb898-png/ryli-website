@@ -36,6 +36,8 @@
  *                                    site's existing no-tracking privacy stance.
  */
 
+import US_PATHS from './us-paths.js';
+
 // Every `daily:` bucket is keyed to a calendar day in THIS timezone, not UTC.
 // Buckets were UTC until 2026-08-04, which meant the dashboard rolled over to
 // "tomorrow" at 8pm Eastern — an empty next-day row would appear while it was
@@ -61,6 +63,46 @@ function shiftDay(dayStr, n) {
   const [y, m, d] = dayStr.split('-').map(Number);
   const t = Date.UTC(y, m - 1, d, 12) + n * 86400000;
   return new Date(t).toISOString().slice(0, 10);
+}
+
+// Coarse location for the growth map, read off Cloudflare's own `request.cf`.
+// Two things worth being precise about, because they are the whole privacy
+// story:
+//
+//   1. We never see, store, or log an IP address. Cloudflare resolves the
+//      geography at their edge — they already terminate the connection to
+//      serve this site — and hands us the answer. Nothing is collected from
+//      the visitor that wasn't already flowing through.
+//   2. STATE level, deliberately — never city, never coordinates, even though
+//      `request.cf` offers both. Paired with a persistent install id, a city
+//      (or a small town) gets close to identifying one specific seller. A
+//      state is the resolution the map actually colours, so finer data would
+//      be held for no benefit. Don't "improve" this.
+//
+// Returns 'US-CT' style for the US, a bare country code elsewhere, and
+// 'unknown' when Cloudflare has no answer (local dev, some VPNs, bots).
+function geoKey(request) {
+  const cf = request.cf || {};
+  const country = typeof cf.country === 'string' ? cf.country.toUpperCase() : '';
+  if (!/^[A-Z]{2}$/.test(country)) return 'unknown';
+  if (country !== 'US') return country;
+  const region = typeof cf.regionCode === 'string' ? cf.regionCode.toUpperCase() : '';
+  return /^[A-Z]{2}$/.test(region) ? `US-${region}` : 'US';
+}
+
+// KV has no atomic increment, so this is a read-modify-write and two requests
+// landing together can lose a count. Accepted deliberately: every other
+// counter in this file works the same way, the map is a morale readout rather
+// than billing, and the alternative (Durable Objects) is real infrastructure
+// for a rounding error at this scale.
+async function bumpGeo(env, kind, key) {
+  const k = `geo:${kind}:${key}`;
+  try {
+    const raw = await env.USAGE_KV.get(k);
+    await env.USAGE_KV.put(k, String(parseInt(raw || '0', 10) + 1));
+  } catch {
+    // A missed map pixel must never fail the request it rode in on.
+  }
 }
 
 async function handlePing(request, env) {
@@ -97,8 +139,21 @@ async function handlePing(request, env) {
   // across many thousands of installs. Keep this in sync with the value
   // body above; they're the same three fields, just also mirrored where
   // list() can see them without fetching each value.
-  await env.USAGE_KV.put(key, JSON.stringify({ lastSeen: today, isPro, version }), {
-    metadata: { lastSeen: today, isPro, version },
+  // Count an install's location the first time we ever LEARN it, not the
+  // first time we see the install. Those differ: every install that existed
+  // before the map shipped already has a record with no `geo`, and keying
+  // off isBrandNewInstall would mean none of them ever appear. This way they
+  // backfill themselves on their next daily ping.
+  const geo = geoKey(request);
+  const geoIsNew = !existing || !existing.geo;
+  if (geoIsNew) await bumpGeo(env, 'install', geo);
+  // Keep the previously-recorded geo once known, so an install that pings
+  // from a coffee shop one day doesn't hop across the map. First location
+  // wins — this is "where our hosts are", not "where they are today".
+  const geoStored = (existing && existing.geo) || geo;
+
+  await env.USAGE_KV.put(key, JSON.stringify({ lastSeen: today, isPro, version, geo: geoStored }), {
+    metadata: { lastSeen: today, isPro, version, geo: geoStored },
   });
 
   // Only bump the daily aggregates the FIRST time this install is seen on a
@@ -143,6 +198,11 @@ async function handleVisit(request, env) {
   } catch {
     // Never fail the page load over a missed count.
   }
+  // Same coarse geography as the install ping, on the same terms — see
+  // geoKey(). Every pageview counts here, not unique visitors, because
+  // that's what this beacon has always measured and inventing a visitor id
+  // to de-dupe would be exactly the tracking this site promises not to do.
+  await bumpGeo(env, 'visit', geoKey(request));
   return new Response(null, { status: 204 });
 }
 
@@ -155,6 +215,66 @@ function escapeHtml(str) {
 // the whole page is already gated behind it in the URL either way — this
 // changes presentation, not the trust model. Raw JSON is still available via
 // &format=json for anything that wants to script against it later.
+const STATE_NAMES = { AL:'Alabama',AK:'Alaska',AZ:'Arizona',AR:'Arkansas',CA:'California',CO:'Colorado',CT:'Connecticut',DE:'Delaware',DC:'Washington DC',FL:'Florida',GA:'Georgia',HI:'Hawaii',ID:'Idaho',IL:'Illinois',IN:'Indiana',IA:'Iowa',KS:'Kansas',KY:'Kentucky',LA:'Louisiana',ME:'Maine',MD:'Maryland',MA:'Massachusetts',MI:'Michigan',MN:'Minnesota',MS:'Mississippi',MO:'Missouri',MT:'Montana',NE:'Nebraska',NV:'Nevada',NH:'New Hampshire',NJ:'New Jersey',NM:'New Mexico',NY:'New York',NC:'North Carolina',ND:'North Dakota',OH:'Ohio',OK:'Oklahoma',OR:'Oregon',PA:'Pennsylvania',RI:'Rhode Island',SC:'South Carolina',SD:'South Dakota',TN:'Tennessee',TX:'Texas',UT:'Utah',VT:'Vermont',VA:'Virginia',WA:'Washington',WV:'West Virginia',WI:'Wisconsin',WY:'Wyoming' };
+
+// The map. Two visual channels rather than one blended heat value: install
+// density is the FILL, website visits are the glowing OUTLINE. They measure
+// different things (people running the app vs people looking at the site) and
+// averaging them into a single colour would say nothing true about either.
+function renderGeoPanel(geo) {
+  const installs = {};
+  const visits = {};
+  const countries = {};
+  for (const [k, n] of Object.entries((geo && geo.install) || {})) {
+    if (k.startsWith('US-')) installs[k.slice(3)] = n;
+    else if (k !== 'unknown') countries[k] = (countries[k] || 0) + n;
+  }
+  for (const [k, n] of Object.entries((geo && geo.visit) || {})) {
+    if (k.startsWith('US-')) visits[k.slice(3)] = n;
+  }
+
+  const maxI = Math.max(1, ...Object.values(installs));
+  const maxV = Math.max(1, ...Object.values(visits));
+
+  const paths = Object.entries(US_PATHS).map(([ab, d]) => {
+    const i = installs[ab] || 0;
+    const v = visits[ab] || 0;
+    // Floor the fill at 0.3 so a state with a single install still reads as
+    // lit rather than as indistinguishable from empty.
+    const t = i ? (0.3 + 0.7 * (i / maxI)).toFixed(3) : 0;
+    const w = v ? (1 + 1.8 * (v / maxV)).toFixed(2) : 0;
+    const cls = ['us'].concat(i ? 'us--i' : [], v ? 'us--v' : []).join(' ');
+    const name = STATE_NAMES[ab] || ab;
+    const tip = `${name} \u2014 ${i} install${i === 1 ? '' : 's'}, ${v} site visit${v === 1 ? '' : 's'}`;
+    return `<path class="${cls}" d="${d}" style="--t:${t};--w:${w}"><title>${escapeHtml(tip)}</title></path>`;
+  }).join('');
+
+  const usTotal = Object.values(installs).reduce((a, b) => a + b, 0);
+  const intlTotal = Object.values(countries).reduce((a, b) => a + b, 0);
+  const chips = Object.entries(countries).sort((a, b) => b[1] - a[1])
+    .map(([c, n]) => `<span class="geo-chip"><b>${escapeHtml(c)}</b>${n}</span>`).join('');
+  const countryCount = Object.keys(countries).length + (usTotal ? 1 : 0);
+
+  return `<div class="panel">
+    <div class="panel__head">
+      <div class="panel__title">Where RYLI is running</div>
+      <div class="geo-toggle"><button data-geo="both" class="active">Both</button><button data-geo="installs">Installs</button><button data-geo="visits">Site visits</button></div>
+    </div>
+    <div class="geo-stats"><span><b class="blue">${(usTotal + intlTotal).toLocaleString()}</b>installs mapped</span><span><b class="blue">${Object.keys(installs).length}</b>states</span><span><b class="purple">${countryCount}</b>countries</span></div>
+    <div class="geo-map" data-mode="both"><svg viewBox="0 0 960 600" role="img" aria-label="Map of the United States shaded by RYLI install count per state">
+      <defs>
+        <radialGradient id="geobg" cx="50%" cy="45%" r="60%"><stop offset="0%" stop-color="#6AAEFF" stop-opacity=".10"/><stop offset="100%" stop-color="#6AAEFF" stop-opacity="0"/></radialGradient>
+        <filter id="geoglow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      </defs>
+      <rect width="960" height="600" fill="url(#geobg)"/>
+      <g>${paths}</g>
+    </svg></div>
+    <div class="geo-legend"><span><i class="geo-sw geo-sw--i"></i>Installs &mdash; brighter means more</span><span><i class="geo-sw geo-sw--v"></i>Website visits</span></div>
+    ${chips ? `<div class="geo-intl"><div class="geo-intl__h">Outside the US</div>${chips}</div>` : ''}
+    <div class="note" style="margin-top:14px;">Location comes from Cloudflare's edge at request time &mdash; country and state only, never a city, coordinate, or IP address. An install's location is recorded once, on first sight.</div>
+  </div>`;
+}
+
 function renderStatsHtml(data, token) {
   const {
     rangeDays, pingsInRange, proPingsInRange, newInRange, visitsInRange,
@@ -283,11 +403,39 @@ function renderStatsHtml(data, token) {
   .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 8px; vertical-align: middle; }
   .footer a { color: #667; }
   .hint { color: #556; font-size: 12px; margin-top: 14px; line-height: 1.5; }
+  .panel__head { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  .geo-stats { display: flex; gap: 24px; flex-wrap: wrap; font-size: 13px; color: #8b95a8; margin: 10px 0 12px; }
+  .geo-stats b { font-size: 21px; font-weight: 700; margin-right: 7px; }
+  .geo-map { border-radius: 10px; overflow: hidden; }
+  .geo-map svg { width: 100%; height: auto; display: block; }
+  .us { fill: #141b28; stroke: #26314a; stroke-width: .7; transition: fill .3s, stroke .3s, stroke-width .3s; }
+  .us--i { fill: rgba(106,174,255,var(--t)); stroke: rgba(150,200,255,.9); stroke-width: .8; filter: url(#geoglow); }
+  .us--v { stroke: #B388FF; stroke-width: var(--w); stroke-opacity: .95; }
+  .us--i.us--v { stroke: #d3bcff; }
+  .us:hover { fill: #7DE7FF; stroke: #fff; stroke-width: 1.5; }
+  .geo-map[data-mode="installs"] .us--v:not(.us--i) { stroke: #26314a; stroke-width: .7; }
+  .geo-map[data-mode="installs"] .us--i.us--v { stroke: rgba(150,200,255,.9); stroke-width: .8; }
+  .geo-map[data-mode="visits"] .us--i { fill: #141b28; filter: none; }
+  .geo-map[data-mode="visits"] .us--i:not(.us--v) { stroke: #26314a; stroke-width: .7; }
+  .geo-map[data-mode="visits"] .us--i.us--v { stroke: #B388FF; }
+  .geo-toggle button { background: none; border: 1px solid rgba(255,255,255,0.1); color: #8b95a8; font: inherit; font-size: 12px; padding: 4px 10px; border-radius: 6px; margin-left: 6px; cursor: pointer; }
+  .geo-toggle button.active { color: #6AAEFF; border-color: #6AAEFF; }
+  .geo-legend { display: flex; gap: 18px; flex-wrap: wrap; font-size: 12px; color: #8b95a8; margin-top: 10px; }
+  .geo-sw { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 7px; vertical-align: middle; }
+  .geo-sw--i { background: rgba(106,174,255,.95); box-shadow: 0 0 9px rgba(106,174,255,.75); }
+  .geo-sw--v { background: transparent; border: 2px solid #B388FF; }
+  .geo-intl { margin-top: 16px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.06); }
+  .geo-intl__h { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: #8b95a8; margin-bottom: 10px; }
+  .geo-chip { display: inline-block; font-size: 12px; color: #c8d2e4; background: rgba(179,136,255,0.12); border: 1px solid rgba(179,136,255,0.25); border-radius: 999px; padding: 4px 10px; margin: 0 6px 6px 0; }
+  .geo-chip b { color: #B388FF; margin-right: 6px; }
   @media (prefers-color-scheme: light) {
     body { background: radial-gradient(ellipse at top, #eef2fb 0%, #fff 60%); color: #0D1117; }
     .card, .panel { background: rgba(0,0,0,0.03); border-color: rgba(0,0,0,0.08); }
     .sub, .card__label, th { color: #5b6472; }
     .hint { color: #7b8492; }
+    .us { fill: #e7ecf6; stroke: #c3ccdd; }
+    .us--i { fill: rgba(46,111,224,var(--t)); stroke: rgba(46,111,224,.9); }
+    .geo-stats, .geo-legend, .geo-intl__h { color: #5b6472; }
   }
 </style>
 </head><body>
@@ -335,6 +483,8 @@ function renderStatsHtml(data, token) {
     </table>
   </div>
 
+  ${renderGeoPanel(data.geo)}
+
   <div class="panel">
     <div class="panel__title" style="margin-bottom:6px;">Growth &mdash; last ${rangeDays}d vs the ${rangeDays}d before</div>
     <div class="note" style="margin-bottom:14px;">Direction, not just a snapshot. Built from daily counters, so it compares like for like.</div>
@@ -355,6 +505,15 @@ function renderStatsHtml(data, token) {
 
   <div class="footer">RYLI &middot; days in ${escapeHtml(timezone)} &middot; refreshes on every page load &middot; <a href="${dayLink(rangeDays)}&format=json">raw JSON</a></div>
 </div>
+<script>
+document.querySelectorAll('.geo-toggle button').forEach(function (b) {
+  b.addEventListener('click', function () {
+    document.querySelectorAll('.geo-toggle button').forEach(function (x) { x.classList.remove('active'); });
+    b.classList.add('active');
+    document.querySelector('.geo-map').dataset.mode = b.dataset.geo;
+  });
+});
+<\/script>
 </body></html>`;
 }
 
@@ -478,7 +637,39 @@ async function handleStats(request, env) {
     .sort((a, b) => b[1] - a[1])
     .map(([version, count]) => ({ version, count }));
 
+  // Geography. One list() sweep over the `geo:` prefix rather than a GET per
+  // state — 50 states plus countries plus two kinds would otherwise be ~100
+  // round trips on every dashboard load. The counts live in the values, so
+  // this does need the GETs, but only for keys that actually exist (a state
+  // nobody has installed from is simply absent, not zero).
+  const geo = { install: {}, visit: {} };
+  try {
+    let cursor;
+    const geoKeys = [];
+    do {
+      const page = await env.USAGE_KV.list({ prefix: 'geo:', cursor });
+      geoKeys.push(...page.keys.map((k) => k.name));
+      cursor = page.list_complete ? null : page.cursor;
+    } while (cursor);
+    await Promise.all(geoKeys.map(async (name) => {
+      // geo:<kind>:<region> — region can itself contain a dash (US-CT), so
+      // split on the first two colons only.
+      const rest = name.slice('geo:'.length);
+      const sep = rest.indexOf(':');
+      if (sep < 0) return;
+      const kind = rest.slice(0, sep);
+      const region = rest.slice(sep + 1);
+      if (kind !== 'install' && kind !== 'visit') return;
+      const raw = await env.USAGE_KV.get(name);
+      const n = parseInt(raw || '0', 10);
+      if (n > 0) geo[kind][region] = n;
+    }));
+  } catch {
+    // A map that can't load must not take the whole dashboard down with it.
+  }
+
   const data = {
+    geo,
     rangeDays: days,
     pingsInRange: periodTotal, // sum of unique-installs-seen-per-day, not de-duped across days — see uniqueActiveInRange for the real figure
     proPingsInRange: periodPro,
