@@ -1,5 +1,13 @@
 [
   {
+    "version": "1.0.24",
+    "date": "2026-08-07",
+    "highlights": [
+      "Fixed: the ticker speed setting did nothing in Flip mode — every message held for the same five seconds no matter what you picked. It now sets the hold time too, from about 8 seconds on Very slow down to 3 on Very fast.",
+      "Clearer labels on the ticker mode picker, which used to promise a fixed speed the speed setting contradicted."
+    ]
+  },
+  {
     "version": "1.0.23",
     "date": "2026-08-07",
     "highlights": [
