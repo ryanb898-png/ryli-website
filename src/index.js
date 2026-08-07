@@ -408,15 +408,15 @@ function renderStatsHtml(data, token) {
   .geo-stats b { font-size: 21px; font-weight: 700; margin-right: 7px; }
   .geo-map { border-radius: 10px; overflow: hidden; }
   .geo-map svg { width: 100%; height: auto; display: block; }
-  .us { fill: #141b28; stroke: #26314a; stroke-width: .7; transition: fill .3s, stroke .3s, stroke-width .3s; }
+  .us { fill: #1c2536; stroke: #38445f; stroke-width: .7; transition: fill .3s, stroke .3s, stroke-width .3s; }
   .us--i { fill: rgba(106,174,255,var(--t)); stroke: rgba(150,200,255,.9); stroke-width: .8; filter: url(#geoglow); }
   .us--v { stroke: #B388FF; stroke-width: var(--w); stroke-opacity: .95; }
   .us--i.us--v { stroke: #d3bcff; }
   .us:hover { fill: #7DE7FF; stroke: #fff; stroke-width: 1.5; }
-  .geo-map[data-mode="installs"] .us--v:not(.us--i) { stroke: #26314a; stroke-width: .7; }
+  .geo-map[data-mode="installs"] .us--v:not(.us--i) { stroke: #38445f; stroke-width: .7; }
   .geo-map[data-mode="installs"] .us--i.us--v { stroke: rgba(150,200,255,.9); stroke-width: .8; }
-  .geo-map[data-mode="visits"] .us--i { fill: #141b28; filter: none; }
-  .geo-map[data-mode="visits"] .us--i:not(.us--v) { stroke: #26314a; stroke-width: .7; }
+  .geo-map[data-mode="visits"] .us--i { fill: #1c2536; filter: none; }
+  .geo-map[data-mode="visits"] .us--i:not(.us--v) { stroke: #38445f; stroke-width: .7; }
   .geo-map[data-mode="visits"] .us--i.us--v { stroke: #B388FF; }
   .geo-toggle button { background: none; border: 1px solid rgba(255,255,255,0.1); color: #8b95a8; font: inherit; font-size: 12px; padding: 4px 10px; border-radius: 6px; margin-left: 6px; cursor: pointer; }
   .geo-toggle button.active { color: #6AAEFF; border-color: #6AAEFF; }
