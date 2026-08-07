@@ -1,5 +1,13 @@
 [
   {
+    "version": "1.0.23",
+    "date": "2026-08-07",
+    "highlights": [
+      "Ticker rail scroll speed is now yours to set — five steps from Very slow to Very fast, in Appearance & FX.",
+      "Fixed: on the Lite effects setting the ticker ignored its own timing and ran everything at a fixed 36 seconds, so short messages crawled. It now scrolls at the speed you picked, on every effects setting."
+    ]
+  },
+  {
     "version": "1.0.22",
     "date": "2026-08-06",
     "highlights": [
