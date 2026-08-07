@@ -443,6 +443,9 @@ function renderStatsHtml(data, token) {
   <h1>RYLI Usage Stats</h1>
   <div class="sub">Anonymous, aggregate install activity &middot; last ${rangeDays} days</div>
 
+  ${renderGeoPanel(data.geo)}
+
+
   <div class="cards">
     <div class="card"><div class="card__label">Installs ever seen</div><div class="card__value">${installsEverSeen.toLocaleString()}</div></div>
     <div class="card"><div class="card__label">Unique active (${rangeDays}d)</div><div class="card__value blue">${uniqueActiveInRange.toLocaleString()}</div></div>
@@ -482,8 +485,6 @@ function renderStatsHtml(data, token) {
       <tbody>${retentionRows || '<tr><td colspan="3" style="color:#556;">No installs yet</td></tr>'}</tbody>
     </table>
   </div>
-
-  ${renderGeoPanel(data.geo)}
 
   <div class="panel">
     <div class="panel__title" style="margin-bottom:6px;">Growth &mdash; last ${rangeDays}d vs the ${rangeDays}d before</div>
