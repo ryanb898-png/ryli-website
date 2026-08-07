@@ -1,5 +1,17 @@
 [
   {
+    "version": "1.0.22",
+    "date": "2026-08-06",
+    "highlights": [
+      "Big sales keep celebrating. Before, the confetti and coin drop stopped at your top tier — so on a $200 card the last celebration was whatever your Tier 4 is, and the whole climb after that was silent. Now it keeps going, doubling each time. With tiers at 3/10/15/25 a $200 lot celebrates at $3, $10, $15, $25, then $50, $100 and $200.",
+      "The ticker rail takes up to three messages instead of one, and a new Flip mode holds each one still for five seconds and fades to the next — much easier to read than a crawl for a short line.",
+      "Sixteen click-to-add icons for your ticker messages: shipping, packages, giveaways, your shop, your socials.",
+      "Appearance & FX is reorganised. Webcam moved up out of the basement, and picking your HUD layout is now three pictures you click instead of a dropdown describing them in words.",
+      "The overlay ships with its own fonts instead of fetching them mid-show, so the first seconds on camera always render in the right typeface.",
+      "Celebration entrances were retimed — cards arrive and settle instead of snapping into place."
+    ]
+  },
+  {
     "version": "1.0.21",
     "date": "2026-08-06",
     "highlights": [
