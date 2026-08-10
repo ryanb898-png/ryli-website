@@ -236,6 +236,35 @@
         </div>
       </section>
 
+      <section class="guide-step-section" id="parallels">
+        <div class="feature__eyebrow"><span class="icon-badge">🍎</span>On a Mac — running RYLI in Parallels</div>
+        <h2>Yes, it works on a Mac</h2>
+        <p class="desc">RYLI is a Windows app. On a Mac it runs inside <strong>Parallels Desktop</strong>, and hosts are already streaming that way. RYLI recognises when it's running in Parallels and sets itself up accordingly — you press the same button everyone else presses, and there is no address to look up.</p>
+        <div class="guide-steps">
+          <details class="faq-item guide-step" open>
+            <summary>Keep OBS on the Mac side</summary>
+            <div class="faq-body">This is the setup to aim for. OBS runs natively on macOS where it can use your Mac's own video encoder, and RYLI runs in the Windows window beside it. RYLI finds OBS across that boundary by itself.</div>
+          </details>
+          <details class="faq-item guide-step">
+            <summary>Press "Connect &amp; Add Overlay to OBS" exactly as normal</summary>
+            <div class="faq-body">Settings → Connections. RYLI checks the Windows side first, then the Mac hosting it, connects to whichever is running OBS, and points OBS back at an address that can actually reach it. Windows may ask whether to allow RYLI through the firewall the first time — choose <strong>Allow</strong>, or OBS won't be able to load your overlay.</div>
+          </details>
+          <details class="faq-item guide-step">
+            <summary>Set your own OBS password instead of copying one</summary>
+            <div class="faq-body">Parallels' shared clipboard can be slow, and OBS generates a long random password. In OBS go to <strong>Tools → WebSocket Server Settings</strong>, type a short password of your own into the password box, and Apply. Then type that same one into RYLI. No copy-paste involved, so nothing can lag or paste half of it.</div>
+          </details>
+          <details class="faq-item guide-step">
+            <summary>If RYLI can't find OBS</summary>
+            <div class="faq-body">Check OBS is open with <strong>Enable WebSocket server</strong> ticked, then press the button again. Still nothing? In Parallels open <strong>Settings → Hardware → Network</strong>, switch from Shared to <strong>Bridged</strong>, restart the Windows VM and try once more.</div>
+          </details>
+          <details class="faq-item guide-step">
+            <summary>You can also run OBS inside Windows</summary>
+            <div class="faq-body">That works too, with no special setup. The trade-off is that OBS can't reach your Mac's hardware encoder from inside the VM, so it falls back to encoding on the processor — fine on some machines, heavy on others. Try the Mac-side setup first.</div>
+          </details>
+        </div>
+        <p class="desc">A native macOS build isn't available yet. If you're running RYLI on a Mac we'd genuinely like to hear how it goes — email <a href="mailto:hello@ryli.app">hello@ryli.app</a>.</p>
+      </section>
+
       <div class="guide-outro">
         <h2>That's the whole stack.</h2>
         <p>DroidCam shows your product, RYLI's overlay reacts live on top — including your own face cam when you want it. Questions along the way? Email <a href="mailto:hello@ryli.app">hello@ryli.app</a> — happy to help.</p>
