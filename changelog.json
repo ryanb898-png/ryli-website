@@ -1,5 +1,14 @@
 [
   {
+    "version": "1.0.30",
+    "date": "2026-08-11",
+    "highlights": [
+      "Label printing works again on direct-USB label printers. If Windows display scaling is set above 100% — which it is on most laptops — every print failed with an error about column counts. Nothing needed changing on your printer; it just prints now.",
+      "The jumbotron no longer gets stuck on \"waiting for bid\". If a lot ended without a new one starting straight after, the centre screen could stop rotating through your boards and cards for the rest of the show.",
+      "Groundwork for tracking down two harder problems: the wake word missing you, and the jumbotron freezing. Nothing is sent anywhere — this only writes to a local file, and only when you launch RYLI in diagnostics mode."
+    ]
+  },
+  {
     "version": "1.0.29",
     "date": "2026-08-11",
     "highlights": [
