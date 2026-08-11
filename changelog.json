@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.0.31",
+    "date": "2026-08-11",
+    "highlights": [
+      "Label printing on direct-USB label printers is fixed for real. The fix in 1.0.29 did not work — it swapped one error for another — so if printing has been failing for you, this is the update that sorts it.",
+      "Ryli sits slightly louder in OBS by default, and this update nudges her level on setups that already exist rather than only new ones. It only moves the volume slider — your mute, monitoring and visibility settings are left exactly as you set them. Move her wherever you like afterwards and RYLI will not touch it again.",
+      "Switching something on from the Ryli panel inside your Whatnot window now updates the matching control in Settings straight away. It was always taking effect; the Settings page just kept showing the old state until you clicked away and back.",
+      "Reworded the announcement about someone being just outside the top 3 — it sounded too much like a live bid."
+    ]
+  },
+  {
     "version": "1.0.30",
     "date": "2026-08-11",
     "highlights": [
