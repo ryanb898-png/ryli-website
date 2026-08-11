@@ -333,10 +333,15 @@ section { padding: 96px 0; position: relative; }
   display: flex;
   align-items: center;
   justify-content: center;
-  aspect-ratio: 16 / 10;
+  /* The Insights screenshot's OWN ratio, so it fills its bubble edge to edge
+     rather than sitting letterboxed inside a taller box — at 16/10 it rendered
+     474x246 in a 524x328 bubble and read as too small. */
+  aspect-ratio: 1600 / 831;
   background: radial-gradient(400px 260px at 50% 50%, rgba(106,174,255,0.10), transparent 70%), var(--slate-2);
-  padding: 24px;
 }
+/* No padding: the screenshot IS the bubble. */
+.insights-media { padding: 0; }
+.waveform-media { padding: 18px; }
 .waveform-media svg,
 .insights-media img {
   width: 100%;
