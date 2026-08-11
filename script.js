@@ -114,12 +114,16 @@ document.querySelectorAll('[data-carousel]').forEach((carousel) => {
   }
 });
 
-// Showcase toggle (Stream Store / Themes & FX)
+// Showcase toggles (Hype Meter / Companion, and Stream Store / Themes & FX)
 document.querySelectorAll('.showcase-toggle__btn').forEach((btn) => {
   btn.addEventListener('click', () => {
     const target = btn.dataset.showPanel;
-    document.querySelectorAll('.showcase-toggle__btn').forEach((b) => b.classList.toggle('is-active', b === btn));
-    document.querySelectorAll('.showcase-panel').forEach((p) => p.classList.toggle('is-active', p.dataset.panel === target));
+    // Scope to the owning section. This was a global query, which worked only
+    // while exactly one showcase existed on the page — with two, clicking a tab
+    // in one would deactivate the other's tabs and blank its panel.
+    const scope = btn.closest('section') || document;
+    scope.querySelectorAll('.showcase-toggle__btn').forEach((b) => b.classList.toggle('is-active', b === btn));
+    scope.querySelectorAll('.showcase-panel').forEach((p) => p.classList.toggle('is-active', p.dataset.panel === target));
   });
 });
 

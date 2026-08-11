@@ -160,71 +160,167 @@
     </div>
   </section>
 
-  <!-- HYPE METER -->
-  <section>
-    <div class="container feature reveal">
-      <div class="feature__copy">
-        <div class="feature__eyebrow"><span class="icon-badge">🔥</span>Hype Meter <span class="tag pro">PRO</span></div>
+  <!-- HYPE METER + COMPANION -->
+  <section id="live-control">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow-badge"><span class="dot"></span>Live Control</span>
         <h2>Whatnot is watching your room. <span class="grad-text">Give it something to see.</span></h2>
-        <p class="desc">Whatnot's own engineering team has published that user actions — <strong>including chats and reactions</strong> — are counted in real time and fed to the service that ranks which livestreams get promoted. In their words, they want to &ldquo;promote livestreams to our users when the most exciting things are happening at that moment.&rdquo;</p>
-        <p class="desc"><strong>The Hype Meter is how you make that moment happen on cue.</strong></p>
-        <ul class="checklist">
-          <li>Press one key — a bar and a countdown appear on your stream</li>
-          <li>Chat fills it by spamming emojis. The higher it climbs, the bigger the giveaway</li>
-          <li>A live count shows <strong>how many different people</strong> are joining in — Whatnot counts distinct users, so that's the number that matters</li>
-          <li>At zero it locks itself in and Ryli announces the prize out loud</li>
-          <li>No giveaway budget? Run it in hype-only mode and just get the room loud</li>
-        </ul>
-        <p class="feature__note">Runs from a hotkey or straight from the RYLI panel inside your Whatnot window — no Stream Deck needed. Whatnot has never published a link between any single action and For You placement, and RYLI never simulates engagement: every tap and message is a real viewer.</p>
+        <p>Whatnot's own engineering team has published that user actions — including chats and reactions — are counted in real time and fed to the service that ranks which livestreams get promoted. In their words, they want to &ldquo;promote livestreams to our users when the most exciting things are happening at that moment.&rdquo;</p>
       </div>
-      <div class="feature__media hype-media">
-        <svg viewBox="0 0 520 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The RYLI Hype Meter mid-run: a bar filled to about sixty percent, a forty-seven person participation count, a countdown at twelve seconds, and dollar tiers from one to one hundred" style="font-family: var(--body);">
-          <defs>
-            <linearGradient id="hm-fill" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%" stop-color="var(--purple)" />
-              <stop offset="55%" stop-color="var(--blue)" />
-              <stop offset="100%" stop-color="var(--cyan)" />
-            </linearGradient>
-            <linearGradient id="hm-edge" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stop-color="var(--blue)" />
-              <stop offset="100%" stop-color="var(--purple)" />
-            </linearGradient>
-          </defs>
 
-          <rect x="8" y="8" width="504" height="244" rx="18" fill="#0d1117" stroke="url(#hm-edge)" stroke-width="2" />
+      <div class="showcase-toggle reveal">
+        <button class="showcase-toggle__btn is-active" data-show-panel="hype">Hype Meter</button>
+        <button class="showcase-toggle__btn" data-show-panel="companion">Companion</button>
+      </div>
 
-          <text x="34" y="58" fill="#8da2d3" font-size="15" font-weight="700" letter-spacing="2.4">🔥 HYPE METER</text>
-          <text x="286" y="58" fill="var(--purple)" font-size="15" font-weight="700" text-anchor="end">47 joining in</text>
-          <text x="392" y="62" fill="var(--cyan)" font-size="30" font-weight="800" text-anchor="end">$20</text>
-          <rect x="404" y="38" width="74" height="30" rx="7" fill="#161c26" stroke="#2b3147" />
-          <text x="441" y="59" fill="#ffd166" font-size="19" font-weight="800" text-anchor="middle">0:12</text>
+      <div class="showcase-panel is-active" data-panel="hype">
+        <div class="feature reveal">
+          <div class="feature__copy">
+            <div class="feature__eyebrow"><span class="icon-badge">🔥</span>Hype Meter <span class="tag pro">PRO</span></div>
+            <h2>Make the moment happen <span class="grad-text">on cue.</span></h2>
+            <p class="desc">A quiet room is invisible to the algorithm. The Hype Meter is how you turn one on — press a key and a bar, a countdown and a live headcount go up on your stream, and chat has a reason to erupt right now instead of eventually.</p>
+            <ul class="checklist">
+              <li>Press one key — a bar and a countdown appear on your stream</li>
+              <li>Chat fills it by spamming emojis. The higher it climbs, the bigger the giveaway</li>
+              <li>A live count shows <strong>how many different people</strong> are joining in — Whatnot counts distinct users, so that's the number that matters</li>
+              <li>At zero it locks itself in and Ryli announces the prize out loud</li>
+              <li>No giveaway budget? Run it in hype-only mode and just get the room loud</li>
+            </ul>
+            <p class="feature__note">Runs from a hotkey or straight from the RYLI panel inside your Whatnot window — no Stream Deck needed. Whatnot has never published a link between any single action and For You placement, and RYLI never simulates engagement: every tap and message is a real viewer.</p>
+          </div>
+          <div class="feature__media hype-media">
+            <svg viewBox="0 0 520 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The RYLI Hype Meter mid-run: a bar filled to about sixty percent, a forty-seven person participation count, a countdown at twelve seconds, and dollar tiers from one to one hundred" style="font-family: var(--body);">
+              <defs>
+                <linearGradient id="hm-fill" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stop-color="var(--purple)" />
+                  <stop offset="55%" stop-color="var(--blue)" />
+                  <stop offset="100%" stop-color="var(--cyan)" />
+                </linearGradient>
+                <linearGradient id="hm-edge" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="var(--blue)" />
+                  <stop offset="100%" stop-color="var(--purple)" />
+                </linearGradient>
+              </defs>
 
-          <rect x="34" y="92" width="444" height="30" rx="15" fill="#161c26" />
-          <rect x="34" y="92" width="268" height="30" rx="15" fill="url(#hm-fill)" />
+              <rect x="8" y="8" width="504" height="244" rx="18" fill="#0d1117" stroke="url(#hm-edge)" stroke-width="2" />
 
-          <g fill="#39405c">
-            <rect x="106" y="92" width="2" height="30" />
-            <rect x="180" y="92" width="2" height="30" />
-            <rect x="254" y="92" width="2" height="30" />
-            <rect x="328" y="92" width="2" height="30" />
-            <rect x="402" y="92" width="2" height="30" />
-          </g>
+              <text x="34" y="58" fill="#8da2d3" font-size="15" font-weight="700" letter-spacing="2.4">🔥 HYPE METER</text>
+              <text x="286" y="58" fill="var(--purple)" font-size="15" font-weight="700" text-anchor="end">47 joining in</text>
+              <text x="392" y="62" fill="var(--cyan)" font-size="30" font-weight="800" text-anchor="end">$20</text>
+              <rect x="404" y="38" width="74" height="30" rx="7" fill="#161c26" stroke="#2b3147" />
+              <text x="441" y="59" fill="#ffd166" font-size="19" font-weight="800" text-anchor="middle">0:12</text>
 
-          <g font-size="13" font-weight="700" text-anchor="middle">
-            <text x="107" y="145" fill="var(--cyan)">$1</text>
-            <text x="181" y="145" fill="var(--cyan)">$5</text>
-            <text x="255" y="145" fill="var(--cyan)">$10</text>
-            <text x="329" y="145" fill="var(--cyan)">$20</text>
-            <text x="403" y="145" fill="#5c6b7f">$50</text>
-            <text x="470" y="145" fill="#5c6b7f">$100</text>
-          </g>
+              <rect x="34" y="92" width="444" height="30" rx="15" fill="#161c26" />
+              <rect x="34" y="92" width="268" height="30" rx="15" fill="url(#hm-fill)" />
 
-          <text x="256" y="182" fill="#afbad2" font-size="15" font-weight="700" letter-spacing="1.6" text-anchor="middle">SPAM EMOJIS TO FILL IT!</text>
+              <g fill="#39405c">
+                <rect x="106" y="92" width="2" height="30" />
+                <rect x="180" y="92" width="2" height="30" />
+                <rect x="254" y="92" width="2" height="30" />
+                <rect x="328" y="92" width="2" height="30" />
+                <rect x="402" y="92" width="2" height="30" />
+              </g>
 
-          <rect x="34" y="200" width="444" height="1" fill="#1b2431" />
-          <text x="34" y="228" fill="#8da2d3" font-size="13">🪙 lahar88 sent x50</text>
-          <text x="478" y="228" fill="#3ddc97" font-size="13" font-weight="700" text-anchor="end">LOCKS IN AT 0:00</text>
-        </svg>
+              <g font-size="13" font-weight="700" text-anchor="middle">
+                <text x="107" y="145" fill="var(--cyan)">$1</text>
+                <text x="181" y="145" fill="var(--cyan)">$5</text>
+                <text x="255" y="145" fill="var(--cyan)">$10</text>
+                <text x="329" y="145" fill="var(--cyan)">$20</text>
+                <text x="403" y="145" fill="#5c6b7f">$50</text>
+                <text x="470" y="145" fill="#5c6b7f">$100</text>
+              </g>
+
+              <text x="256" y="182" fill="#afbad2" font-size="15" font-weight="700" letter-spacing="1.6" text-anchor="middle">SPAM EMOJIS TO FILL IT!</text>
+
+              <rect x="34" y="200" width="444" height="1" fill="#1b2431" />
+              <text x="34" y="228" fill="#8da2d3" font-size="13">🪙 lahar88 sent x50</text>
+              <text x="478" y="228" fill="#3ddc97" font-size="13" font-weight="700" text-anchor="end">LOCKS IN AT 0:00</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="showcase-panel" data-panel="companion">
+        <div class="feature reveal">
+          <div class="feature__copy">
+            <div class="feature__eyebrow"><span class="icon-badge">🎛️</span>Ryli Companion</div>
+            <h2>Run the whole show <span class="grad-text">without ever leaving it.</span></h2>
+            <p class="desc">While you stream you're watching your own Whatnot page — not the RYLI app in another window. So RYLI puts her controls where you're already looking: a small panel drawn straight into your Whatnot tab. <strong>Only you can see it.</strong> It's painted locally in your browser, so nothing reaches Whatnot and viewers never see a thing.</p>
+            <ul class="checklist">
+              <li>Launch the Hype Meter, fire a chat announcement, or mute Ryli — one tap, eyes still on your show</li>
+              <li>A green dot on every automation that's currently armed, so you can see what's running at a glance</li>
+              <li>No Stream Deck and nothing to memorise — the buttons do exactly what the hotkeys do</li>
+              <li>Drag it anywhere, collapse it to a single orb, or switch it to a slim bar that stays out of your way</li>
+              <li>If RYLI ever stops responding it greys itself out, rather than showing you a green light that's lying</li>
+            </ul>
+            <p class="feature__note">Included with RYLI. Pro automations stay Pro — but muting Ryli is always free, because you have to be able to silence anything playing over your own show.</p>
+          </div>
+          <div class="feature__media companion-media">
+            <svg viewBox="0 0 520 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The RYLI Companion drawn inside the host's own Whatnot browser tab: a small draggable control panel with six one-tap buttons, green dots marking which automations are armed, and a note that viewers cannot see it" style="font-family: var(--body);">
+              <defs>
+                <linearGradient id="cp-edge" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="var(--blue)" />
+                  <stop offset="100%" stop-color="var(--purple)" />
+                </linearGradient>
+                <linearGradient id="cp-orb" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="var(--cyan)" />
+                  <stop offset="100%" stop-color="var(--purple)" />
+                </linearGradient>
+              </defs>
+
+              <rect x="8" y="8" width="504" height="244" rx="18" fill="#0d1117" stroke="url(#cp-edge)" stroke-width="2" />
+
+              <circle cx="30" cy="30" r="3.5" fill="#2b3147" />
+              <circle cx="42" cy="30" r="3.5" fill="#2b3147" />
+              <circle cx="54" cy="30" r="3.5" fill="#2b3147" />
+              <rect x="72" y="22" width="200" height="16" rx="8" fill="#161c26" />
+              <text x="82" y="34" fill="#5c6b7f" font-size="10">whatnot.com/dashboard/live</text>
+              <rect x="8" y="46" width="504" height="1" fill="#1b2431" />
+
+              <rect x="24" y="60" width="322" height="140" rx="10" fill="#121822" />
+              <text x="185" y="134" fill="#2b3147" font-size="13" font-weight="700" letter-spacing="2" text-anchor="middle">YOUR LIVE SHOW</text>
+
+              <rect x="358" y="60" width="138" height="176" rx="10" fill="#101620" />
+              <g fill="#1e2636">
+                <rect x="370" y="74" width="86" height="7" rx="3.5" />
+                <rect x="370" y="92" width="110" height="7" rx="3.5" />
+                <rect x="370" y="110" width="72" height="7" rx="3.5" />
+                <rect x="370" y="128" width="100" height="7" rx="3.5" />
+                <rect x="370" y="146" width="64" height="7" rx="3.5" />
+                <rect x="370" y="164" width="94" height="7" rx="3.5" />
+                <rect x="370" y="182" width="80" height="7" rx="3.5" />
+                <rect x="370" y="200" width="104" height="7" rx="3.5" />
+              </g>
+
+              <rect x="24" y="142" width="214" height="94" rx="12" fill="#131a26" stroke="url(#cp-edge)" stroke-width="1.5" />
+              <circle cx="40" cy="159" r="8" fill="url(#cp-orb)" />
+              <text x="56" y="163" fill="#afbad2" font-size="12" font-weight="700" letter-spacing="1.6">RYLI</text>
+
+              <g font-size="10" font-weight="700" text-anchor="middle" fill="#afbad2">
+                <rect x="34" y="172" width="60" height="26" rx="7" fill="#1a2130" stroke="#2b3147" />
+                <text x="64" y="189">HYPE</text>
+                <rect x="101" y="172" width="60" height="26" rx="7" fill="#1a2130" stroke="#2b3147" />
+                <text x="131" y="189">CHAT</text>
+                <rect x="168" y="172" width="60" height="26" rx="7" fill="#1a2130" stroke="#2b3147" />
+                <text x="198" y="189">GIVE</text>
+                <circle cx="220" cy="179" r="3" fill="#3ddc97" />
+
+                <rect x="34" y="203" width="60" height="26" rx="7" fill="#1a2130" stroke="#2b3147" />
+                <text x="64" y="220">AUTO</text>
+                <circle cx="86" cy="210" r="3" fill="#3ddc97" />
+                <rect x="101" y="203" width="60" height="26" rx="7" fill="#1a2130" stroke="#2b3147" />
+                <text x="131" y="220">CAM</text>
+                <rect x="168" y="203" width="60" height="26" rx="7" fill="#1a2130" stroke="#2b3147" />
+                <text x="198" y="220">MUTE</text>
+                <circle cx="220" cy="210" r="3" fill="#ffd166" />
+              </g>
+
+              <rect x="248" y="200" width="104" height="24" rx="12" fill="#161c26" stroke="#2b3147" />
+              <text x="300" y="216" fill="#8da2d3" font-size="10.5" text-anchor="middle">Only you see this</text>
+            </svg>
+          </div>
+        </div>
       </div>
     </div>
   </section>
