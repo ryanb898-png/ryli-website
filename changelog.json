@@ -1,5 +1,14 @@
 [
   {
+    "version": "1.0.32",
+    "date": "2026-08-11",
+    "highlights": [
+      "Taking over the Top Supporters board is now a real moment on screen. It always announced out loud, but nothing was ever drawn for it — so the one crown your non-buying viewers can win was invisible. It gets its own celebration card and confetti now, in your theme’s colours.",
+      "The jumbotron reacts while the Hype Meter is running. The meter itself already got faster and brighter as the room heated up, but the big screen sat still. It now breathes and pulses in step with the room, escalating through four levels — so chat can see their spamming working without looking at the small meter.",
+      "All of it follows whichever theme you have picked, and eases off automatically on the Lite effects setting."
+    ]
+  },
+  {
     "version": "1.0.31",
     "date": "2026-08-11",
     "highlights": [
