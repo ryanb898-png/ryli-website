@@ -992,3 +992,9 @@ section { padding: 96px 0; position: relative; }
   .changelog__entry { padding: 18px 16px; }
   .changelog__date { margin-left: 0; width: 100%; }
 }
+
+/* Hype Meter feature media (2026-08-10). Same shape as .thermalflow-media —
+   an inline SVG rather than a screenshot, because the meter is changing and a
+   screenshot would go stale the moment it does. */
+.hype-media { display: flex; align-items: center; justify-content: center; }
+.hype-media svg { width: 100%; max-width: 520px; height: auto; }
