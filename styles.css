@@ -323,15 +323,27 @@ section { padding: 96px 0; position: relative; }
   background: var(--slate-2);
 }
 .feature__media img { width: 100%; height: auto; display: block; }
-.waveform-media {
+/* Ryli's waveform and the Insights screenshot sit in matching bubbles. A shared
+   aspect-ratio (rather than a min-height) is what actually keeps them the same
+   size — they share a column, so equal width plus equal ratio means equal
+   height at every breakpoint. Left to their own content they diverged badly:
+   the waveform ran ~332px while the Insights shot came in at ~271px. */
+.waveform-media,
+.insights-media {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 280px;
+  aspect-ratio: 16 / 10;
   background: radial-gradient(400px 260px at 50% 50%, rgba(106,174,255,0.10), transparent 70%), var(--slate-2);
   padding: 24px;
 }
-.waveform-media svg { width: 100%; height: auto; }
+.waveform-media svg,
+.insights-media img {
+  width: 100%;
+  height: auto;
+  max-height: 100%;
+  object-fit: contain;
+}
 .thermalflow-media {
   display: flex;
   align-items: center;
