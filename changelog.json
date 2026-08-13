@@ -1,5 +1,13 @@
 [
   {
+    "version": "1.0.33",
+    "date": "2026-08-13",
+    "highlights": [
+      "Fixed RYLI going quiet after a raid. If you raid out and then start another show without closing the window, she sometimes never started tracking again — the overlay stayed on screen but nothing was counted for the whole show. Your own show now resumes tracking the moment it comes back.",
+      "Minor fixes and polish."
+    ]
+  },
+  {
     "version": "1.0.32",
     "date": "2026-08-11",
     "highlights": [
