@@ -314,10 +314,10 @@ function renderGeoPanel(geo) {
   return `<div class="panel">
     <div class="panel__head">
       <div class="panel__title">Where RYLI is running <span class="panel__note">all time</span></div>
-      <div class="geo-toggle"><button data-geo="both" class="active">Both</button><button data-geo="installs">Installs</button><button data-geo="visits">Site visits</button></div>
+      <div class="geo-toggle"><button data-geo="installs" class="active">Installs</button><button data-geo="both">Both</button><button data-geo="visits">Site visits</button></div>
     </div>
     <div class="geo-stats"><span><b class="blue">${(usTotal + intlTotal).toLocaleString()}</b>installs mapped</span><span><b class="blue">${Object.keys(installs).length}</b>states</span><span><b class="purple">${countryCount}</b>countries</span></div>
-    <div class="geo-map" data-mode="both"><svg viewBox="0 0 960 600" role="img" aria-label="Map of the United States shaded by RYLI install count per state">
+    <div class="geo-map" data-mode="installs"><svg viewBox="0 0 960 600" role="img" aria-label="Map of the United States shaded by RYLI install count per state">
       <defs>
         <radialGradient id="geobg" cx="50%" cy="45%" r="60%"><stop offset="0%" stop-color="#6AAEFF" stop-opacity=".10"/><stop offset="100%" stop-color="#6AAEFF" stop-opacity="0"/></radialGradient>
         <filter id="geoglow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
