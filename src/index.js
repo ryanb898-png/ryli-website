@@ -37,6 +37,7 @@
  */
 
 import US_PATHS from './us-paths.js';
+import US_BLIPS from './us-blips.js';
 
 // Every `daily:` bucket is keyed to a calendar day in THIS timezone, not UTC.
 // Buckets were UTC until 2026-08-04, which meant the dashboard rolled over to
@@ -236,17 +237,72 @@ function renderGeoPanel(geo) {
   const maxI = Math.max(1, ...Object.values(installs));
   const maxV = Math.max(1, ...Object.values(visits));
 
+  // Base map: every state drawn as a quiet outline. It exists for orientation
+  // only now \u2014 the DATA lives in the blips below, not in the fill. Each state
+  // still carries its own tooltip and hover, so pointing at an empty state
+  // still answers "is there anything here".
   const paths = Object.entries(US_PATHS).map(([ab, d]) => {
     const i = installs[ab] || 0;
     const v = visits[ab] || 0;
-    // Floor the fill at 0.3 so a state with a single install still reads as
-    // lit rather than as indistinguishable from empty.
-    const t = i ? (0.3 + 0.7 * (i / maxI)).toFixed(3) : 0;
-    const w = v ? (1 + 1.8 * (v / maxV)).toFixed(2) : 0;
-    const cls = ['us'].concat(i ? 'us--i' : [], v ? 'us--v' : []).join(' ');
     const name = STATE_NAMES[ab] || ab;
     const tip = `${name} \u2014 ${i} install${i === 1 ? '' : 's'}, ${v} site visit${v === 1 ? '' : 's'}`;
-    return `<path class="${cls}" d="${d}" style="--t:${t};--w:${w}"><title>${escapeHtml(tip)}</title></path>`;
+    return `<path class="us${i ? ' us--has' : ''}" d="${d}"><title>${escapeHtml(tip)}</title></path>`;
+  }).join('');
+
+  // Deterministic scatter. Seeded from the state code + index so a blip sits in
+  // the same spot on every load \u2014 a dot that jumps around between refreshes
+  // reads as noise rather than as a place.
+  const jitter = (ab, i) => {
+    let h = 2166136261;
+    const s = ab + ':' + i;
+    for (let j = 0; j < s.length; j++) { h ^= s.charCodeAt(j); h = Math.imul(h, 16777619); }
+    const a = ((h >>> 0) % 1000) / 1000;
+    const b = ((Math.imul(h, 2654435761) >>> 0) % 1000) / 1000;
+    // sqrt on the radius keeps the scatter even across the disc instead of
+    // clumping everything toward the centre.
+    const rad = Math.sqrt(a);
+    const ang = b * Math.PI * 2;
+    return [Math.cos(ang) * rad, Math.sin(ang) * rad];
+  };
+
+  // One blip per install, up to a cap \u2014 past that the dots grow instead of
+  // multiplying, so a breakout state reads as intense rather than as a smear.
+  const MAX_BLIPS = 14;
+  const blipsFor = (map, ab, kind, max) => {
+    const n = map[ab] || 0;
+    if (!n) return '';
+    const anchor = US_BLIPS[ab];
+    if (!anchor) return '';
+    const [cx, cy, rx, ry] = anchor;
+    const shown = Math.min(n, MAX_BLIPS);
+    const over = n / MAX_BLIPS;
+    const r = kind === 'i'
+      ? (2.2 + 1.9 * Math.min(1, Math.log2(1 + n) / Math.log2(1 + max))).toFixed(2)
+      : (1.5 + 1.2 * Math.min(1, Math.log2(1 + n) / Math.log2(1 + max))).toFixed(2);
+    let out = '';
+    for (let k = 0; k < shown; k++) {
+      const [jx, jy] = jitter(ab + kind, k);
+      const x = (cx + jx * rx).toFixed(1);
+      const y = (cy + jy * ry).toFixed(1);
+      // Staggered so a busy state fills in rather than snapping on at once.
+      const delay = ((k * 0.09) + (kind === 'v' ? 0.25 : 0)).toFixed(2);
+      out += `<circle class="blip blip--${kind}" cx="${x}" cy="${y}" r="${r}" style="--d:${delay}s"></circle>`;
+    }
+    // A single soft halo for states past the cap, so "a lot" still reads.
+    if (over > 1) {
+      out += `<circle class="blip-halo blip-halo--${kind}" cx="${cx}" cy="${cy}" r="${(Math.min(rx, ry) * 1.25).toFixed(1)}"></circle>`;
+    }
+    return out;
+  };
+
+  const blips = Object.keys(US_BLIPS).map((ab) => {
+    const bi = blipsFor(installs, ab, 'i', maxI);
+    const bv = blipsFor(visits, ab, 'v', maxV);
+    if (!bi && !bv) return '';
+    const name = STATE_NAMES[ab] || ab;
+    const tip = `${name} \u2014 ${installs[ab] || 0} install${(installs[ab] || 0) === 1 ? '' : 's'}, ${visits[ab] || 0} site visit${(visits[ab] || 0) === 1 ? '' : 's'}`;
+    // Visits behind installs, so an install blip is never hidden by a pageview.
+    return `<g class="blip-g"><title>${escapeHtml(tip)}</title>${bv}${bi}</g>`;
   }).join('');
 
   const usTotal = Object.values(installs).reduce((a, b) => a + b, 0);
@@ -257,7 +313,7 @@ function renderGeoPanel(geo) {
 
   return `<div class="panel">
     <div class="panel__head">
-      <div class="panel__title">Where RYLI is running</div>
+      <div class="panel__title">Where RYLI is running <span class="panel__note">all time</span></div>
       <div class="geo-toggle"><button data-geo="both" class="active">Both</button><button data-geo="installs">Installs</button><button data-geo="visits">Site visits</button></div>
     </div>
     <div class="geo-stats"><span><b class="blue">${(usTotal + intlTotal).toLocaleString()}</b>installs mapped</span><span><b class="blue">${Object.keys(installs).length}</b>states</span><span><b class="purple">${countryCount}</b>countries</span></div>
@@ -268,8 +324,9 @@ function renderGeoPanel(geo) {
       </defs>
       <rect width="960" height="600" fill="url(#geobg)"/>
       <g>${paths}</g>
+      <g class="blips">${blips}</g>
     </svg></div>
-    <div class="geo-legend"><span><i class="geo-sw geo-sw--i"></i>Installs &mdash; brighter means more</span><span><i class="geo-sw geo-sw--v"></i>Website visits</span></div>
+    <div class="geo-legend"><span><i class="geo-sw geo-sw--i"></i>Installs &mdash; one blip each</span><span><i class="geo-sw geo-sw--v"></i>Website visits</span></div>
     ${chips ? `<div class="geo-intl"><div class="geo-intl__h">Outside the US</div>${chips}</div>` : ''}
     <div class="note" style="margin-top:14px;">Location comes from Cloudflare's edge at request time &mdash; country and state only, never a city, coordinate, or IP address. An install's location is recorded once, on first sight.</div>
   </div>`;
@@ -281,6 +338,10 @@ function renderStatsHtml(data, token) {
     installsEverSeen, uniqueActiveInRange, uniqueActiveProInRange, versionBreakdown, perDay,
     timezone, previous, retention,
   } = data;
+  // "(1d)" reads as a typo. Every range-dependent label goes through these so
+  // the Today view reads like a sentence rather than a unit.
+  const rangeLabel = rangeDays === 1 ? 'today' : `${rangeDays}d`;
+  const rangeWords = rangeDays === 1 ? 'today' : `last ${rangeDays} days`;
   const freeInRange = pingsInRange - proPingsInRange;
 
   // "vs previous period" chip. A jump from zero has no meaningful percentage,
@@ -408,16 +469,35 @@ function renderStatsHtml(data, token) {
   .geo-stats b { font-size: 21px; font-weight: 700; margin-right: 7px; }
   .geo-map { border-radius: 10px; overflow: hidden; }
   .geo-map svg { width: 100%; height: auto; display: block; }
-  .us { fill: #1c2536; stroke: #38445f; stroke-width: .7; transition: fill .3s, stroke .3s, stroke-width .3s; }
-  .us--i { fill: rgba(106,174,255,var(--t)); stroke: rgba(150,200,255,.9); stroke-width: .8; filter: url(#geoglow); }
-  .us--v { stroke: #B388FF; stroke-width: var(--w); stroke-opacity: .95; }
-  .us--i.us--v { stroke: #d3bcff; }
-  .us:hover { fill: #7DE7FF; stroke: #fff; stroke-width: 1.5; }
-  .geo-map[data-mode="installs"] .us--v:not(.us--i) { stroke: #38445f; stroke-width: .7; }
-  .geo-map[data-mode="installs"] .us--i.us--v { stroke: rgba(150,200,255,.9); stroke-width: .8; }
-  .geo-map[data-mode="visits"] .us--i { fill: #1c2536; filter: none; }
-  .geo-map[data-mode="visits"] .us--i:not(.us--v) { stroke: #38445f; stroke-width: .7; }
-  .geo-map[data-mode="visits"] .us--i.us--v { stroke: #B388FF; }
+  /* Base map is now scenery, not data — the blips carry the numbers. A state
+     with something in it gets a slightly lifted outline so the shape reads
+     under its dots without competing with them. */
+  .us { fill: #161d2b; stroke: #333e56; stroke-width: .7; transition: fill .25s, stroke .25s; }
+  .us--has { fill: #1b2436; stroke: #46557a; }
+  .us:hover { fill: #24304a; stroke: #7DE7FF; }
+
+  /* Blips. Scale/opacity only, both GPU-composited, so a hundred of them still
+     cost nothing. They fade in staggered rather than all at once, which is what
+     makes a busy state look like it is filling up. */
+  .blip { transform-box: fill-box; transform-origin: center; opacity: 0;
+          animation: blipIn .5s ease-out forwards var(--d), blipPulse 4s ease-in-out infinite var(--d); }
+  .blip--i { fill: #6AAEFF; filter: url(#geoglow); }
+  .blip--v { fill: #B388FF; }
+  .blip-halo { fill: none; stroke-width: 1.2; opacity: .5; animation: blipPulse 5s ease-in-out infinite; }
+  .blip-halo--i { stroke: rgba(106,174,255,.55); }
+  .blip-halo--v { stroke: rgba(179,136,255,.4); }
+  .blip-g:hover .blip { fill: #7DE7FF; }
+  @keyframes blipIn { from { opacity: 0; transform: scale(.3); } to { opacity: .95; transform: scale(1); } }
+  @keyframes blipPulse { 0%,100% { opacity: .95; } 50% { opacity: .62; } }
+  /* The toggle hides a layer outright rather than restyling it — with blips
+     there is no "half on" state to express, unlike the old outline shading. */
+  .geo-map[data-mode="installs"] .blip--v,
+  .geo-map[data-mode="installs"] .blip-halo--v,
+  .geo-map[data-mode="visits"] .blip--i,
+  .geo-map[data-mode="visits"] .blip-halo--i { display: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .blip, .blip-halo { animation: none; opacity: .95; }
+  }
   .geo-toggle button { background: none; border: 1px solid rgba(255,255,255,0.1); color: #8b95a8; font: inherit; font-size: 12px; padding: 4px 10px; border-radius: 6px; margin-left: 6px; cursor: pointer; }
   .geo-toggle button.active { color: #6AAEFF; border-color: #6AAEFF; }
   .geo-legend { display: flex; gap: 18px; flex-wrap: wrap; font-size: 12px; color: #8b95a8; margin-top: 10px; }
@@ -434,30 +514,36 @@ function renderStatsHtml(data, token) {
     .sub, .card__label, th { color: #5b6472; }
     .hint { color: #7b8492; }
     .us { fill: #e7ecf6; stroke: #c3ccdd; }
-    .us--i { fill: rgba(46,111,224,var(--t)); stroke: rgba(46,111,224,.9); }
+    .us--has { fill: #dde5f3; stroke: #9fb0cd; }
+    .us:hover { fill: #ccd8ee; stroke: #2e6fe0; }
+    .blip--i { fill: #2e6fe0; }
+    .blip--v { fill: #7c4dff; }
+    .blip-halo--i { stroke: rgba(46,111,224,.5); }
+    .blip-halo--v { stroke: rgba(124,77,255,.4); }
     .geo-stats, .geo-legend, .geo-intl__h { color: #5b6472; }
   }
 </style>
 </head><body>
 <div class="wrap">
   <h1>RYLI Usage Stats</h1>
-  <div class="sub">Anonymous, aggregate install activity &middot; last ${rangeDays} days</div>
+  <div class="sub">Anonymous, aggregate install activity &middot; ${rangeWords}</div>
 
   ${renderGeoPanel(data.geo)}
 
 
   <div class="cards">
     <div class="card"><div class="card__label">Installs ever seen</div><div class="card__value">${installsEverSeen.toLocaleString()}</div></div>
-    <div class="card"><div class="card__label">Unique active (${rangeDays}d)</div><div class="card__value blue">${uniqueActiveInRange.toLocaleString()}</div></div>
+    <div class="card"><div class="card__label">Unique active (${rangeLabel})</div><div class="card__value blue">${uniqueActiveInRange.toLocaleString()}</div></div>
     <div class="card"><div class="card__label">...of those, Pro</div><div class="card__value purple">${uniqueActiveProInRange.toLocaleString()}</div></div>
-    <div class="card"><div class="card__label">New installs (${rangeDays}d)</div><div class="card__value cyan">${newInRange.toLocaleString()}</div></div>
-    <div class="card"><div class="card__label">Website pageviews (${rangeDays}d)</div><div class="card__value">${visitsInRange.toLocaleString()}</div></div>
+    <div class="card"><div class="card__label">New installs (${rangeLabel})</div><div class="card__value cyan">${newInRange.toLocaleString()}</div></div>
+    <div class="card"><div class="card__label">Website pageviews (${rangeLabel})</div><div class="card__value">${visitsInRange.toLocaleString()}</div></div>
   </div>
 
   <div class="panel">
     <div class="panel__head">
       <div class="panel__title">Daily pings</div>
       <div class="range-links">
+        <a href="${dayLink(1)}" class="${rangeDays === 1 ? 'active' : ''}">Today</a>
         <a href="${dayLink(7)}" class="${rangeDays === 7 ? 'active' : ''}">7d</a>
         <a href="${dayLink(30)}" class="${rangeDays === 30 ? 'active' : ''}">30d</a>
         <a href="${dayLink(90)}" class="${rangeDays === 90 ? 'active' : ''}">90d</a>
@@ -487,7 +573,7 @@ function renderStatsHtml(data, token) {
   </div>
 
   <div class="panel">
-    <div class="panel__title" style="margin-bottom:6px;">Growth &mdash; last ${rangeDays}d vs the ${rangeDays}d before</div>
+    <div class="panel__title" style="margin-bottom:6px;">Growth &mdash; ${rangeWords} vs the ${rangeDays === 1 ? 'day' : rangeDays + ' days'} before</div>
     <div class="note" style="margin-bottom:14px;">Direction, not just a snapshot. Built from daily counters, so it compares like for like.</div>
     <table>
       <thead><tr><th>Measure</th><th class="num">This period</th><th class="num">Previous</th><th>Change</th></tr></thead>
@@ -536,7 +622,7 @@ async function handleStats(request, env) {
     return new Response('not found', { status: 404 });
   }
 
-  const days = Math.max(1, Math.min(365, parseInt(url.searchParams.get('days') || '30', 10) || 30));
+  const days = Math.max(1, Math.min(365, parseInt(url.searchParams.get('days') || '1', 10) || 1));
   const todayKey = dayKey();
   const dayStrings = [];
   for (let i = 0; i < days; i++) dayStrings.push(shiftDay(todayKey, -i));
@@ -629,8 +715,20 @@ async function handleStats(request, env) {
       if (meta.lastSeen >= cutoff7) retActive7++;
       else if (meta.lastSeen >= cutoff30) retActive30++;
       else retDormant++;
-      const v = meta.version || 'unknown';
-      versionCounts.set(v, (versionCounts.get(v) || 0) + 1);
+      // Version uptake counts only installs seen in the last 30 DAYS, not every
+      // install ever recorded. Counting all of them answered the wrong question:
+      // an install last seen weeks ago still reports its old version forever, so
+      // the breakdown claimed people were sitting on stale builds when they had
+      // simply stopped opening the app. What this needs to answer is "of the
+      // people actually running RYLI, who has the update yet".
+      //
+      // Keyed to a FIXED 30 days rather than the selected range, so switching to
+      // the Today view does not collapse it to whoever launched in the last few
+      // hours.
+      if (meta.lastSeen >= cutoff30) {
+        const v = meta.version || 'unknown';
+        versionCounts.set(v, (versionCounts.get(v) || 0) + 1);
+      }
     }
     cursor = page.cursor;
   } while (cursor);
