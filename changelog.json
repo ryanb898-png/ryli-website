@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.0.35",
+    "date": "2026-08-14",
+    "highlights": [
+      "Fixed the jumbotron sitting on \"Waiting for bid\" for a whole lot. On a quiet lot it now cycles your boards, sponsors and socials like it should, and the bid prompt keeps coming back around. A real bid still takes over the screen instantly.",
+      "Ryli says usernames properly. Handles with dots in them were being read out loud as \"dot\" — pokedad.87 came out as \"pokedad dot eighty-seven\" — and she was saying \"at\" before every name. Both fixed.",
+      "She also speaks a little slower, at her natural pace, which sounds noticeably less clipped.",
+      "ThermalFlow can now print labels for shop purchases as well as auction wins. Off by default — turn it on in Settings if you sell mostly from your shop. Tips never print, and if the printer ever falls behind, Ryli skips a label and tells you rather than printing it minutes late."
+    ]
+  },
+  {
     "version": "1.0.34",
     "date": "2026-08-14",
     "highlights": [
