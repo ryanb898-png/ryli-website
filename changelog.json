@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.0.34",
+    "date": "2026-08-14",
+    "highlights": [
+      "Settings is reorganised. Every Pro feature now sits together under one Ryli Pro heading instead of being scattered across four groups, so it is clear at a glance what you have and what you are missing. Connections moved in alongside your account settings.",
+      "Configure Ryli is now called Ryli Smart, and the bring-your-own-AI-key section inside it is now the Ryli Intelligence Upgrade.",
+      "Pro badges look the same everywhere now — they used to be two different styles depending on which page you were on.",
+      "Minor fixes and polish."
+    ]
+  },
+  {
     "version": "1.0.33",
     "date": "2026-08-13",
     "highlights": [
