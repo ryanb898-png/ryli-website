@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.0.36",
+    "date": "2026-08-14",
+    "highlights": [
+      "Ryli can now read viewer questions out loud, so you don't miss one while you're on camera. She waits for a quiet moment, keeps it occasional, and you choose who she'll read. Turn it on in Settings → Automated Tasks.",
+      "The hype meter now goes up only when you want it to — your hotkey, or the RYLI panel in your Whatnot window.",
+      "Hotkeys now start empty so you can pick keys that don't clash with anything else you run. Any keys you've already set stay exactly as they are.",
+      "Various fixes and improvements."
+    ]
+  },
+  {
     "version": "1.0.35",
     "date": "2026-08-14",
     "highlights": [
