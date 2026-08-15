@@ -1,5 +1,14 @@
 [
   {
+    "version": "1.0.37",
+    "date": "2026-08-14",
+    "highlights": [
+      "Quick controls on your dashboard. Cycle your theme, HUD layout and sound pack in one click and watch the preview change as you go, flip your ticker rail between the top and bottom edge, and play a celebration on your overlay so you can see and hear it before you're live.",
+      "A taller live preview, so your whole overlay is in view — including the Moment Zone, which used to sit right on the bottom edge.",
+      "Various fixes and improvements."
+    ]
+  },
+  {
     "version": "1.0.36",
     "date": "2026-08-14",
     "highlights": [
