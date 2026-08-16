@@ -1,5 +1,14 @@
 [
   {
+    "version": "1.0.39",
+    "date": "2026-08-16",
+    "highlights": [
+      "The RYLI panel on your Whatnot page keeps its styling after you open your show. It could turn into a stack of plain white buttons, and the only way back was reloading the tab.",
+      "It now repairs itself if that happens again, instead of staying broken until you notice.",
+      "The crown now sits on the top bidder’s picture instead of floating above it."
+    ]
+  },
+  {
     "version": "1.0.38",
     "date": "2026-08-16",
     "highlights": [
