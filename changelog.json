@@ -1,5 +1,17 @@
 [
   {
+    "version": "1.0.38",
+    "date": "2026-08-16",
+    "highlights": [
+      "Ask Ryli who your top buyer is and she answers correctly. She was reading the wrong board on some shows and saying nobody had bought yet while your leaderboard was full.",
+      "The Hype Meter now stays on your jumbotron for the whole run. It was being wiped off the screen a second or two after it appeared, so most of a run played out with nothing on camera.",
+      "The jumbotron keeps rotating through your cards. It could freeze on one card and stay there — most noticeable during quiet stretches between lots, which is exactly when it should be doing the work.",
+      "The RYLI panel now follows you from your Whatnot page to your live show. It could get left behind on the page you started from and never come back.",
+      "Sound previews in Settings actually play now.",
+      "Various fixes and improvements."
+    ]
+  },
+  {
     "version": "1.0.37",
     "date": "2026-08-14",
     "highlights": [
