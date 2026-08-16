@@ -1,5 +1,14 @@
 [
   {
+    "version": "1.0.40",
+    "date": "2026-08-16",
+    "highlights": [
+      "Fixed a fault that could stop RYLI tracking your show entirely — no bids, no chat, no leaderboards, no Ryli, and nothing on screen explaining why. It could last a whole show.",
+      "If tracking ever stops while you are on your own show, RYLI now notices within seconds, starts again on its own, and tells you it did.",
+      "Raid protection is unchanged: your tracking still pauses when you raid out, so the other seller’s sales are never saved as yours."
+    ]
+  },
+  {
     "version": "1.0.39",
     "date": "2026-08-16",
     "highlights": [
