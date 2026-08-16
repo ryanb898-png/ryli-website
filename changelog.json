@@ -1,5 +1,12 @@
 [
   {
+    "version": "1.0.41",
+    "date": "2026-08-16",
+    "highlights": [
+      "The jumbotron can no longer stop rotating for the rest of a show if a single card fails to build. It now always carries on to the next one."
+    ]
+  },
+  {
     "version": "1.0.40",
     "date": "2026-08-16",
     "highlights": [
