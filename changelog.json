@@ -1,5 +1,18 @@
 [
   {
+    "version": "1.0.42",
+    "date": "2026-08-18",
+    "highlights": [
+      "Your overlay has been rebuilt from the frame in. A rendered metal jumbotron surrounds a true black screen, and every card inside it — the leader, the win, the boards, the shoutouts, the Moment Zone, the Hype Meter — has been redesigned in glass and light instead of flat boxes and coloured outlines. Open OBS after updating and it is simply there.",
+      "NEW — Custom bezels (Pro). Upload your own frame artwork and RYLI builds the whole look around it: your art wraps the screen, and the glow colour you choose breathes around the outside and recolours every number, card and celebration to match. Your frame, your show.",
+      "Nine colourways, and three of them are free — Gray Base, Black Slate and Whatnot Yellow. Pro unlocks the other six plus the richer gradient finish, so upgrading makes the colour you already picked visibly better rather than making you start again.",
+      "The dashboard is now a studio. Your live overlay sits beside one panel for layout and one for themes, with your favourites a click away and the voice and effects faders on the preview itself. Everything fits on screen the moment you open the app.",
+      "Whatnot Yellow now rains Whatnot Ws through its celebrations, alongside the coins.",
+      "Your layout, theme and settings all carry over — nothing to set up again, and everything is still yours to rearrange in Settings → Appearance & FX.",
+      "Plus a round of stability and performance work across the overlay, including smoother celebrations on lower-powered machines."
+    ]
+  },
+  {
     "version": "1.0.41",
     "date": "2026-08-16",
     "highlights": [
