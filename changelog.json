@@ -3,15 +3,15 @@
     "version": "1.0.43",
     "date": "2026-08-20",
     "highlights": [
-      "🚨 BIG FIX — Ryli could go completely deaf for a whole show. If she reconnected while your show was already running, she would keep showing your overlay and keep her voice, but stop reacting to anything at all: no bids, no chat, not even a mod Announce. There was no error and no warning, so the only clue was that she went quiet. This is fixed, and it is the most important thing in this update.",
-      "🔊 Ryli is LOUDER and clearer. Her voice was sitting well under your bid sounds — not because of a volume setting, but because speech and chimes carry differently. She is now levelled like a real broadcast voice, so she cuts through your music and your talking without you touching a thing. If she ends up too loud for your taste, the Voice slider on your dashboard now actually works properly.",
-      "🎧 She no longer goes silent when you change scenes. Her sound was only ever added to whichever OBS scene was open when you set her up — so if you switched to a Starting Soon or BRB scene, viewers heard nothing from her. She is added to all of your scenes automatically the next time you open RYLI.",
-      "🚀 A clearer Launch Whatnot Show button, with the Whatnot logo and a reminder that RYLI needs it to track your show. It only appears if you actually sell on Whatnot. If your show window closes unexpectedly mid-show, the button turns red and offers to relaunch — but if you simply ended your show or raided out, it stays normal. And RYLI no longer keeps reopening browser windows after you close one.",
+      "🚨 Important — please update. This release fixes a rare issue where Ryli could stop responding during a show.",
+      "🔊 Ryli is LOUDER and clearer. She now cuts through your music and your talking without you touching a thing. If she ends up too loud for your taste, the Voice slider on your dashboard has you covered.",
+      "🎧 She stays audible across every one of your OBS scenes.",
+      "🚀 A clearer Launch Whatnot Show button, with the Whatnot logo so it is easy to find. If your show window closes unexpectedly, the button turns red and offers to bring it straight back.",
       "🖥️ NEW — Platforms page, replacing Account. One place to switch on the platforms you stream to, with step-by-step launch instructions for each. TikTok Shop LIVE is listed as coming soon.",
       "🎥 NEW — Creator mode, for streamers who don't sell live. Tell RYLI during setup that you stream but don't sell, and she drops the auction language, the leaderboards and the sales pages, and swaps in follow and chat prompts instead. Twitch, YouTube, anywhere.",
-      "⚡ A smoother overlay on ordinary hardware. Several effects were quietly costing real performance while being invisible — including one that could never draw a single pixel, and a glow effect that was being redrawn from scratch every frame. Fixed without changing how anything looks.",
+      "⚡ A smoother overlay on ordinary hardware, with no change to how anything looks.",
       "⚠️ RYLI now tells you if you pick an FX quality your PC may struggle with. It never blocks you — if you run OBS on a second machine, Ultra is still the right choice.",
-      "Improvements and fixes throughout: the ticker rail can no longer get stuck empty until you toggle it off and on, celebration cards look right in every layout, settings pages now hide the ones that can't apply to you, and various background clean-ups to keep RYLI light while you stream."
+      "Various reliability, performance and interface improvements throughout."
     ]
   },
   {
