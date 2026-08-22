@@ -259,15 +259,43 @@ async function handleVisit(request, env) {
   // actually open, and whether they are on a machine that can run the app.
   let body = {};
   try { body = await request.json(); } catch { /* older page, no body */ }
-  const ref = referrerKey(body && body.referrer);
-  const path = pathKey(body && body.path);
-  const device = deviceKey(request.headers.get('user-agent'));
-  await Promise.all([
-    bumpCounter(env, `ref:${today}:${ref}`),
-    bumpCounter(env, `path:${today}:${path}`),
-    bumpCounter(env, `dev:${today}:${device}`),
-  ]);
+  await bumpVisitMeta(env, today, {
+    ref: referrerKey(body && body.referrer),
+    path: pathKey(body && body.path),
+    dev: deviceKey(request.headers.get('user-agent')),
+  });
   return new Response(null, { status: 204 });
+}
+
+// ONE key per day holding every breakdown, rather than a key per label.
+// The first version wrote ref:<day>:<label> and read them back with a list()
+// per day per category -- 270 list calls for a 90-day range, which took the
+// dashboard 39 SECONDS to render. It also inherited KV's eventually-consistent
+// list(), so a fresh visit took ~25s to appear at all. A single key per day is
+// one get + one put here, and one get per day when reading: no list, no
+// pagination, no consistency lag.
+//
+// Labels are capped so a hostile or broken referrer cannot grow one day's
+// object without bound.
+const VISIT_META_MAX_LABELS = 40;
+async function bumpVisitMeta(env, day, parts) {
+  const k = `vmeta:${day}`;
+  try {
+    let obj = {};
+    try { obj = JSON.parse((await env.USAGE_KV.get(k)) || '{}') || {}; } catch { obj = {}; }
+    for (const [kind, label] of Object.entries(parts)) {
+      if (!label) continue;
+      const bucket = obj[kind] || (obj[kind] = {});
+      if (bucket[label] === undefined && Object.keys(bucket).length >= VISIT_META_MAX_LABELS) {
+        bucket.other = (bucket.other || 0) + 1;
+      } else {
+        bucket[label] = (bucket[label] || 0) + 1;
+      }
+    }
+    await env.USAGE_KV.put(k, JSON.stringify(obj));
+  } catch {
+    // A missed breakdown must never fail the page load it rode in on.
+  }
 }
 
 // A visitor pressed Download. This is the only funnel step the site has --
@@ -275,20 +303,10 @@ async function handleVisit(request, env) {
 // from a page problem.
 async function handleDownloadClick(request, env) {
   if (request.method !== 'POST') return new Response('method not allowed', { status: 405 });
-  await bumpCounter(env, `dl:${dayKey()}`);
+  await bumpVisitMeta(env, dayKey(), { dl: 'clicks' });
   return new Response(null, { status: 204 });
 }
 
-// Same read-modify-write as bumpGeo, and the same accepted race: KV has no
-// atomic increment and this is a morale readout, not billing.
-async function bumpCounter(env, key) {
-  try {
-    const raw = await env.USAGE_KV.get(key);
-    await env.USAGE_KV.put(key, String(parseInt(raw || '0', 10) + 1));
-  } catch {
-    // A missed count must never fail the request it rode in on.
-  }
-}
 
 function escapeHtml(str) {
   return String(str).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -983,29 +1001,22 @@ async function handleStats(request, env) {
   // Referrers, landing pages, device split and download clicks -- all daily
   // keys, so they are summed over exactly the selected range like every other
   // number here rather than being all-time totals pretending to be a period.
-  const sumDaily = async (prefix) => {
-    const out = {};
-    await Promise.all(dayStrings.map(async (d) => {
-      let cursor;
-      do {
-        const page = await env.USAGE_KV.list({ prefix: `${prefix}:${d}:`, cursor });
-        await Promise.all(page.keys.map(async (k) => {
-          const label = k.name.slice(`${prefix}:${d}:`.length);
-          const n = parseInt((await env.USAGE_KV.get(k.name)) || '0', 10);
-          if (n > 0) out[label] = (out[label] || 0) + n;
-        }));
-        cursor = page.list_complete ? null : page.cursor;
-      } while (cursor);
-    }));
-    return out;
-  };
+  // One get per day, all in parallel -- see bumpVisitMeta for why this is a
+  // single key rather than a list() sweep.
   let referrers = {}, pages = {}, devices = {}, downloadClicks = 0;
   try {
-    [referrers, pages, devices] = await Promise.all([
-      sumDaily('ref'), sumDaily('path'), sumDaily('dev'),
-    ]);
-    const dls = await Promise.all(dayStrings.map((d) => env.USAGE_KV.get(`dl:${d}`)));
-    downloadClicks = dls.reduce((a, b) => a + parseInt(b || '0', 10), 0);
+    const blobs = await Promise.all(dayStrings.map(async (d) => {
+      try { return JSON.parse((await env.USAGE_KV.get(`vmeta:${d}`)) || '{}') || {}; } catch { return {}; }
+    }));
+    const merge = (into, from) => {
+      for (const [k, n] of Object.entries(from || {})) into[k] = (into[k] || 0) + n;
+    };
+    for (const b of blobs) {
+      merge(referrers, b.ref);
+      merge(pages, b.path);
+      merge(devices, b.dev);
+      downloadClicks += (b.dl && b.dl.clicks) || 0;
+    }
   } catch {
     // Same rule as the map: a panel that cannot load must not take the
     // dashboard down with it.
