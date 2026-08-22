@@ -10,7 +10,31 @@
 // dropped if the tab closes/navigates away before it completes; a failure
 // here must never be visible or block the page in any way.
 try {
-  fetch('/api/visit', { method: 'POST', keepalive: true }).catch(() => {});
+  fetch('/api/visit', {
+    method: 'POST',
+    keepalive: true,
+    headers: { 'Content-Type': 'application/json' },
+    // Two aggregate fields, both reduced server-side before anything is
+    // stored: the referrer is cut down to a bare hostname (never the full
+    // URL, which could carry a search query), and the path is stored without
+    // its query string. Still no cookie, no id, nothing linking one visit to
+    // the next -- this answers "where did people come from and what did they
+    // open", which the region counter alone cannot.
+    body: JSON.stringify({ referrer: document.referrer || '', path: location.pathname || '/' }),
+  }).catch(() => {});
+} catch {}
+
+// Download intent. Visits and installs were the only two numbers here, which
+// makes "hundreds of visits, a handful of installs" impossible to read -- a
+// traffic problem and a page problem look identical. This is the step between
+// them. Fires on any link to the installer, wherever it appears on the site,
+// and never delays or blocks the download itself.
+try {
+  document.addEventListener('click', (e) => {
+    const a = e.target && e.target.closest && e.target.closest('a[href*="releases/latest/download"]');
+    if (!a) return;
+    try { fetch('/api/download-click', { method: 'POST', keepalive: true }).catch(() => {}); } catch {}
+  }, { capture: true });
 } catch {}
 
 // Mobile nav toggle

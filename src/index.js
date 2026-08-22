@@ -189,6 +189,54 @@ async function handlePing(request, env) {
 // id is ever created or read, matching the same "anonymous, aggregate only"
 // stance already documented for the app's own usage ping. Answers "is
 // anyone actually looking at the site" without adding any real tracking.
+// Where a visit came FROM, bucketed to a bare hostname and nothing more.
+// The full referring URL can carry a search query or a private page path, so
+// only the host is kept -- enough to answer "is anyone arriving from Google or
+// Whatnot", never enough to identify anyone. Own-domain referrers are internal
+// navigation and are folded into 'ryli.app' rather than counted as traffic.
+function referrerKey(ref) {
+  if (!ref) return 'direct';
+  let host;
+  try { host = new URL(ref).hostname.toLowerCase().replace(/^www\./, ''); } catch { return 'other'; }
+  if (!host) return 'direct';
+  if (host === 'ryli.app') return 'ryli.app';
+  // Fold the obvious families so the list stays readable instead of turning
+  // into fifteen Google country domains.
+  if (/(^|\.)google\./.test(host)) return 'google';
+  if (/(^|\.)bing\./.test(host)) return 'bing';
+  if (/(^|\.)duckduckgo\./.test(host)) return 'duckduckgo';
+  if (/(^|\.)(youtube|youtu\.be)/.test(host)) return 'youtube';
+  if (/(^|\.)(facebook|fb\.com|instagram|threads)/.test(host)) return 'meta';
+  if (/(^|\.)(twitter|x\.com|t\.co)/.test(host)) return 'x';
+  if (/(^|\.)(tiktok)/.test(host)) return 'tiktok';
+  if (/(^|\.)(reddit)/.test(host)) return 'reddit';
+  if (/(^|\.)(discord)/.test(host)) return 'discord';
+  if (/(^|\.)(whatnot)/.test(host)) return 'whatnot';
+  return host.slice(0, 40);
+}
+
+// Which page they landed on. Path only -- no query string, which is where
+// anything identifying would live -- and capped to a known shape so a
+// crawler hitting /wp-admin cannot mint unlimited KV keys.
+function pathKey(p) {
+  if (!p || typeof p !== 'string') return '/';
+  const clean = p.split('?')[0].split('#')[0].toLowerCase().slice(0, 40);
+  if (clean === '' || clean === '/') return '/';
+  return /^[a-z0-9/_-]+$/.test(clean) ? clean : 'other';
+}
+
+// Desktop or phone. RYLI is a desktop app, so someone reading the site on a
+// phone cannot install it there -- that split is the single most useful thing
+// the user agent can say, and it is the only thing taken from it. No version,
+// no fingerprint, no string stored.
+function deviceKey(ua) {
+  const u = String(ua || '').toLowerCase();
+  if (!u) return 'unknown';
+  if (/ipad|tablet|playbook|silk/.test(u)) return 'tablet';
+  if (/mobi|iphone|android.*mobile|windows phone/.test(u)) return 'mobile';
+  return 'desktop';
+}
+
 async function handleVisit(request, env) {
   if (request.method !== 'POST') return new Response('method not allowed', { status: 405 });
   const today = dayKey();
@@ -204,7 +252,42 @@ async function handleVisit(request, env) {
   // that's what this beacon has always measured and inventing a visitor id
   // to de-dupe would be exactly the tracking this site promises not to do.
   await bumpGeo(env, 'visit', geoKey(request));
+
+  // Three more aggregate counters, same terms as the geography above: no id,
+  // no cookie, no IP, nothing that links one visit to another. They answer the
+  // questions the region map cannot -- where traffic comes from, what people
+  // actually open, and whether they are on a machine that can run the app.
+  let body = {};
+  try { body = await request.json(); } catch { /* older page, no body */ }
+  const ref = referrerKey(body && body.referrer);
+  const path = pathKey(body && body.path);
+  const device = deviceKey(request.headers.get('user-agent'));
+  await Promise.all([
+    bumpCounter(env, `ref:${today}:${ref}`),
+    bumpCounter(env, `path:${today}:${path}`),
+    bumpCounter(env, `dev:${today}:${device}`),
+  ]);
   return new Response(null, { status: 204 });
+}
+
+// A visitor pressed Download. This is the only funnel step the site has --
+// without it, "591 visits, 3 installs" cannot tell a traffic problem apart
+// from a page problem.
+async function handleDownloadClick(request, env) {
+  if (request.method !== 'POST') return new Response('method not allowed', { status: 405 });
+  await bumpCounter(env, `dl:${dayKey()}`);
+  return new Response(null, { status: 204 });
+}
+
+// Same read-modify-write as bumpGeo, and the same accepted race: KV has no
+// atomic increment and this is a morale readout, not billing.
+async function bumpCounter(env, key) {
+  try {
+    const raw = await env.USAGE_KV.get(key);
+    await env.USAGE_KV.put(key, String(parseInt(raw || '0', 10) + 1));
+  } catch {
+    // A missed count must never fail the request it rode in on.
+  }
 }
 
 function escapeHtml(str) {
@@ -222,6 +305,68 @@ const STATE_NAMES = { AL:'Alabama',AK:'Alaska',AZ:'Arizona',AR:'Arkansas',CA:'Ca
 // density is the FILL, website visits are the glowing OUTLINE. They measure
 // different things (people running the app vs people looking at the site) and
 // averaging them into a single colour would say nothing true about either.
+
+// A ranked bar list. Used for referrers, landing pages and devices -- three
+// questions the geography map cannot answer, all shaped the same way, so they
+// share one renderer rather than three near-identical blocks.
+function renderBarList(title, obj, opts) {
+  const o = opts || {};
+  const rows = Object.entries(obj || {}).sort((a, b) => b[1] - a[1]).slice(0, o.limit || 10);
+  const total = Object.values(obj || {}).reduce((a, b) => a + b, 0);
+  if (!rows.length) {
+    return `<div class="panel"><div class="panel__title">${escapeHtml(title)}</div>
+      <div class="empty">Nothing recorded yet &mdash; this starts filling once visitors arrive after the update.</div></div>`;
+  }
+  const max = rows[0][1] || 1;
+  const body = rows.map(([label, n]) => {
+    const pct = total ? Math.round((n / total) * 100) : 0;
+    return `<div class="hbar">
+      <div class="hbar__label">${escapeHtml(o.pretty ? o.pretty(label) : label)}</div>
+      <div class="hbar__track"><div class="hbar__fill" style="width:${Math.max(2, Math.round((n / max) * 100))}%"></div></div>
+      <div class="hbar__n">${n.toLocaleString()}<span class="hbar__pct">${pct}%</span></div>
+    </div>`;
+  }).join('');
+  return `<div class="panel"><div class="panel__title">${escapeHtml(title)}</div>
+    ${o.note ? `<div class="panel__note">${escapeHtml(o.note)}</div>` : ''}
+    <div class="hbars">${body}</div></div>`;
+}
+
+const REF_NAMES = {
+  direct: 'Direct / typed in', google: 'Google', bing: 'Bing', duckduckgo: 'DuckDuckGo',
+  youtube: 'YouTube', meta: 'Facebook / Instagram', x: 'X (Twitter)', tiktok: 'TikTok',
+  reddit: 'Reddit', discord: 'Discord', whatnot: 'Whatnot', 'ryli.app': 'Within ryli.app',
+  other: 'Other',
+};
+const PAGE_NAMES = {
+  '/': 'Home', '/setup-guide': 'Setup guide', '/changelog': 'Changelog',
+  '/privacy': 'Privacy', '/terms': 'Terms', '/thank-you': 'Thank you (post-purchase)',
+};
+
+
+// Visits -> download clicks -> installs. Two of these existed before and the
+// middle one did not, which made the gap between "hundreds of visits" and "a
+// handful of installs" unreadable: a traffic problem and a page problem look
+// identical without it.
+function renderFunnelPanel(d) {
+  const visits = d.visitsInRange || 0;
+  const clicks = d.downloadClicks || 0;
+  const installs = d.newInRange || 0;
+  const pct = (a, b) => (b ? ((a / b) * 100).toFixed(1) + '%' : '—');
+  const row = (label, n, of, hint) => `<div class="hbar">
+    <div class="hbar__label">${escapeHtml(label)}</div>
+    <div class="hbar__track"><div class="hbar__fill" style="width:${visits ? Math.max(2, Math.round((n / visits) * 100)) : 2}%"></div></div>
+    <div class="hbar__n">${n.toLocaleString()}<span class="hbar__pct">${of}</span></div>
+  </div>${hint ? `<div class="panel__note">${escapeHtml(hint)}</div>` : ''}`;
+  return `<div class="panel"><div class="panel__title">Visit &rarr; download &rarr; install</div>
+    <div class="hbars">
+      ${row('Visited the site', visits, '100%')}
+      ${row('Pressed Download', clicks, pct(clicks, visits))}
+      ${row('Actually installed', installs, pct(installs, visits))}
+    </div>
+    ${clicks === 0 && visits > 0 ? '<div class="panel__note">Download clicks start counting from this update onward, so this row reads zero until people visit again.</div>' : ''}
+  </div>`;
+}
+
 function renderGeoPanel(geo) {
   const installs = {};
   const visits = {};
@@ -413,8 +558,33 @@ function renderStatsHtml(data, token) {
   return `<!doctype html>
 <html><head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>RYLI Usage Stats</title>
+<!-- Home-screen shortcut. The founder wants this on his phone, and the URL
+     carries the admin token, so the manifest's start_url has to carry it too
+     or the shortcut opens an unauthorised page. It is generated per-request
+     and inlined as a data: URI rather than served as a static file, because a
+     static manifest could not include the token and a token in a public file
+     would be worse than no shortcut at all.
+     iOS ignores the manifest and uses the apple-* tags below instead; both are
+     present so Add to Home Screen behaves on either phone. -->
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0b0f17">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="RYLI Stats">
+<link rel="apple-touch-icon" href="/assets/favicon/apple-touch-icon.png">
+<link rel="icon" href="/assets/favicon/apple-touch-icon.png">
+<link rel="manifest" href="data:application/manifest+json,${encodeURIComponent(JSON.stringify({
+  name: 'RYLI Usage Stats',
+  short_name: 'RYLI Stats',
+  start_url: `/api/stats?token=${token}&days=7`,
+  scope: '/api/',
+  display: 'standalone',
+  background_color: '#0b0f17',
+  theme_color: '#0b0f17',
+  icons: [{ src: '/assets/favicon/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
+}))}">
 <style>
   :root { --blue:#6AAEFF; --purple:#B388FF; --cyan:#7DE7FF; --slate:#0D1117; --frost:#F2F6FF; }
   * { box-sizing: border-box; }
@@ -446,6 +616,32 @@ function renderStatsHtml(data, token) {
   .bar { flex: 1; height: 100%; display: flex; align-items: flex-end; min-width: 2px; }
   .bar__fill { width: 100%; background: rgba(106,174,255,0.35); border-radius: 3px 3px 0 0; display: flex; align-items: flex-end; }
   .bar__pro { width: 100%; background: var(--purple); border-radius: 3px 3px 0 0; }
+  /* Horizontal ranked lists -- referrers, pages, device, funnel. Deliberately
+     NOT .bar/.bar__fill: those are the daily chart's vertical bars above and
+     reusing the names silently restyled it. */
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .hbars { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+  .hbar { display: grid; grid-template-columns: 140px 1fr 92px; align-items: center; gap: 12px; }
+  .hbar__label { font-size: 13px; color: #c7cede; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .hbar__track { background: rgba(255,255,255,0.06); border-radius: 999px; height: 10px; overflow: hidden; }
+  .hbar__fill { height: 100%; background: linear-gradient(90deg, var(--blue), var(--purple)); border-radius: 999px; }
+  .hbar__n { font-size: 13px; color: #e8edf7; text-align: right; font-variant-numeric: tabular-nums; }
+  .hbar__pct { color: #8b95a8; margin-left: 8px; font-size: 12px; }
+  .panel__note { font-size: 12px; color: #8b95a8; margin-top: 10px; line-height: 1.5; }
+  .empty { font-size: 13px; color: #8b95a8; margin-top: 14px; line-height: 1.5; }
+  /* Phone. This dashboard is meant to be checked from a home-screen shortcut,
+     so it has to be readable one-handed, not just technically responsive. */
+  @media (max-width: 760px) {
+    .wrap { padding: 16px 14px 40px; }
+    .grid2 { grid-template-columns: 1fr; gap: 16px; }
+    .panel { padding: 16px; margin-bottom: 16px; border-radius: 10px; }
+    .cards { grid-template-columns: 1fr 1fr; }
+    .hbar { grid-template-columns: 104px 1fr 76px; gap: 8px; }
+    .hbar__label, .hbar__n { font-size: 12px; }
+    h1 { font-size: 20px; }
+    table { font-size: 12px; }
+    th, td { padding: 6px 6px; }
+  }
   table { width: 100%; border-collapse: collapse; font-size: 13px; }
   th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid rgba(255,255,255,0.06); }
   th { color: #8b95a8; font-weight: 600; font-size: 11px; text-transform: uppercase; }
@@ -529,6 +725,23 @@ function renderStatsHtml(data, token) {
   <div class="sub">Anonymous, aggregate install activity &middot; ${rangeWords}</div>
 
   ${renderGeoPanel(data.geo)}
+
+  <div class="grid2">
+    ${renderBarList('Where visitors came from', data.referrers, {
+      pretty: (k) => REF_NAMES[k] || k,
+      note: 'Referring site only, never the full link.',
+    })}
+    ${renderBarList('Pages they landed on', data.pages, {
+      pretty: (k) => PAGE_NAMES[k] || k,
+    })}
+  </div>
+  <div class="grid2">
+    ${renderBarList('Device', data.devices, {
+      pretty: (k) => ({ desktop: 'Desktop / laptop', mobile: 'Phone', tablet: 'Tablet', unknown: 'Unknown' }[k] || k),
+      note: 'RYLI only installs on a desktop, so phone visitors cannot download from where they are standing.',
+    })}
+    ${renderFunnelPanel(data)}
+  </div>
 
 
   <div class="cards">
@@ -767,8 +980,43 @@ async function handleStats(request, env) {
     // A map that can't load must not take the whole dashboard down with it.
   }
 
+  // Referrers, landing pages, device split and download clicks -- all daily
+  // keys, so they are summed over exactly the selected range like every other
+  // number here rather than being all-time totals pretending to be a period.
+  const sumDaily = async (prefix) => {
+    const out = {};
+    await Promise.all(dayStrings.map(async (d) => {
+      let cursor;
+      do {
+        const page = await env.USAGE_KV.list({ prefix: `${prefix}:${d}:`, cursor });
+        await Promise.all(page.keys.map(async (k) => {
+          const label = k.name.slice(`${prefix}:${d}:`.length);
+          const n = parseInt((await env.USAGE_KV.get(k.name)) || '0', 10);
+          if (n > 0) out[label] = (out[label] || 0) + n;
+        }));
+        cursor = page.list_complete ? null : page.cursor;
+      } while (cursor);
+    }));
+    return out;
+  };
+  let referrers = {}, pages = {}, devices = {}, downloadClicks = 0;
+  try {
+    [referrers, pages, devices] = await Promise.all([
+      sumDaily('ref'), sumDaily('path'), sumDaily('dev'),
+    ]);
+    const dls = await Promise.all(dayStrings.map((d) => env.USAGE_KV.get(`dl:${d}`)));
+    downloadClicks = dls.reduce((a, b) => a + parseInt(b || '0', 10), 0);
+  } catch {
+    // Same rule as the map: a panel that cannot load must not take the
+    // dashboard down with it.
+  }
+
   const data = {
     geo,
+    referrers,
+    pages,
+    devices,
+    downloadClicks,
     rangeDays: days,
     pingsInRange: periodTotal, // sum of unique-installs-seen-per-day, not de-duped across days — see uniqueActiveInRange for the real figure
     proPingsInRange: periodPro,
@@ -879,6 +1127,7 @@ export default {
     const url = new URL(request.url);
     if (url.pathname === '/api/ping') return handlePing(request, env);
     if (url.pathname === '/api/visit') return handleVisit(request, env);
+    if (url.pathname === '/api/download-click') return handleDownloadClick(request, env);
     if (url.pathname === '/api/stats') return handleStats(request, env);
     if (url.pathname === '/api/checkout-license') return handleCheckoutLicense(request, env);
     // Anything else reaching this script has no matching static file
