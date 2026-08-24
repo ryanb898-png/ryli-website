@@ -1,5 +1,21 @@
 [
   {
+    "version": "1.0.45",
+    "date": "2026-08-24",
+    "highlights": [
+      "Important — please update. Your jumbotron could stop changing partway through a show and stay stuck on a single card for the rest of it. It keeps rotating now.",
+      "Updates install properly when you quit RYLI. The tray icon tells you when one is ready, and applies it on the way out.",
+      "🎛️ NEW — Info-Card Display, a new page in Settings. Every card that rotates through your jumbotron now has its own switch. Turn off the ones that don't suit how you sell — the NEXT LOT prompt, the leaderboards, the show stats — and they simply stop appearing. Free for everyone. Pro hosts can rewrite the wording on any of them, and your ad banners live here now too.",
+      "📣 NEW — The ticker rail is free. You get a scrolling message of your own, alongside a line pointing your viewers to RYLI. Pro unlocks all three message slots and lets you clear the RYLI line.",
+      "↔️ NEW — The ticker rail is a widget you can move. Drag it, resize it, lock it and hide it from your dashboard, exactly like the HUD and the Moment Zone.",
+      "Creator mode is cleanly separated now. If you stream but don't sell, the upgrade screen no longer lists auction and sales features you will never use, and the setup tour no longer points at buttons that aren't on your screen.",
+      "Switching Whatnot on in Platforms brings your game features back with it, so starting to sell no longer means hunting for a second switch.",
+      "Ultra effects behave. RYLI no longer dials them down on a machine that is running perfectly well, and on one that genuinely cannot keep up it eases off the celebration particles instead of stuttering.",
+      "Custom bezel artwork now comes with the right size guidance, so what you upload is what you get on screen.",
+      "Various reliability and performance improvements throughout."
+    ]
+  },
+  {
     "version": "1.0.44",
     "date": "2026-08-21",
     "highlights": [
