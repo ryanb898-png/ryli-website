@@ -3,24 +3,24 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>How to Set Up OBS for Whatnot — Complete Guide | RYLI</title>
-<meta name="description" content="Step-by-step guide to streaming Whatnot with OBS: scenes and sources, using your phone as a camera with DroidCam, and adding the RYLI overlay on top. No experience required." />
+<title>RYLI Setup Guide — Install, Connect OBS, and Go Live</title>
+<meta name="description" content="Set up RYLI in two parts: install it and connect OBS, then start your show. Whatnot step by step (including the launch button people miss), plus running on a Mac with Parallels." />
 <link rel="canonical" href="https://ryli.app/setup-guide" />
 
 <!-- Open Graph / Twitter: without these, every link shared into a Discord,
      a Facebook seller group or X renders as a bare URL with no picture. -->
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="RYLI" />
-<meta property="og:title" content="How to Set Up OBS for Whatnot — Complete Guide | RYLI" />
-<meta property="og:description" content="Step-by-step guide to streaming Whatnot with OBS: scenes and sources, using your phone as a camera with DroidCam, and adding the RYLI overlay on top. No experience required." />
+<meta property="og:title" content="RYLI Setup Guide — Install, Connect OBS, and Go Live" />
+<meta property="og:description" content="Set up RYLI in two parts: install it and connect OBS, then start your show. Whatnot step by step (including the launch button people miss), plus running on a Mac with Parallels." />
 <meta property="og:url" content="https://ryli.app/setup-guide" />
 <meta property="og:image" content="https://ryli.app/assets/images/og-cover.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta property="og:image:alt" content="RYLI — the overlay and voice co-host for Whatnot live sellers" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="How to Set Up OBS for Whatnot — Complete Guide | RYLI" />
-<meta name="twitter:description" content="Step-by-step guide to streaming Whatnot with OBS: scenes and sources, using your phone as a camera with DroidCam, and adding the RYLI overlay on top. No experience required." />
+<meta name="twitter:title" content="RYLI Setup Guide — Install, Connect OBS, and Go Live" />
+<meta name="twitter:description" content="Set up RYLI in two parts: install it and connect OBS, then start your show. Whatnot step by step (including the launch button people miss), plus running on a Mac with Parallels." />
 <meta name="twitter:image" content="https://ryli.app/assets/images/og-cover.png" />
 
 <link rel="icon" type="image/x-icon" href="assets/favicon/favicon.ico" />
@@ -56,245 +56,223 @@
   <section class="guide">
     <div class="container">
       <span class="eyebrow-badge"><span class="dot"></span>Setup Guide</span>
-      <h1>Your camera &amp; overlay, <span class="grad-text">set up right.</span></h1>
-      <p class="guide__intro">Never used OBS before? Start here. This guide covers four things, in order: getting OBS running, adding a phone camera as your product cam with DroidCam, setting up RYLI's overlay on top, and starting your show the right way on Whatnot. Follow it top to bottom your first time — about 15–25 minutes, no experience required.</p>
+      <h1>Get RYLI running, <span class="grad-text">then go live.</span></h1>
+      <p class="guide__intro">Two parts. <strong>Part one</strong> gets RYLI installed and talking to OBS — do it once and you are done. <strong>Part two</strong> is how you actually start a show, which depends on where you sell. Never used OBS before? You are in the right place; no experience needed.</p>
 
-      <ul class="checklist" style="max-width: 520px;">
-        <li>A Windows PC — or a Mac running <a href="#parallels">Parallels Desktop</a></li>
-        <li>A smartphone with a camera (Android or iPhone)</li>
-        <li>Same Wi-Fi for phone + PC, or a USB cable (more reliable — recommended)</li>
+      <!-- Video slot. Empty for now — drop an <iframe> or <video> in here and
+           remove the hidden attribute when there is something to show. -->
+      <div class="guide-video" id="guide-video" hidden>
+        <!-- tutorial video goes here -->
+      </div>
+
+      <ul class="checklist" style="max-width: 560px;">
+        <li>A Windows PC — or a Mac running <a href="#golive">Parallels Desktop</a></li>
+        <li>OBS Studio (free — part one walks you through it)</li>
+        <li>Optional: a phone to use as your product camera</li>
         <li>About 15–25 minutes, start to finish</li>
       </ul>
 
       <nav class="guide-nav" aria-label="Jump to a step">
-        <a href="#step-obs">1. Install OBS</a>
-        <a href="#step-droidcam">2. Add DroidCam</a>
-        <a href="#step-layers">3. How it layers</a>
-        <a href="#step-ryli">4. Install RYLI</a>
-        <a href="#step-golive">5. Start your show</a>
+        <a href="#step-ryli">1. Install RYLI</a>
+        <a href="#step-obs">2. Install OBS</a>
+        <a href="#step-connect">3. Connect them</a>
+        <a href="#step-camera">4. Product camera</a>
+        <a href="#golive">5. Go live</a>
       </nav>
 
-      <!-- STEP 1 -->
+      <!-- ================= PART ONE — GET RUNNING ================= -->
+      <h2 class="guide-part">Part one — get RYLI running</h2>
+
+      <section class="guide-step-section" id="step-ryli">
+        <div class="feature__eyebrow"><span class="icon-badge">✨</span>Step 1 — Install RYLI</div>
+        <h2>Start here</h2>
+        <p class="desc">RYLI is a free download and installs like any other Windows app. The same installer covers both plans — Pro unlocks with a key, nothing separate to download.</p>
+        <div class="guide-steps">
+          <details class="faq-item guide-step" open>
+            <summary>Download and run the installer</summary>
+            <div class="faq-body">Grab it from the button at the bottom of this page, or from anywhere else on this site. Windows may warn you about an app from a new publisher — RYLI is code-signed, so click <strong>More info → Run anyway</strong> if you see it.</div>
+          </details>
+          <details class="faq-item guide-step">
+            <summary>Open RYLI and let the wizard start</summary>
+            <div class="faq-body">RYLI opens straight into a short setup wizard. It asks where you go live, sorts your microphone and camera, and connects OBS for you. You can replay it any time from <strong>Settings → About</strong>.</div>
+          </details>
+          <details class="faq-item guide-step">
+            <summary>Activate Pro (only if you bought it)</summary>
+            <div class="faq-body">Paste your key in <strong>Settings → About</strong> and hit Activate. Every new install also gets a 10-day trial with everything unlocked, so there is nothing to buy to try it.</div>
+          </details>
+        </div>
+      </section>
+
       <section class="guide-step-section" id="step-obs">
-        <div class="feature__eyebrow"><span class="icon-badge">🎥</span>Step 1 of 5 — Install OBS Studio</div>
-        <h2>Get the free broadcast software running</h2>
-        <p class="desc">OBS (Open Broadcaster Software) is the free program that actually sends your stream to Whatnot. Everything else in this guide — your phone camera, RYLI's overlay — plugs into OBS. If you don't have it yet, get it first.</p>
+        <div class="feature__eyebrow"><span class="icon-badge">🎥</span>Step 2 — Install OBS Studio</div>
+        <h2>The free broadcast software</h2>
+        <p class="desc">OBS is what actually sends your stream out. RYLI does not replace it — RYLI's overlay is a layer that sits inside it. If you already stream with OBS, skip to step 3.</p>
         <div class="guide-steps">
           <details class="faq-item guide-step" open>
             <summary>Download OBS Studio</summary>
-            <div class="faq-body">Go to <a href="https://obsproject.com/download" target="_blank" rel="noopener">obsproject.com/download</a> and grab the Windows installer — it's free, official, and takes under a minute.</div>
+            <div class="faq-body">Go to <a href="https://obsproject.com/download" target="_blank" rel="noopener">obsproject.com/download</a> and grab the installer — free, official, under a minute.</div>
           </details>
           <details class="faq-item guide-step">
-            <summary>Run the installer</summary>
-            <div class="faq-body">Open the downloaded file and click through with the default options — there's nothing to configure yet. Leave "Launch OBS Studio" checked when it finishes.</div>
+            <summary>Run it with the default options</summary>
+            <div class="faq-body">There is nothing to configure yet. Leave "Launch OBS Studio" checked when it finishes.</div>
           </details>
           <details class="faq-item guide-step">
             <summary>Skip the Auto-Configuration Wizard</summary>
-            <div class="faq-body">OBS may offer to auto-configure your stream on first launch. Click "Cancel" — RYLI's own onboarding handles the settings that matter later in this guide.</div>
-          </details>
-          <details class="faq-item guide-step">
-            <summary>Confirm OBS opens to an empty scene</summary>
-            <div class="faq-body">You'll see a blank black canvas with empty "Scene" and "Sources" panels. That's normal — you haven't added any cameras yet. That's Step 2.</div>
+            <div class="faq-body">OBS may offer to auto-configure your stream on first launch. Click <strong>Cancel</strong> — RYLI handles the settings that matter.</div>
           </details>
         </div>
       </section>
 
-      <!-- STEP 2 -->
-      <section class="guide-step-section" id="step-droidcam">
-        <div class="feature__eyebrow"><span class="icon-badge">📱</span>Step 2 of 5 — Add DroidCam</div>
-        <h2>Turn your phone into your product cam</h2>
-        <p class="desc">DroidCam turns your phone into a wireless camera OBS can use — most live sellers point it forward at the table so viewers see the product, not just a face. It has two halves — an app on your phone, and a plugin on this PC — you need both.</p>
+      <section class="guide-step-section" id="step-connect">
+        <div class="feature__eyebrow"><span class="icon-badge">🔗</span>Step 3 — Connect RYLI to OBS</div>
+        <h2>One button, no scene-building</h2>
+        <p class="desc">RYLI adds its overlay to OBS for you. You never copy a link or type a number.</p>
         <div class="guide-steps">
           <details class="faq-item guide-step" open>
-            <summary>Install DroidCam on your phone</summary>
-            <div class="faq-body">Get it from <a href="https://play.google.com/store/apps/details?id=com.dev47apps.obsdroidcam" target="_blank" rel="noopener">Google Play</a> or the <a href="https://apps.apple.com/us/app/droidcam-webcam-obs-camera/id1510258102" target="_blank" rel="noopener">Apple App Store</a>. Open it once so it can ask for camera permission.</div>
+            <summary>Turn on OBS's WebSocket server</summary>
+            <div class="faq-body">In OBS: <strong>Tools → WebSocket Server Settings</strong>, tick <strong>Enable WebSocket server</strong>, and Apply. This is what lets RYLI talk to it.</div>
           </details>
           <details class="faq-item guide-step">
-            <summary>Install the DroidCam client on this PC</summary>
-            <div class="faq-body">Download it from <a href="https://droidcam.app/windows/" target="_blank" rel="noopener">droidcam.app/windows</a> and run it with the default options. This is the program that receives your phone's video on this computer.</div>
+            <summary>Press "Connect &amp; Add Overlay to OBS"</summary>
+            <div class="faq-body">It is in RYLI's wizard, and afterwards in <strong>Settings → Connections</strong>. RYLI creates the browser sources itself. Windows may ask whether to allow RYLI through the firewall — choose <strong>Allow</strong>, or OBS cannot load your overlay.</div>
+          </details>
+          <details class="faq-item guide-step">
+            <summary>Check your overlay is on the canvas</summary>
+            <div class="faq-body">You should see the RYLI strip appear in OBS. RYLI also adds a second source for her audio, so her voice gets its own fader in your mixer instead of riding on Desktop Audio.</div>
+          </details>
+          <details class="faq-item guide-step">
+            <summary>Optional — put your face in the jumbotron</summary>
+            <div class="faq-body">In <strong>Settings → Appearance &amp; FX → Webcam</strong>, turn on your camera and pick your device. It is free on every plan and off by default. This is piped through RYLI, not a second OBS source.</div>
+          </details>
+        </div>
+      </section>
+
+      <section class="guide-step-section" id="step-camera">
+        <div class="feature__eyebrow"><span class="icon-badge">📱</span>Step 4 — Your product camera <span class="tag">OPTIONAL</span></div>
+        <h2>Point a phone at the table</h2>
+        <p class="desc">Most live sellers use a phone as their main camera so viewers see the product, not just a face. DroidCam is the usual way to do it. Skip this if you already have a camera in OBS.</p>
+        <div class="guide-steps">
+          <details class="faq-item guide-step">
+            <summary>Install DroidCam on your phone and this PC</summary>
+            <div class="faq-body">Phone app from <a href="https://play.google.com/store/apps/details?id=com.dev47apps.droidcam" target="_blank" rel="noopener">Google Play</a> or the <a href="https://apps.apple.com/app/droidcam/id1510258102" target="_blank" rel="noopener">App Store</a>; the PC client from <a href="https://droidcam.app/windows" target="_blank" rel="noopener">droidcam.app/windows</a>. You need both halves.</div>
           </details>
           <details class="faq-item guide-step">
             <summary>Install the DroidCam OBS plugin</summary>
-            <div class="faq-body">This is a separate small installer from <a href="https://droidcam.app/obs/" target="_blank" rel="noopener">droidcam.app/obs</a> that adds DroidCam as an option inside OBS's own source list. Without it, OBS can't see your phone. Run it, then fully close and reopen OBS.</div>
+            <div class="faq-body">A separate small installer from <a href="https://droidcam.app/obs" target="_blank" rel="noopener">droidcam.app/obs</a>. Without it OBS cannot see your phone. Run it, then fully close and reopen OBS.</div>
           </details>
           <details class="faq-item guide-step">
-            <summary>Connect your phone to the PC client</summary>
-            <div class="faq-body">Open the PC client and the phone app together. Both on the same Wi-Fi works, but a USB cable gives the most stable, lowest-lag feed — that's what we recommend for live selling.</div>
+            <summary>Connect by USB if you can</summary>
+            <div class="faq-body">Same Wi-Fi works, but a USB cable gives the most stable, lowest-lag feed — worth it for live selling.</div>
           </details>
           <details class="faq-item guide-step">
-            <summary>Add DroidCam as an OBS source, pointed at your product</summary>
-            <div class="faq-body">In OBS, click the <strong>+</strong> under Sources → <strong>DroidCam Source</strong> → select your phone. Prop it facing forward at your product or table. This feed is your show's main camera — your <strong>product cam</strong> — for the rest of this guide.</div>
+            <summary>Add it as an OBS source</summary>
+            <div class="faq-body">In OBS click <strong>+</strong> under Sources → <strong>DroidCam Source</strong> → pick your phone. Prop it facing your product. RYLI's overlay sits on top of this.</div>
           </details>
         </div>
       </section>
 
-      <!-- STEP 3 -->
-      <section class="guide-step-section" id="step-layers">
-        <div class="feature__eyebrow"><span class="icon-badge">🗂️</span>Step 3 of 5 — How it all layers</div>
-        <h2>Two things in OBS — RYLI does double duty</h2>
-        <p class="desc">Any OBS livestream setup already has its own camera — that's DroidCam, from Step 2. RYLI only ever adds ONE more thing to OBS on top of it: a single "RYLI Overlay" browser source. Hover (or tap) the picture itself, or the list beside it — either one highlights what each piece does.</p>
+      <!-- ================= PART TWO — GO LIVE ================= -->
+      <h2 class="guide-part" id="golive">Part two — start your show</h2>
+      <p class="desc" style="max-width:720px;">You are set up. How you actually go live depends on where you sell — pick yours.</p>
 
-        <div class="camera-stack">
-          <div class="camera-stack__diagram">
-            <svg viewBox="0 0 520 320" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <defs>
-                <linearGradient id="layer-grad" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stop-color="#6AAEFF" />
-                  <stop offset="100%" stop-color="#B388FF" />
-                </linearGradient>
-              </defs>
+      <section class="guide-step-section">
+        <div class="showcase-toggle" role="tablist" aria-label="Choose your platform">
+          <button class="showcase-toggle__btn is-active" data-show-panel="whatnot" type="button">Whatnot</button>
+          <button class="showcase-toggle__btn" data-show-panel="mac" type="button">On a Mac</button>
+          <button class="showcase-toggle__btn" data-show-panel="twitch" type="button">Twitch</button>
+          <button class="showcase-toggle__btn" data-show-panel="tiktok" type="button">TikTok</button>
+        </div>
 
-              <!-- OBS canvas frame -->
-              <rect x="8" y="8" width="504" height="304" rx="14" fill="#0a0e14" stroke="rgba(242,246,255,0.14)" stroke-width="2" />
+        <!-- ---------- WHATNOT ---------- -->
+        <div class="showcase-panel is-active" data-panel="whatnot">
+          <div class="feature__eyebrow"><span class="icon-badge">🟢</span>Going live on Whatnot</div>
+          <h2>Start every show from RYLI</h2>
 
-              <!-- Layer 1: DroidCam product cam — OBS's own source, full-bleed base -->
-              <g class="stack-layer" data-layer="product">
-                <rect x="8" y="8" width="504" height="304" rx="14" fill="rgba(106,174,255,0.08)" />
-                <rect x="170" y="130" width="180" height="120" rx="10" fill="rgba(106,174,255,0.18)" stroke="url(#layer-grad)" stroke-width="2" />
-                <text x="260" y="198" text-anchor="middle" font-size="34">📦</text>
-                <text x="260" y="272" text-anchor="middle" font-size="12" fill="rgba(242,246,255,0.5)" font-family="Inter, sans-serif">Product / table view</text>
-              </g>
-
-              <!-- Layer 2: RYLI Overlay — the ONE browser source, runs graphics + the jumbotron box -->
-              <g class="stack-layer" data-layer="overlay">
-                <rect x="20" y="20" width="480" height="92" rx="14" fill="rgba(179,136,255,0.07)" stroke="rgba(179,136,255,0.3)" stroke-width="1.5" stroke-dasharray="5 4" />
-                <text x="34" y="36" font-size="10" fill="rgba(242,246,255,0.45)" font-family="Inter, sans-serif" font-weight="700">RYLI OVERLAY — ONE BROWSER SOURCE</text>
-
-                <rect x="34" y="44" width="110" height="54" rx="10" fill="rgba(125,231,255,0.14)" stroke="rgba(125,231,255,0.5)" stroke-width="1.5" />
-                <text x="89" y="70" text-anchor="middle" font-size="20">🏆</text>
-                <text x="89" y="89" text-anchor="middle" font-size="10" fill="#F2F6FF" font-family="Inter, sans-serif">Leaderboard</text>
-
-                <rect x="376" y="44" width="110" height="54" rx="10" fill="rgba(106,174,255,0.18)" stroke="url(#layer-grad)" stroke-width="1.5" />
-                <text x="431" y="67" text-anchor="middle" font-size="18">⚡</text>
-                <text x="431" y="89" text-anchor="middle" font-size="10" fill="#F2F6FF" font-family="Inter, sans-serif">Hype Meter</text>
-
-                <!-- the jumbotron box: shows engagement graphics normally, or your face cam when it's on -->
-                <rect x="164" y="38" width="192" height="66" rx="10" fill="rgba(179,136,255,0.12)" stroke="rgba(179,136,255,0.55)" stroke-width="1.5" />
-                <line x1="260" y1="44" x2="260" y2="98" stroke="rgba(242,246,255,0.2)" stroke-dasharray="3 3" />
-                <text x="212" y="78" text-anchor="middle" font-size="22">📋</text>
-                <text x="308" y="78" text-anchor="middle" font-size="22">🙂</text>
-                <text x="260" y="113" text-anchor="middle" font-size="10" fill="rgba(242,246,255,0.55)" font-family="Inter, sans-serif">Jumbotron — graphics or your face</text>
-              </g>
-
-              <!-- Face cam highlight ring — same box as "overlay" above, calling out the right (face) half specifically.
-                   fill="transparent" (not "none") so this rect is still hoverable — SVG excludes fill="none"
-                   shapes from hit-testing entirely, which would make this whole region unclickable/unhoverable. -->
-              <g class="stack-layer" data-layer="facecam">
-                <rect x="262" y="38" width="94" height="66" rx="10" fill="transparent" stroke="#7DE7FF" stroke-width="2.5" stroke-opacity="0.35" />
-              </g>
-            </svg>
+          <div class="guide-critical">
+            <strong>This is the one step people miss.</strong>
+            RYLI can only read a window she opened herself. If you start your show from your own browser — even the same account, even the same show — she sees <em>nothing</em>: no bids, no chat, no leaderboards, no celebrations, no sales tracked. The overlay will sit there looking fine and doing nothing. Always begin with the <strong>Launch Whatnot Show</strong> button at the top of RYLI.
           </div>
 
-          <div class="camera-stack__legend">
-            <button type="button" class="camera-layer-btn" data-layer="product">
-              <span class="num">1</span>
-              <span><span class="title">DroidCam — your product cam</span><span class="sub">Your phone, propped forward on the table, added as its own OBS source — the same camera setup any streamer already has.</span></span>
-            </button>
-            <button type="button" class="camera-layer-btn" data-layer="overlay">
-              <span class="num">2</span>
-              <span><span class="title">RYLI Overlay — added once</span><span class="sub">One browser source in OBS. It sits on top of your product cam for the whole show, running the leaderboard, hype meter, and jumbotron.</span></span>
-            </button>
-            <button type="button" class="camera-layer-btn" data-layer="facecam">
-              <span class="num">3</span>
-              <span><span class="title">Your face cam (optional)</span><span class="sub">Piped straight through RYLI itself — not a second OBS source. Turn it on in Settings and it fills that same jumbotron box.</span></span>
-            </button>
+          <div class="guide-steps">
+            <details class="faq-item guide-step" open>
+              <summary>1. Click "Launch Whatnot Show" in RYLI</summary>
+              <div class="faq-body">It is the button in RYLI's header. This opens a dedicated window just for Whatnot — the one RYLI watches. Log in there as normal; it stays separate from your everyday browser.</div>
+            </details>
+            <details class="faq-item guide-step">
+              <summary>2. In that window: Shows → OBS Tools → Connect to OBS</summary>
+              <div class="faq-body">These are Whatnot's own buttons, on their site. <strong>Connect to OBS</strong> sits in the bottom-right of the page.</div>
+            </details>
+            <details class="faq-item guide-step">
+              <summary>3. Start Show → Open Show</summary>
+              <div class="faq-body">Also Whatnot's buttons. This is what actually puts you live.</div>
+            </details>
+            <details class="faq-item guide-step">
+              <summary>4. Leave that window running</summary>
+              <div class="faq-body">Run the whole auction from it, or leave it open in the background and control the show from a phone or tablet on the same account. Either way, do not close it mid-show.</div>
+            </details>
+            <details class="faq-item guide-step">
+              <summary>Set your Whatnot username in RYLI</summary>
+              <div class="faq-body"><strong>Settings → Platforms</strong>. This is how RYLI knows to track only <em>your</em> shows — if you browse someone else's stream, she stops recording so their buyers never end up in your history.</div>
+            </details>
           </div>
         </div>
 
-        <p class="desc">That one overlay does two jobs. It automatically runs the engagement graphics — leaderboard, milestone celebrations, the hype meter — the moment it's added, no extra setup. And if you want, it can also show your own face: piped straight from your PC's webcam through RYLI, not a second OBS source. It's off by default, and when it's on, it fills that same jumbotron box edge-to-edge — rotating in during quiet moments, or pinned on with a hotkey while you're talking. More on turning it on in the next step.</p>
-      </section>
+        <!-- ---------- MAC / PARALLELS ---------- -->
+        <div class="showcase-panel" data-panel="mac">
+          <div class="feature__eyebrow"><span class="icon-badge">🍎</span>Running RYLI on a Mac</div>
+          <h2>It works, through Parallels</h2>
+          <p class="desc">RYLI is a Windows app. On a Mac it runs inside <a href="https://www.parallels.com/products/desktop/" target="_blank" rel="noopener">Parallels Desktop</a>, and hosts are already streaming that way. RYLI recognises when it is running in Parallels and sets itself up accordingly — you press the same button everyone else presses, and there is no address to look up.</p>
+          <div class="guide-steps">
+            <details class="faq-item guide-step" open>
+              <summary>Keep OBS on the Mac side</summary>
+              <div class="faq-body">This is the setup to aim for. OBS runs natively on macOS where it can use your Mac's own video encoder, and RYLI runs in the Windows window beside it. RYLI finds OBS across that boundary by itself.</div>
+            </details>
+            <details class="faq-item guide-step">
+              <summary>Press "Connect &amp; Add Overlay to OBS" exactly as normal</summary>
+              <div class="faq-body"><strong>Settings → Connections</strong>. RYLI checks the Windows side first, then the Mac hosting it, connects to whichever is running OBS, and points OBS back at an address that can actually reach it. Windows may ask whether to allow RYLI through the firewall the first time — choose <strong>Allow</strong>, or OBS cannot load your overlay.</div>
+            </details>
+            <details class="faq-item guide-step">
+              <summary>Type your own OBS password instead of copying one</summary>
+              <div class="faq-body">Parallels' shared clipboard can be slow, and OBS generates a long random password. In OBS go to <strong>Tools → WebSocket Server Settings</strong>, type a short password of your own, and Apply. Then type that same one into RYLI — no copy-paste to lag or paste half of.</div>
+            </details>
+            <details class="faq-item guide-step">
+              <summary>If RYLI cannot find OBS</summary>
+              <div class="faq-body">Check OBS is open with <strong>Enable WebSocket server</strong> ticked, then press the button again. Still nothing? In Parallels open <strong>Settings → Hardware → Network</strong>, switch from Shared to <strong>Bridged</strong>, restart the Windows VM and try once more.</div>
+            </details>
+            <details class="faq-item guide-step">
+              <summary>You can also run OBS inside Windows</summary>
+              <div class="faq-body">That works too, with no special setup. The trade-off is that OBS cannot reach your Mac's hardware encoder from inside the VM, so it falls back to encoding on the processor — fine on some machines, heavy on others. Try the Mac-side setup first.</div>
+            </details>
+          </div>
+          <p class="desc">Everything in the <strong>Whatnot</strong> tab still applies — including starting your show from RYLI's own button. A native macOS build is not available yet; if you are running RYLI on a Mac we would genuinely like to hear how it goes: <a href="mailto:hello@ryli.app">hello@ryli.app</a>.</p>
+        </div>
 
-      <!-- STEP 4 -->
-      <section class="guide-step-section" id="step-ryli">
-        <div class="feature__eyebrow"><span class="icon-badge">✨</span>Step 4 of 5 — Install &amp; onboard RYLI</div>
-        <h2>Layer RYLI on top</h2>
-        <p class="desc">With OBS and DroidCam already working, RYLI layers on top in a few minutes — its setup wizard walks you through connecting to OBS.</p>
-        <div class="guide-steps">
-          <details class="faq-item guide-step" open>
-            <summary>Download RYLI</summary>
-            <div class="faq-body">Grab the free installer — <a href="https://github.com/ryanb898-png/ryli-releases/releases/latest/download/RYLI-Setup.exe">same one used everywhere else on this site</a>.</div>
-          </details>
-          <details class="faq-item guide-step">
-            <summary>Run the onboarding wizard</summary>
-            <div class="faq-body">RYLI opens straight into a short wizard. When you reach the OBS step, make sure OBS is open with <strong>Tools → WebSocket Server Settings → Enable WebSocket server</strong> checked, then tap <strong>Connect &amp; Add Overlay</strong> — it adds the "RYLI Overlay" browser source for you, no manual scene-building.</div>
-          </details>
-          <details class="faq-item guide-step">
-            <summary>Turn on your face cam (optional)</summary>
-            <div class="faq-body">In Settings → Configure Ryli → Webcam, check <strong>"Rotate my camera through the jumbotron"</strong> and pick your device. It's free on every plan, and off by default. Once it's on, hotkeys let you fine-tune it live (hold to pin it full-time, release to let it rotate again, disable to turn it off) — good to know, not required to get started.</div>
-          </details>
-          <details class="faq-item guide-step">
-            <summary>Pick a theme</summary>
-            <div class="faq-body">Choose any of the 3 free themes to match your brand. Next up — actually starting your show.</div>
-          </details>
+        <!-- ---------- TWITCH ---------- -->
+        <div class="showcase-panel" data-panel="twitch">
+          <div class="feature__eyebrow"><span class="icon-badge">🟣</span>Twitch <span class="tag">COMING SOON</span></div>
+          <h2>Not connected yet</h2>
+          <p class="desc">RYLI's overlay already works on Twitch today — it is an OBS browser source, so it goes wherever OBS goes. Your camera, themes, sounds, hype meter and Ryli's voice all run exactly as they do anywhere else.</p>
+          <p class="desc">What is <em>not</em> there yet is reading your Twitch chat and events, so leaderboards and celebrations have nothing to react to. That connection is in progress. In the meantime, in RYLI choose <strong>"I stream, but don't sell live"</strong> during setup — or in <strong>Settings → Platforms</strong> — and the sales pages stay out of your way.</p>
+        </div>
+
+        <!-- ---------- TIKTOK ---------- -->
+        <div class="showcase-panel" data-panel="tiktok">
+          <div class="feature__eyebrow"><span class="icon-badge">⚫</span>TikTok Shop LIVE <span class="tag">COMING SOON</span></div>
+          <h2>Not connected yet</h2>
+          <p class="desc">Same position as Twitch: the overlay itself works anywhere OBS streams, but RYLI cannot yet read TikTok's bids and chat, so the live reactions have nothing to feed on.</p>
+          <p class="desc">TikTok also gates OBS streaming behind a follower threshold on their side, which is worth knowing before you plan around it. Set RYLI to <strong>"I stream, but don't sell live"</strong> for now.</p>
         </div>
       </section>
 
-      <!-- STEP 5 -->
-      <section class="guide-step-section" id="step-golive">
-        <div class="feature__eyebrow"><span class="icon-badge">🟢</span>Step 5 of 5 — Start your Whatnot show</div>
-        <h2>Go live the right way</h2>
-        <p class="desc">Whatnot is RYLI's launch platform today, with more platforms planned. Following this exact sequence matters — it's what lets RYLI's data capture and effects trigger correctly, not just "some window with Whatnot open."</p>
-        <div class="guide-steps">
-          <details class="faq-item guide-step" open>
-            <summary>Click "🎥 Go Live" in RYLI</summary>
-            <div class="faq-body">This opens a dedicated window just for Whatnot — RYLI watches everything that happens inside it.</div>
-          </details>
-          <details class="faq-item guide-step">
-            <summary>Log into Whatnot in that window</summary>
-            <div class="faq-body">Same as you always do. This window stays separate from your regular browser.</div>
-          </details>
-          <details class="faq-item guide-step">
-            <summary>On Whatnot's site: Shows → OBS Tools → Connect to OBS</summary>
-            <div class="faq-body">These are Whatnot's own buttons, on their website — <strong>Connect to OBS</strong> sits in the bottom-right of the page.</div>
-          </details>
-          <details class="faq-item guide-step">
-            <summary>Start Show → Open Show</summary>
-            <div class="faq-body">Also Whatnot's own buttons. This is what actually puts you live and lets RYLI start capturing your show correctly.</div>
-          </details>
-          <details class="faq-item guide-step">
-            <summary>Leave that window running</summary>
-            <div class="faq-body">Run your whole auction from this same window, or leave it open in the background and control the auction from a second phone or tablet logged into the same Whatnot account. Either way — don't close this window mid-show.</div>
-          </details>
-        </div>
-      </section>
-
-      <section class="guide-step-section" id="parallels">
-        <div class="feature__eyebrow"><span class="icon-badge">🍎</span>On a Mac — running RYLI in Parallels</div>
-        <h2>Yes, it works on a Mac</h2>
-        <p class="desc">RYLI is a Windows app. On a Mac it runs inside <strong>Parallels Desktop</strong>, and hosts are already streaming that way. RYLI recognises when it's running in Parallels and sets itself up accordingly — you press the same button everyone else presses, and there is no address to look up.</p>
-        <div class="guide-steps">
-          <details class="faq-item guide-step" open>
-            <summary>Keep OBS on the Mac side</summary>
-            <div class="faq-body">This is the setup to aim for. OBS runs natively on macOS where it can use your Mac's own video encoder, and RYLI runs in the Windows window beside it. RYLI finds OBS across that boundary by itself.</div>
-          </details>
-          <details class="faq-item guide-step">
-            <summary>Press "Connect &amp; Add Overlay to OBS" exactly as normal</summary>
-            <div class="faq-body">Settings → Connections. RYLI checks the Windows side first, then the Mac hosting it, connects to whichever is running OBS, and points OBS back at an address that can actually reach it. Windows may ask whether to allow RYLI through the firewall the first time — choose <strong>Allow</strong>, or OBS won't be able to load your overlay.</div>
-          </details>
-          <details class="faq-item guide-step">
-            <summary>Set your own OBS password instead of copying one</summary>
-            <div class="faq-body">Parallels' shared clipboard can be slow, and OBS generates a long random password. In OBS go to <strong>Tools → WebSocket Server Settings</strong>, type a short password of your own into the password box, and Apply. Then type that same one into RYLI. No copy-paste involved, so nothing can lag or paste half of it.</div>
-          </details>
-          <details class="faq-item guide-step">
-            <summary>If RYLI can't find OBS</summary>
-            <div class="faq-body">Check OBS is open with <strong>Enable WebSocket server</strong> ticked, then press the button again. Still nothing? In Parallels open <strong>Settings → Hardware → Network</strong>, switch from Shared to <strong>Bridged</strong>, restart the Windows VM and try once more.</div>
-          </details>
-          <details class="faq-item guide-step">
-            <summary>You can also run OBS inside Windows</summary>
-            <div class="faq-body">That works too, with no special setup. The trade-off is that OBS can't reach your Mac's hardware encoder from inside the VM, so it falls back to encoding on the processor — fine on some machines, heavy on others. Try the Mac-side setup first.</div>
-          </details>
-        </div>
-        <p class="desc">A native macOS build isn't available yet. If you're running RYLI on a Mac we'd genuinely like to hear how it goes — email <a href="mailto:hello@ryli.app">hello@ryli.app</a>.</p>
-      </section>
-
-      <div class="guide-outro">
+      <section class="guide-outro">
         <h2>That's the whole stack.</h2>
-        <p>DroidCam shows your product, RYLI's overlay reacts live on top — including your own face cam when you want it. Questions along the way? Email <a href="mailto:hello@ryli.app">hello@ryli.app</a> — happy to help.</p>
+        <p class="desc">OBS sends the stream, your camera shows the product, and RYLI's overlay reacts live on top — including your own face cam when you want it. Questions along the way? Email <a href="mailto:hello@ryli.app">hello@ryli.app</a> — happy to help.</p>
         <a class="btn btn-primary" href="https://github.com/ryanb898-png/ryli-releases/releases/latest/download/RYLI-Setup.exe">Download RYLI</a>
-      </div>
+      </section>
     </div>
   </section>
 </main>
+
 
 <footer class="footer">
   <div class="container">
