@@ -354,8 +354,7 @@ section { padding: 96px 0; position: relative; }
    size — they share a column, so equal width plus equal ratio means equal
    height at every breakpoint. Left to their own content they diverged badly:
    the waveform ran ~332px while the Insights shot came in at ~271px. */
-.waveform-media,
-.insights-media {
+.waveform-media {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -363,6 +362,18 @@ section { padding: 96px 0; position: relative; }
      rather than sitting letterboxed inside a taller box — at 16/10 it rendered
      474x246 in a 524x328 bubble and read as too small. */
   aspect-ratio: 1600 / 831;
+  background: radial-gradient(400px 260px at 50% 50%, rgba(106,174,255,0.10), transparent 70%), var(--slate-2);
+}
+.insights-media {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Its OWN ratio, not the waveform's. These two used to share 1600/831 -- the
+     old Insights screenshot's shape. That shot is gone: it showed an eBay Live
+     platform pill for a platform that was dropped from the product, so it is
+     cropped above the switcher now and is shorter. Sharing the old ratio would
+     letterbox it. */
+  aspect-ratio: 1600 / 685;
   background: radial-gradient(400px 260px at 50% 50%, rgba(106,174,255,0.10), transparent 70%), var(--slate-2);
 }
 /* No padding: the screenshot IS the bubble. */

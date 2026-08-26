@@ -91,7 +91,7 @@ console.log('\n  IMAGES');
 
   // Superseded files are kept for exactly one deploy so cached HTML pointing at
   // the old name does not 404. List them here and delete them next time.
-  const GRACE = new Set(['og-cover.png']);
+  const GRACE = new Set(['og-cover.png', 'screenshot-themes-v2.png', 'screenshot-insights-v2.png', 'ryliring.png']);
 
   const orphans = files.filter((f) => !sources.includes(f) && !GRACE.has(f));
   const mb = orphans.reduce((n, f) => n + fs.statSync(path.join(dir, f)).size, 0) / 1048576;
