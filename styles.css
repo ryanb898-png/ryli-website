@@ -283,6 +283,32 @@ section { padding: 96px 0; position: relative; }
   .hero { padding-top: 48px; }
 }
 
+/* ---------- who it's for ---------- */
+
+.audience-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.audience-card { padding: 32px 28px; }
+.audience-card h3 { font-size: 24px; margin: 6px 0 8px; }
+.audience-card .desc { color: var(--ink-dim); margin-bottom: 18px; max-width: 46ch; }
+.audience-card .feature__eyebrow { margin-bottom: 4px; }
+@media (max-width: 860px) { .audience-grid { grid-template-columns: 1fr; } }
+
+/* A neutral pill. There is no bare `.tag` rule in this file -- only `.tag.pro`
+   and the theme-swatch variants -- so setup-guide.html's own COMING SOON tags
+   have been rendering unstyled. One rule covers both. */
+.tag {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: rgba(242, 246, 255, 0.08);
+  color: var(--ink-dim);
+  border: 1px solid var(--line);
+}
+
 /* ---------- positioning strip ---------- */
 
 .strip {

@@ -2,27 +2,27 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://ryli.app/</loc>
-    <lastmod>2026-08-19</lastmod>
+    <lastmod>2026-08-26</lastmod>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://ryli.app/setup-guide</loc>
-    <lastmod>2026-08-19</lastmod>
+    <lastmod>2026-08-26</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://ryli.app/changelog</loc>
-    <lastmod>2026-08-19</lastmod>
+    <lastmod>2026-08-26</lastmod>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://ryli.app/privacy</loc>
-    <lastmod>2026-08-19</lastmod>
+    <lastmod>2026-08-26</lastmod>
     <priority>0.3</priority>
   </url>
   <url>
     <loc>https://ryli.app/terms</loc>
-    <lastmod>2026-08-19</lastmod>
+    <lastmod>2026-08-26</lastmod>
     <priority>0.3</priority>
   </url>
 </urlset>
