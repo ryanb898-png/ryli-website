@@ -5,7 +5,9 @@
    body, Celestial Blue / Aurora Purple / Soft Cyan accents on a
    Slate background.
    ============================================================= */
-@import url("https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap");
+/* Fonts are <link>ed from each page's <head> now, not @imported. An @import
+   at the top of a stylesheet serialises the request chain: HTML -> this file
+   -> Google's CSS -> the woff2 files, with nothing overlapping. */
 
 :root {
   --blue: #6AAEFF;
@@ -33,6 +35,15 @@
   --radius-lg: 22px;
   --shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
   --container: 1160px;
+
+  /* Motion. There were none of these: every duration was hardcoded and every
+     easing was the bare `ease` keyword. --lift extracts the "this one matters"
+     idiom that .price-card.pro already used, so it has one definition. */
+  --dur-1: 160ms;   /* micro -- hover, tab */
+  --dur-2: 320ms;   /* panel crossfade */
+  --dur-3: 620ms;   /* scroll reveal */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --lift: 0 0 0 1px rgba(106, 174, 255, 0.2), var(--shadow);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -180,8 +191,20 @@ section { padding: 96px 0; position: relative; }
   border-radius: var(--radius-lg);
 }
 
-.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity var(--dur-3) var(--ease-out), transform var(--dur-3) var(--ease-out); }
 .reveal.is-visible { opacity: 1; transform: translateY(0); }
+
+/* STAGGER. .reveal is applied to 21 CONTAINERS, so grids arrived as one rigid
+   block -- all four steps, both pricing cards, every theme swatch at once. The
+   per-child delay comes from a --d custom property set in script.js, the same
+   convention the admin dashboard in src/index.js already uses. */
+.stagger > * { opacity: 0; transform: translateY(18px); }
+.stagger.is-visible > * {
+  opacity: 1;
+  transform: none;
+  transition: opacity var(--dur-3) var(--ease-out) var(--d, 0s),
+              transform var(--dur-3) var(--ease-out) var(--d, 0s);
+}
 
 /* ---------- nav ---------- */
 
@@ -476,6 +499,25 @@ section { padding: 96px 0; position: relative; }
   transition: background 0.2s ease, transform 0.2s ease;
 }
 .carousel__dots button.is-active { background: var(--white); transform: scale(1.2); }
+
+/* The pause control lives in the dots row. It is a real button, not a hover
+   affordance, because hover is not available to a keyboard or a phone. */
+.carousel__pause {
+  width: auto;
+  min-width: 26px;
+  height: 12px;
+  padding: 0 6px;
+  margin-left: 8px;
+  font-size: 9px;
+  line-height: 1;
+  color: var(--ink-dim);
+  background: rgba(242, 246, 255, 0.12);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color var(--dur-1) var(--ease-out), background var(--dur-1) var(--ease-out);
+}
+.carousel__pause:hover { color: var(--ink); background: rgba(242, 246, 255, 0.2); }
 .carousel__arrow {
   position: absolute;
   top: 50%;
@@ -599,7 +641,11 @@ section { padding: 96px 0; position: relative; }
 }
 
 .showcase-panel { display: none; }
-.showcase-panel.is-active { display: block; }
+/* Was a hard display:none -> block cut on two prominent tab widgets. Keeps
+   display:none (so lazy images in a hidden panel stay unfetched and the layout
+   reserves nothing) while the incoming panel fades up. No JS change. */
+.showcase-panel.is-active { display: block; animation: panelIn var(--dur-2) var(--ease-out) both; }
+@keyframes panelIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 
 .store-highlights {
   display: grid;
@@ -1088,3 +1134,180 @@ section { padding: 96px 0; position: relative; }
    screenshot would go stale the moment it does. */
 .hype-media, .companion-media { display: flex; align-items: center; justify-content: center; }
 .hype-media svg, .companion-media svg { width: 100%; max-width: 520px; height: auto; }
+
+/* ---------- hover, focus, and the reduced-motion guard ---------- */
+
+/* The card system had NO hover state at all -- .card, .price-card, .step,
+   .theme-swatch and .store-highlight were completely inert. --gradient-soft
+   was declared in :root and never referenced; this is what it was for. */
+.card,
+.price-card,
+.step,
+.theme-swatch,
+.store-highlight,
+.audience-card {
+  transition: transform var(--dur-1) var(--ease-out),
+              border-color var(--dur-1) var(--ease-out),
+              background var(--dur-1) var(--ease-out);
+}
+.step:hover,
+.theme-swatch:hover,
+.store-highlight:hover,
+.audience-card:hover,
+.step:focus-visible,
+.theme-swatch:focus-visible,
+.store-highlight:focus-visible {
+  transform: translateY(-3px);
+  border-color: var(--line-hot);
+  background-image: var(--gradient-soft);
+}
+
+/* The glow is PRE-PAINTED on a pseudo-element and only its opacity animates.
+   Interpolating box-shadow repaints the element and its shadow region every
+   frame -- which .btn already does, and does on the download CTA. */
+.price-card { position: relative; }
+.price-card::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  box-shadow: var(--lift);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-1) var(--ease-out);
+}
+.price-card:hover::after { opacity: 1; }
+
+/* There was no focus-ring convention anywhere on this site. */
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Nothing on this site honoured a reduced-motion preference: not the reveals,
+   not smooth scroll, and not the 4.5s carousel autoplay.
+   The last rule is load-bearing -- without it, any .reveal whose observer
+   never fires is stranded at opacity:0 and its content is simply gone. */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal, .stagger > * { opacity: 1 !important; transform: none !important; }
+}
+
+/* ---------- showpiece: the Hype Meter fills ---------- */
+/* The section's whole argument is "make the room erupt on cue" and the graphic
+   was a static SVG with the bar hard-coded at 268 of 444. Transform and opacity
+   only: transform-box:fill-box gives the rect its own coordinate space so a
+   left-origin scaleX grows it from its own edge, the same technique the admin
+   map's blips use. */
+.hm-fill {
+  transform-box: fill-box;
+  transform-origin: left center;
+  transform: scaleX(0);
+}
+.hype-media.is-live .hm-fill {
+  animation: hmFill 1400ms var(--ease-out) 120ms forwards;
+}
+@keyframes hmFill { to { transform: scaleX(1); } }
+
+/* The countdown breathes rather than blinks -- a blink reads as an error state,
+   and this is a prompt. */
+.hype-media.is-live .hm-clock { animation: hmPulse 1800ms ease-in-out 900ms infinite; }
+@keyframes hmPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.55; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .hm-fill { transform: scaleX(1); }
+  .hype-media.is-live .hm-fill,
+  .hype-media.is-live .hm-clock { animation: none; }
+}
+
+/* ---------- showpiece: the board fills itself ---------- */
+/* The board screenshot above it is a board BEFORE a break starts -- every spot
+   open. This is the part a still cannot carry: spots being claimed one at a
+   time with a buyer's name landing on each. Transform and opacity only, and it
+   runs once, when the section is first seen. */
+.breaker-media { display: block; padding: 0; }
+.breaker-media img { border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
+
+.bk-live {
+  padding: 14px 16px 16px;
+  border-top: 1px solid var(--line);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent);
+}
+.bk-live__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 10px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.1px;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.bk-live__count { color: var(--blue); font-variant-numeric: tabular-nums; }
+.bk-live__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.bk-tile {
+  position: relative;
+  overflow: hidden;
+  padding: 7px 8px 7px 11px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.02);
+}
+/* The team's own colour as a left edge -- the same device the real board uses,
+   and what makes a 32-spot board scannable at a glance. */
+.bk-tile::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: var(--team);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 320ms var(--ease-out) var(--d, 0s);
+}
+.bk-live.is-running .bk-tile::before { transform: scaleY(1); }
+
+.bk-tile__team {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.bk-tile__who {
+  display: block;
+  font-size: 10px;
+  color: var(--ink-dim);
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 260ms var(--ease-out) var(--d, 0s),
+              transform 260ms var(--ease-out) var(--d, 0s);
+}
+.bk-live.is-running .bk-tile__who { opacity: 1; transform: none; }
+/* A spot nobody has taken stays visibly open -- that is the information. */
+.bk-tile.is-open .bk-tile__who { color: var(--ink-faint); font-style: italic; }
+.bk-tile.is-open::before { opacity: 0.35; }
+
+@media (max-width: 520px) { .bk-live__grid { grid-template-columns: repeat(2, 1fr); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .bk-tile::before { transform: scaleY(1); }
+  .bk-tile__who { opacity: 1; transform: none; }
+}

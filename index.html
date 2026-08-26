@@ -29,6 +29,9 @@
 <link rel="apple-touch-icon" href="assets/favicon/apple-touch-icon.png" />
 <link rel="manifest" href="assets/favicon/site.webmanifest" />
 <meta name="theme-color" content="#0D1117" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@600;700&family=Inter:wght@400;500;600;700;800&display=swap" />
 <link rel="stylesheet" href="styles.css" />
 <!-- Polar checkout embed — turns the "Subscribe" link into an overlay modal
      on top of this page instead of a full navigation away. Linked directly
@@ -403,13 +406,13 @@
               <rect x="8" y="8" width="504" height="244" rx="18" fill="#0d1117" stroke="url(#hm-edge)" stroke-width="2" />
 
               <text x="34" y="58" fill="#8da2d3" font-size="15" font-weight="700" letter-spacing="2.4">🔥 HYPE METER</text>
-              <text x="286" y="58" fill="var(--purple)" font-size="15" font-weight="700" text-anchor="end">47 joining in</text>
+              <text class="hm-count" x="286" y="58" fill="var(--purple)" font-size="15" font-weight="700" text-anchor="end" data-to="47">0 joining in</text>
               <text x="392" y="62" fill="var(--cyan)" font-size="30" font-weight="800" text-anchor="end">$20</text>
               <rect x="404" y="38" width="74" height="30" rx="7" fill="#161c26" stroke="#2b3147" />
-              <text x="441" y="59" fill="#ffd166" font-size="19" font-weight="800" text-anchor="middle">0:12</text>
+              <text class="hm-clock" x="441" y="59" fill="#ffd166" font-size="19" font-weight="800" text-anchor="middle">0:12</text>
 
               <rect x="34" y="92" width="444" height="30" rx="15" fill="#161c26" />
-              <rect x="34" y="92" width="268" height="30" rx="15" fill="url(#hm-fill)" />
+              <rect class="hm-fill" x="34" y="92" width="268" height="30" rx="15" fill="url(#hm-fill)" />
 
               <g fill="#39405c">
                 <rect x="106" y="92" width="2" height="30" />
@@ -543,9 +546,24 @@
         </ul>
         <p class="feature__note">Already built your break on Whatnot? RYLI will match your board to it &mdash; the teams, the spot count, and everyone who has already bought in.</p>
       </div>
-      <div class="feature__media">
+      <div class="feature__media breaker-media">
         <img src="assets/images/breaker-board-v4.png" width="1200" height="877" loading="lazy" decoding="async"
              alt="The RYLI breaker board on a live stream: a grid of NFL team tiles with a spots-filled counter, a SPOTS OPEN prompt and a Stash or Pass sign" />
+        <!-- The picture above is a board before the break starts. This is the
+             thing a picture cannot show: spots being claimed, live. -->
+        <div class="bk-live" aria-hidden="true">
+          <div class="bk-live__head"><span>WATCH IT FILL</span><span class="bk-live__count">0 / 8</span></div>
+          <ul class="bk-live__grid">
+            <li class="bk-tile" style="--team:#FF3C00"><span class="bk-tile__team">Browns</span><span class="bk-tile__who">@cardking93</span></li>
+            <li class="bk-tile" style="--team:#241773"><span class="bk-tile__team">Ravens</span><span class="bk-tile__who">@whaleshark</span></li>
+            <li class="bk-tile" style="--team:#E31837"><span class="bk-tile__team">Chiefs</span><span class="bk-tile__who">@rookie_r</span></li>
+            <li class="bk-tile" style="--team:#FFB612"><span class="bk-tile__team">Packers</span><span class="bk-tile__who">@lealboys</span></li>
+            <li class="bk-tile" style="--team:#041E42"><span class="bk-tile__team">Cowboys</span><span class="bk-tile__who">@dcollector</span></li>
+            <li class="bk-tile" style="--team:#AA0000"><span class="bk-tile__team">49ers</span><span class="bk-tile__who">@bayarea_b</span></li>
+            <li class="bk-tile is-open" style="--team:#C83803"><span class="bk-tile__team">Bears</span><span class="bk-tile__who">open</span></li>
+            <li class="bk-tile is-open" style="--team:#0076B6"><span class="bk-tile__team">Lions</span><span class="bk-tile__who">open</span></li>
+          </ul>
+        </div>
       </div>
     </div>
   </section>
@@ -621,7 +639,7 @@
         <h2>Live in under 5 minutes.</h2>
         <p>No technical setup, no manual OBS configuration — the onboarding wizard does it for you.</p>
       </div>
-      <div class="steps reveal">
+      <div class="steps reveal stagger">
         <div class="step">
           <span class="num">01</span>
           <h3>Activate</h3>
@@ -664,7 +682,7 @@
         <div class="feature__media" style="margin-bottom: 40px;">
           <img src="assets/images/store-screenshot-v3.png" width="1600" height="990" decoding="async" loading="lazy" alt="RYLI Stream Store showing overlay effects and Stream Deck icon packs" />
         </div>
-        <div class="store-highlights reveal">
+        <div class="store-highlights reveal stagger">
           <div class="store-highlight">
             <span class="icon-badge">🎬</span>
             <div class="name">Animated Overlays</div>
@@ -692,7 +710,7 @@
         <div class="feature__media" style="margin-bottom: 40px;">
           <img src="assets/images/screenshot-themes-v4.png" width="1600" height="900" loading="lazy" decoding="async" alt="RYLI theme picker showing free and premium themes" />
         </div>
-        <div class="theme-grid theme-grid--compact reveal">
+        <div class="theme-grid theme-grid--compact reveal stagger">
           <div class="theme-swatch theme-swatch--bundle">
             <div class="name">×3 Free</div>
             <div class="sub">Gray Base, Black Slate, Whatnot</div>
@@ -734,7 +752,7 @@
         <h2>Free forever. <span class="grad-text">Pro when you're ready.</span></h2>
         <p>Enjoy RYLI free in your shows, no credit card required.</p>
       </div>
-      <div class="pricing-grid reveal">
+      <div class="pricing-grid reveal stagger">
         <div class="price-card card">
           <span class="tier-label">Free</span>
           <h3>Core Overlay</h3>

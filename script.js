@@ -1,5 +1,10 @@
 // RYLI marketing site — vanilla JS, no build step, no framework.
 
+// Read once and honoured everywhere below: stagger delays are skipped, and the
+// carousel never starts autoplaying. Nothing on this site used to check it.
+const REDUCED = window.matchMedia
+  && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 // Anonymous pageview beacon — one fire-and-forget call per real page load.
 // Loaded on every HTML page in this site (index/privacy/terms/setup-guide/
 // thank-you), so this covers the whole site from one place. Counts raw
@@ -121,16 +126,44 @@ document.querySelectorAll('[data-carousel]').forEach((carousel) => {
   }
   function restartAutoplay() { stopAutoplay(); startAutoplay(); }
 
-  if (autoplayMs) {
+  if (autoplayMs && !REDUCED) {
     let userInteracting = false;
+    let paused = false;
+
+    // A REAL pause control. Autoplay that loops forever with only a hover
+    // escape is continuous motion a keyboard or touch user cannot stop, which
+    // is a genuine accessibility failure rather than a nicety.
+    const pauseBtn = document.createElement('button');
+    pauseBtn.type = 'button';
+    pauseBtn.className = 'carousel__pause';
+    const paint = () => {
+      pauseBtn.textContent = paused ? '▶' : '‖';
+      pauseBtn.setAttribute('aria-label', paused ? 'Resume slideshow' : 'Pause slideshow');
+      pauseBtn.setAttribute('aria-pressed', String(paused));
+    };
+    pauseBtn.addEventListener('click', () => {
+      paused = !paused;
+      if (paused) stopAutoplay(); else startAutoplay();
+      paint();
+    });
+    paint();
+    if (dotsWrap) dotsWrap.appendChild(pauseBtn);
+
+    // Tabbing onto an arrow used to have the slide yanked out from under you.
+    carousel.addEventListener('focusin', stopAutoplay);
+    carousel.addEventListener('focusout', () => { if (!paused && !userInteracting) startAutoplay(); });
+    // The old comment claimed this already happened. Only the section half did.
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) stopAutoplay(); else if (!paused) startAutoplay();
+    });
     track.addEventListener('pointerdown', () => { userInteracting = true; stopAutoplay(); });
-    track.addEventListener('pointerup', () => { userInteracting = false; restartAutoplay(); });
+    track.addEventListener('pointerup', () => { userInteracting = false; if (!paused) restartAutoplay(); });
     carousel.addEventListener('mouseenter', stopAutoplay);
-    carousel.addEventListener('mouseleave', () => { if (!userInteracting) startAutoplay(); });
+    carousel.addEventListener('mouseleave', () => { if (!userInteracting && !paused) startAutoplay(); });
 
     if ('IntersectionObserver' in window) {
       new IntersectionObserver((entries) => {
-        entries.forEach((entry) => (entry.isIntersecting ? startAutoplay() : stopAutoplay()));
+        entries.forEach((entry) => ((entry.isIntersecting && !paused) ? startAutoplay() : stopAutoplay()));
       }, { threshold: 0.3 }).observe(carousel);
     } else {
       startAutoplay();
@@ -149,6 +182,86 @@ document.querySelectorAll('.showcase-toggle__btn').forEach((btn) => {
     scope.querySelectorAll('.showcase-toggle__btn').forEach((b) => b.classList.toggle('is-active', b === btn));
     scope.querySelectorAll('.showcase-panel').forEach((p) => p.classList.toggle('is-active', p.dataset.panel === target));
   });
+});
+
+// Per-child stagger delays, read by the .stagger rule in styles.css. Capped at
+// 7 so an eleven-item pricing list does not take two seconds to arrive.
+document.querySelectorAll('.stagger').forEach((group) => {
+  Array.from(group.children).forEach((el, i) => {
+    el.style.setProperty('--d', REDUCED ? '0s' : (Math.min(i, 7) * 0.07) + 's');
+  });
+});
+
+// The Hype Meter runs itself once, when it is first seen. The bar and the
+// countdown are pure CSS off an .is-live class; only the participation count
+// needs JS, because it is a number being tallied rather than a property being
+// tweened. Reduced motion gets the finished state with no animation at all.
+document.querySelectorAll('.hype-media').forEach((media) => {
+  const count = media.querySelector('.hm-count');
+  const to = count ? Number(count.dataset.to) || 0 : 0;
+  const settle = () => { if (count) count.textContent = to + ' joining in'; };
+
+  if (REDUCED || !('IntersectionObserver' in window)) {
+    media.classList.add('is-live');
+    settle();
+    return;
+  }
+
+  const run = () => {
+    media.classList.add('is-live');
+    if (!count) return;
+    const DURATION = 1400;
+    const started = performance.now();
+    const step = (now) => {
+      const t = Math.min(1, (now - started) / DURATION);
+      // Same ease-out shape the bar uses, so the number lands with the fill
+      // rather than racing ahead of it.
+      const eased = 1 - Math.pow(1 - t, 3);
+      count.textContent = Math.round(to * eased) + ' joining in';
+      if (t < 1) requestAnimationFrame(step); else settle();
+    };
+    requestAnimationFrame(step);
+  };
+
+  new IntersectionObserver((entries, obs) => {
+    entries.forEach((e) => { if (e.isIntersecting) { run(); obs.disconnect(); } });
+  }, { threshold: 0.4 }).observe(media);
+});
+
+// The breaker board claims its spots once, when first seen. Everything visual
+// is CSS off .is-running; JS only sets the per-tile delay and tallies the
+// counter, which is a number rather than a property.
+document.querySelectorAll('.bk-live').forEach((board) => {
+  const tiles = Array.from(board.querySelectorAll('.bk-tile'));
+  const counter = board.querySelector('.bk-live__count');
+  const taken = tiles.filter((t) => !t.classList.contains('is-open')).length;
+  const STEP = 190;
+
+  const finish = () => { if (counter) counter.textContent = taken + ' / ' + tiles.length; };
+
+  if (REDUCED || !('IntersectionObserver' in window)) {
+    board.classList.add('is-running');
+    finish();
+    return;
+  }
+
+  tiles.forEach((t, i) => t.style.setProperty('--d', (i * STEP) + 'ms'));
+
+  new IntersectionObserver((entries, obs) => {
+    entries.forEach((e) => {
+      if (!e.isIntersecting) return;
+      obs.disconnect();
+      board.classList.add('is-running');
+      // The counter climbs in step with the tiles rather than jumping at the
+      // end, so the number and the picture tell the same story.
+      let n = 0;
+      tiles.forEach((t, i) => {
+        if (t.classList.contains('is-open')) return;
+        setTimeout(() => { n += 1; if (counter) counter.textContent = n + ' / ' + tiles.length; }, i * STEP + 260);
+      });
+      setTimeout(finish, tiles.length * STEP + 400);
+    });
+  }, { threshold: 0.35 }).observe(board);
 });
 
 // Scroll-reveal
