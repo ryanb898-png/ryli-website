@@ -1044,7 +1044,15 @@ async function handleStats(request, env) {
       // are left in place below rather than showing an empty map.
       if (b.geo && Object.keys(b.geo).length) { sawGeo = true; merge(visitGeo, b.geo); }
     }
-    if (sawGeo) geo.visit = visitGeo;
+    // MERGED, not replaced. The old geo:visit:* keys are a frozen all-time
+    // total from before the move and stopped growing at it, so adding the
+    // range's per-day geography on top can never double-count -- and the map
+    // never suddenly loses the regions it has been collecting all year, which
+    // replacing it outright would have done the moment the first new day
+    // landed. The only imprecision is that a SHORT range skips the days
+    // between the move and that range; the map is a morale readout, and one
+    // that only ever grows is the right shape for it.
+    if (sawGeo) merge(geo.visit, visitGeo);
   } catch {
     // Same rule as the map: a panel that cannot load must not take the
     // dashboard down with it.
