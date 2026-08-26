@@ -240,18 +240,14 @@ function deviceKey(ua) {
 async function handleVisit(request, env) {
   if (request.method !== 'POST') return new Response('method not allowed', { status: 405 });
   const today = dayKey();
-  const key = `daily:${today}:visits`;
-  try {
-    const raw = await env.USAGE_KV.get(key);
-    await env.USAGE_KV.put(key, String(parseInt(raw || '0', 10) + 1));
-  } catch {
-    // Never fail the page load over a missed count.
-  }
-  // Same coarse geography as the install ping, on the same terms — see
-  // geoKey(). Every pageview counts here, not unique visitors, because
-  // that's what this beacon has always measured and inventing a visitor id
-  // to de-dupe would be exactly the tracking this site promises not to do.
-  await bumpGeo(env, 'visit', geoKey(request));
+  // Geography on the same terms as the install ping — see geoKey(). Every
+  // pageview counts, not unique visitors: that is what this beacon has always
+  // measured, and inventing a visitor id to de-dupe would be exactly the
+  // tracking this site promises not to do.
+  //
+  // It rides in the same object as everything else now. daily:<day>:visits and
+  // geo:visit:* are no longer written; both are still READ, so every number
+  // already on the dashboard survives -- see handleStats.
 
   // Three more aggregate counters, same terms as the geography above: no id,
   // no cookie, no IP, nothing that links one visit to another. They answer the
@@ -263,7 +259,8 @@ async function handleVisit(request, env) {
     ref: referrerKey(body && body.referrer),
     path: pathKey(body && body.path),
     dev: deviceKey(request.headers.get('user-agent')),
-  });
+    geo: geoKey(request),
+  }, 1);
   return new Response(null, { status: 204 });
 }
 
@@ -278,11 +275,17 @@ async function handleVisit(request, env) {
 // Labels are capped so a hostile or broken referrer cannot grow one day's
 // object without bound.
 const VISIT_META_MAX_LABELS = 40;
-async function bumpVisitMeta(env, day, parts) {
+async function bumpVisitMeta(env, day, parts, bump) {
   const k = `vmeta:${day}`;
   try {
     let obj = {};
     try { obj = JSON.parse((await env.USAGE_KV.get(k)) || '{}') || {}; } catch { obj = {}; }
+    // A pageview used to cost THREE read-modify-writes: the day's visit total,
+    // the region counter, and this breakdown. KV's free tier allows 1,000
+    // writes a day and the site alone was spending ~600 of them, while the
+    // desktop app -- the thing this namespace is named after -- spent about
+    // twelve. Three counters describing one pageview belong in one key.
+    if (bump) obj.visits = (obj.visits || 0) + bump;
     for (const [kind, label] of Object.entries(parts)) {
       if (!label) continue;
       const bucket = obj[kind] || (obj[kind] = {});
@@ -872,17 +875,31 @@ async function handleStats(request, env) {
   let periodNew = 0;
   let periodVisits = 0;
   const perDay = [];
+  // Visits moved into vmeta:<day> to cut a pageview from three KV writes to
+  // one. Days written before that still have daily:<day>:visits and nothing
+  // else, so BOTH are read and the new location wins -- every day already on
+  // the chart keeps its number. Reads are not the constrained resource here
+  // (100k/day against a few hundred used), so this costs nothing that matters.
+  const dayVisits = async (day) => {
+    const [metaRaw, legacyRaw] = await Promise.all([
+      env.USAGE_KV.get(`vmeta:${day}`),
+      env.USAGE_KV.get(`daily:${day}:visits`),
+    ]);
+    let meta = {};
+    try { meta = JSON.parse(metaRaw || '{}') || {}; } catch { meta = {}; }
+    return typeof meta.visits === 'number' ? meta.visits : parseInt(legacyRaw || '0', 10);
+  };
+
   for (const day of dayStrings) {
-    const [totalRaw, proRaw, newRaw, visitsRaw] = await Promise.all([
+    const [totalRaw, proRaw, newRaw, visits] = await Promise.all([
       env.USAGE_KV.get(`daily:${day}:total`),
       env.USAGE_KV.get(`daily:${day}:pro`),
       env.USAGE_KV.get(`daily:${day}:new`),
-      env.USAGE_KV.get(`daily:${day}:visits`),
+      dayVisits(day),
     ]);
     const total = parseInt(totalRaw || '0', 10);
     const pro = parseInt(proRaw || '0', 10);
     const newInstalls = parseInt(newRaw || '0', 10);
-    const visits = parseInt(visitsRaw || '0', 10);
     periodTotal += total;
     periodPro += pro;
     periodNew += newInstalls;
@@ -898,11 +915,11 @@ async function handleStats(request, env) {
     const [t, n, v] = await Promise.all([
       env.USAGE_KV.get(`daily:${day}:total`),
       env.USAGE_KV.get(`daily:${day}:new`),
-      env.USAGE_KV.get(`daily:${day}:visits`),
+      dayVisits(day),
     ]);
     prevTotal += parseInt(t || '0', 10);
     prevNew += parseInt(n || '0', 10);
-    prevVisits += parseInt(v || '0', 10);
+    prevVisits += v;
   }
 
   // One list() sweep over every install:* key covers three things at once,
@@ -973,6 +990,9 @@ async function handleStats(request, env) {
   // this does need the GETs, but only for keys that actually exist (a state
   // nobody has installed from is simply absent, not zero).
   const geo = { install: {}, visit: {} };
+  // Filled from the per-day objects further down; replaces the all-time
+  // geo:visit:* sweep for any range that has per-day geography.
+  const visitGeo = {};
   try {
     let cursor;
     const geoKeys = [];
@@ -1011,12 +1031,20 @@ async function handleStats(request, env) {
     const merge = (into, from) => {
       for (const [k, n] of Object.entries(from || {})) into[k] = (into[k] || 0) + n;
     };
+    let sawGeo = false;
     for (const b of blobs) {
       merge(referrers, b.ref);
       merge(pages, b.path);
       merge(devices, b.dev);
       downloadClicks += (b.dl && b.dl.clicks) || 0;
+      // Visitor geography moved in here with the visit count. Where the range
+      // has it, it is summed over exactly the selected days like every other
+      // number on this page. Where it does not -- a range made entirely of
+      // days written before the move -- the old all-time geo:visit:* totals
+      // are left in place below rather than showing an empty map.
+      if (b.geo && Object.keys(b.geo).length) { sawGeo = true; merge(visitGeo, b.geo); }
     }
+    if (sawGeo) geo.visit = visitGeo;
   } catch {
     // Same rule as the map: a panel that cannot load must not take the
     // dashboard down with it.
