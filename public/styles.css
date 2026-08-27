@@ -767,6 +767,7 @@ section { padding: 96px 0; position: relative; }
 
 .showcase-toggle {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   gap: 10px;
   margin-bottom: 40px;

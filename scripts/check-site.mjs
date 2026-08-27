@@ -25,7 +25,7 @@ import path from 'path';
 
 // Only ./public is served, so only ./public is checked. See wrangler.jsonc.
 const ROOT = path.join(import.meta.dirname, '..', 'public');
-const PAGES = ['index.html', 'engagement.html', 'breaker-tools.html', 'changelog.html', 'setup-guide.html',
+const PAGES = ['index.html', 'engagement.html', 'breaker-tools.html', 'pricing.html', 'changelog.html', 'setup-guide.html',
   'privacy.html', 'terms.html', 'thank-you.html'];
 
 let fails = 0;
