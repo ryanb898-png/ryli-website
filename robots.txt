@@ -1,0 +1,21 @@
+# ryli.app
+#
+# Until this file existed, the only robots.txt served here was Cloudflare's
+# auto-generated one, which is entirely comments -- no User-agent line, no
+# Allow, and crucially no Sitemap pointer. Crawlers had nothing to act on.
+
+User-agent: *
+Allow: /
+
+# The one line that actually helps: it tells every crawler where the full URL
+# list lives, with a lastmod date per page, instead of leaving them to find
+# pages by following links.
+Sitemap: https://ryli.app/sitemap.xml
+
+# Content signals, in Cloudflare's format, so switching to a real robots.txt
+# does not silently drop the declaration their generated one carried.
+# search = yes because search traffic is the point of this site. ai-input and
+# ai-train are deliberately left unstated, which under this scheme neither
+# grants nor restricts them -- the same position as before this file.
+User-agent: *
+Content-Signal: search=yes
