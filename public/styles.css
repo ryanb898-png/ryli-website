@@ -542,14 +542,26 @@ section { padding: 96px 0; position: relative; }
   width: 100%;
   height: auto;
   border-radius: var(--radius-lg);
-  /* Slightly knocked back so the overlay stays the subject, not the backdrop. */
-  filter: brightness(0.82) saturate(0.9);
-  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 77%, rgba(0,0,0,0.55) 89%, transparent 100%);
-          mask-image: linear-gradient(to bottom, #000 0%, #000 77%, rgba(0,0,0,0.55) 89%, transparent 100%);
+  /* Knocked back so the overlay stays the subject -- but not so far that the
+     streamer's badge and viewer count stop reading, since showing those is the
+     point of keeping the top band. */
+  filter: brightness(0.88) saturate(0.92);
+  /* A light fade at the top so the stream chrome is not sliced off square, and
+     a harder one at the bottom so the card and hands trail away into the page
+     instead of stopping on a line. */
+  -webkit-mask-image: linear-gradient(to bottom,
+    transparent 0%, #000 5%, #000 86%, rgba(0,0,0,0.28) 95%, transparent 100%);
+          mask-image: linear-gradient(to bottom,
+    transparent 0%, #000 5%, #000 86%, rgba(0,0,0,0.28) 95%, transparent 100%);
 }
+/* 18.29% is where the badge/viewer-count row ends in the source frame. As a
+   PERCENTAGE it holds at every width: both layers scale with the container, so
+   the clip lands under the chrome on a phone exactly as it does on a desktop. */
 .stream-shot__clip {
   position: absolute;
-  inset: 0 0 auto 0;
+  left: 0;
+  right: 0;
+  top: 18.29%;
 }
 
 .overlay-clip {
