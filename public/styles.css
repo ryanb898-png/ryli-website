@@ -1434,3 +1434,14 @@ input:focus-visible {
   .league-card:hover { transform: none; }
 }
 #scales .checklist strong { white-space: nowrap; }
+
+/* The core-count line under each FX tier's name. Small, accent-coloured and
+   uppercase so it reads as a spec rather than as more body copy. */
+.mini-card .spec-line {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 10px;
+}

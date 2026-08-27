@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>System Requirements — Will RYLI Run on Your PC?</title>
+<meta name="description" content="RYLI reads your CPU on first launch and picks its own FX tier and voice engine. Here is exactly what it looks at, what each of the three FX levels costs, the one OBS setting that matters more than any of it, and how it runs on a Mac." />
+<link rel="canonical" href="https://ryli.app/system-requirements" />
+
+<!-- Open Graph / Twitter: without these, every link shared into a Discord,
+     a Facebook seller group or X renders as a bare URL with no picture. -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="RYLI" />
+<meta property="og:title" content="System Requirements — Will RYLI Run on Your PC?" />
+<meta property="og:description" content="RYLI reads your CPU on first launch and picks its own FX tier and voice engine. What each of the three FX levels costs, the one OBS setting that matters more, and how it runs on a Mac." />
+<meta property="og:url" content="https://ryli.app/system-requirements" />
+<meta property="og:image" content="https://ryli.app/assets/images/og-cover-v2.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="RYLI — the OBS overlay and AI voice co-host for live sellers and streamers" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="System Requirements — Will RYLI Run on Your PC?" />
+<meta name="twitter:description" content="RYLI reads your CPU on first launch and picks its own FX tier and voice engine. What each of the three FX levels costs, the one OBS setting that matters more, and how it runs on a Mac." />
+<meta name="twitter:image" content="https://ryli.app/assets/images/og-cover-v2.png" />
+
+<link rel="icon" type="image/x-icon" href="assets/favicon/favicon.ico" />
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png" />
+<link rel="apple-touch-icon" href="assets/favicon/apple-touch-icon.png" />
+<link rel="manifest" href="assets/favicon/site.webmanifest" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<header class="nav">
+  <div class="nav__inner">
+    <a class="nav__brand" href="index.html#top">
+      <img src="assets/images/ryliring-64.png" width="26" height="26" alt="RYLI" />
+      <span>RYLI</span>
+    </a>
+    <nav class="nav__links">
+      <a href="index.html#features">Features</a>
+      <a href="engagement">Engagement</a>
+      <a href="breaker-tools">Breaker Tools</a>
+      <a href="index.html#themes">Themes</a>
+      <a href="pricing">Pricing</a>
+      <a href="setup-guide">Setup Guide</a>
+      <a href="index.html#faq">FAQ</a>
+    </nav>
+    <div class="nav__cta">
+      <a class="btn btn-primary" href="pricing">Download Now</a>
+    </div>
+    <button class="nav__toggle" aria-label="Toggle menu">☰</button>
+  </div>
+</header>
+
+<main id="top">
+
+  <section id="specs-hero">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="feature__eyebrow" style="justify-content:center;"><span class="icon-badge">🖥️</span>System Requirements</div>
+        <h2>You do not have to <span class="grad-text">work any of this out.</span></h2>
+        <p class="sub">On first launch RYLI reads your CPU and picks its own effects level and voice engine, then shows you what it chose. This page is for the people who want to know what it looked at and why &mdash; and for anyone deciding whether their PC is up to it before they download.</p>
+      </div>
+      <div class="mini-grid stagger reveal">
+        <div class="card mini-card">
+          <div class="mini-card__icon">🪟</div>
+          <h3>Windows 10 or 11</h3>
+          <p>64-bit. The installer is a normal signed <code>.exe</code> &mdash; no admin rights, no command line, nothing to configure.</p>
+        </div>
+        <div class="card mini-card">
+          <div class="mini-card__icon">🎬</div>
+          <h3>OBS Studio</h3>
+          <p>RYLI adds its own Browser Source for you at setup. If you already stream, you already have everything.</p>
+        </div>
+        <div class="card mini-card">
+          <div class="mini-card__icon">💾</div>
+          <h3>About 1 GB of disk</h3>
+          <p>The app itself, plus a one-time ~326 MB voice model if you use the local neural voice. After that it never phones home to speak.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE FX LADDER. Real thresholds from bridge/hardwareTier.js and real
+       multipliers from the overlay's own fxScale(). -->
+  <section id="fx">
+    <div class="container">
+      <div class="section-head reveal">
+        <h2>Three effects levels, and <span class="grad-text">what decides yours.</span></h2>
+        <p class="sub">The number RYLI actually looks at is your CPU core count. It is a rough proxy &mdash; a discrete GPU is the real signal &mdash; but it is the one thing that can be read reliably on every machine, and it errs toward smooth.</p>
+      </div>
+      <div class="mini-grid stagger reveal">
+        <div class="card mini-card">
+          <div class="mini-card__icon">🍃</div>
+          <h3>Lite</h3>
+          <p class="spec-line">Under 4 cores</p>
+          <p>Low-power, smooth on any PC. Confetti and glow stay modest and nothing animates continuously. This is the baseline every other level scales up from.</p>
+        </div>
+        <div class="card mini-card">
+          <div class="mini-card__icon">⚖️</div>
+          <h3>Balanced</h3>
+          <p class="spec-line">4 to 7 cores &middot; free</p>
+          <p>Spring motion and soft glow. Roughly <strong>1.6&times;</strong> the particles and glow of Lite &mdash; the level most machines land on, and free on every plan.</p>
+        </div>
+        <div class="card mini-card">
+          <div class="mini-card__icon">✨</div>
+          <h3>Ultra</h3>
+          <p class="spec-line">8+ cores &middot; Pro</p>
+          <p>Animated glow, frosted glass and shockwaves. About <strong>3&times;</strong> Lite, with the heavier blurs and the bloom ring that only make sense with real headroom.</p>
+        </div>
+      </div>
+      <p class="feature__note reveal">Whatever it picks, you can override it. It is a recommendation with a soft warning, never a cap &mdash; plenty of people run OBS on a second machine and do not care what the first one is doing.</p>
+    </div>
+  </section>
+
+  <!-- VOICE. The other thing core count decides. -->
+  <section id="voice-cost">
+    <div class="container feature reveal">
+      <div class="feature__copy">
+        <div class="feature__eyebrow"><span class="icon-badge">🎙️</span>The voice</div>
+        <h2>Local and free, or <span class="grad-text">nothing on your CPU at all.</span></h2>
+        <p class="desc">Ryli's flagship voice is a neural model that runs <em>on your machine</em> &mdash; no account, no per-word billing, and no internet once it has downloaded. That costs real CPU per line, so on a machine with fewer than four cores RYLI recommends a network voice instead, which costs you essentially nothing locally.</p>
+        <ul class="checklist">
+          <li><strong>4+ cores</strong> &mdash; the local neural voice, about 0.6&ndash;1.5s per announcement once warm</li>
+          <li><strong>Under 4</strong> &mdash; a network voice, near-zero local cost, still free</li>
+          <li>The model downloads once (~326 MB) and then works entirely offline</li>
+          <li>Synthesis runs off the main thread, so it cannot stall the overlay or your OBS connection</li>
+        </ul>
+        <p class="feature__note">If you already pay for ElevenLabs you can plug your own key in and use that instead. It is optional and RYLI works fully without it.</p>
+      </div>
+      <div class="feature__media">
+        <img src="assets/images/screenshot-fx-voice-v1.webp" width="505" height="190" loading="lazy" decoding="async"
+             alt="RYLI's Appearance and FX settings showing the FX quality selector with its Lite, Balanced and Ultra options" />
+      </div>
+    </div>
+  </section>
+
+  <!-- OBS. The thing that actually causes stutter. -->
+  <section id="obs-settings">
+    <div class="container feature flip reveal">
+      <div class="feature__copy">
+        <div class="feature__eyebrow"><span class="icon-badge">⚙️</span>The setting that matters most</div>
+        <h2>Your encoder will make more difference <span class="grad-text">than any of this.</span></h2>
+        <p class="desc">If your stream stutters, the overlay is rarely the cause. OBS runs its Browser Source in its own separate process, and RYLI deliberately hands its own rendering to the CPU precisely so it never fights OBS for the GPU.</p>
+        <ul class="checklist">
+          <li>Use a <strong>hardware encoder</strong> &mdash; QuickSync, NVENC or AMD &mdash; not x264. On integrated graphics, software encoding is the single most common cause of viewer-side stutter</li>
+          <li>Use a <strong>Browser Source</strong> pointed at RYLI's overlay URL, not Window Capture. RYLI sets this up for you</li>
+          <li>Give Ryli her own audio fader &mdash; on by default, so your desktop volume slider does not drag her voice down with it</li>
+        </ul>
+        <p class="feature__note">One real case from a host's own machine: a stream fault blamed on the overlay for weeks turned out to be network software throttling their upload. Rule the boring things out first.</p>
+      </div>
+      <div class="feature__media">
+        <img src="assets/images/screenshot-obs-connect-v1.webp" width="1040" height="250" loading="lazy" decoding="async"
+             alt="RYLI's Connections settings: the overlay URL with a copy button, and the one-click Connect and Add Overlay to OBS button" />
+      </div>
+    </div>
+  </section>
+
+  <!-- MAC. Honest. -->
+  <section id="mac">
+    <div class="container">
+      <div class="section-head reveal">
+        <h2>On a Mac, <span class="grad-text">with a caveat.</span></h2>
+      </div>
+      <div class="audience-grid reveal">
+        <div class="card audience-card">
+          <div class="feature__eyebrow"><span class="icon-badge">🍎</span>Mac + Parallels</div>
+          <h3>Supported, and set up for it</h3>
+          <p class="desc">There is no native Mac build yet. Hosts run RYLI in Parallels with OBS on the macOS side, and RYLI detects that it is inside a VM and switches itself to serve the overlay across the boundary &mdash; then finds your OBS on its own.</p>
+          <ul class="checklist">
+            <li>Detected automatically; nothing to configure</li>
+            <li>The same switch covers a two-PC rig, where OBS lives on a second machine</li>
+            <li>Windows will ask once whether to allow RYLI through the firewall &mdash; say yes, or the overlay cannot reach OBS</li>
+          </ul>
+        </div>
+        <div class="card audience-card">
+          <div class="feature__eyebrow"><span class="icon-badge">🚧</span>No native build</div>
+          <h3>Why not yet</h3>
+          <p class="desc">Not a code problem &mdash; every native piece RYLI depends on already ships a macOS build. It is blocked on the practical part: a Mac to build and notarise on, an Apple developer account, and a Mac to actually test it on before putting it in anyone's hands.</p>
+          <p class="feature__note">Shipping a Mac build nobody has run a real show on would be worse than not shipping one.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="final-cta">
+    <div class="container">
+      <h2>The honest answer: <span class="grad-text">it will probably just run.</span></h2>
+      <p class="sub">If your PC already streams to Whatnot through OBS, it is comfortably enough for RYLI. Install it, and it will tell you what it picked for you on the first screen.</p>
+      <div class="hero__cta">
+        <a class="btn btn-primary btn-lg" href="pricing">Download Now</a>
+        <a class="btn btn-ghost btn-lg" href="setup-guide">Read the Setup Guide</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer__top">
+      <div>
+        <div class="footer__brand">
+          <img src="assets/images/ryliring-64.png" width="26" height="26" alt="RYLI" />
+          <span>RYLI</span>
+        </div>
+        <p class="footer__tagline">Run your live intelligently.</p>
+      </div>
+      <div class="footer__links">
+        <a href="index.html#features">Features</a>
+        <a href="pricing">Pricing</a>
+        <a href="system-requirements">System Requirements</a>
+        <a href="changelog">Changelog</a>
+        <a href="privacy">Privacy</a>
+        <a href="terms">Terms</a>
+        <a href="mailto:hello@ryli.app">Contact</a>
+      </div>
+    </div>
+    <div class="footer__bottom">© 2026 RYLI. Built for the people behind the stream.</div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
