@@ -105,6 +105,8 @@ console.log('\n  IMAGES');
     'hero-ryli-live.png',
     // Superseded by the OBS-badge version; eBay Live is not supported.
     'hero-ryli-live-v2.webp',
+    // Superseded by a current, seeded capture of the real store grid.
+    'store-screenshot-v3.png',
   ]);
 
   const orphans = files.filter((f) => !sources.includes(f) && !GRACE.has(f));
