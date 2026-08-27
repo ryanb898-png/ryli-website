@@ -555,6 +555,11 @@ section { padding: 96px 0; position: relative; }
    and swallow the whole block. Inset to 80% it lands at 419 -- the two heroes
    read as the same size -- and a board that stops short of the edges looks like
    an overlay sitting on the video rather than replacing it. */
+/* The hype clip is the widest of the three (3.07:1), so at full frame width
+   it is also the shortest -- no inset, it already leaves room above and
+   below. Its logo circle ends at source y 166. */
+.stream-shot--hype { --clip-top: 17.57%; }
+
 .stream-shot--inset {
   --clip-top: 13.39%;
   --clip-inset: 10%;
@@ -1276,12 +1281,11 @@ section { padding: 96px 0; position: relative; }
 /* Hype Meter feature media (2026-08-10). Same shape as .thermalflow-media —
    an inline SVG rather than a screenshot, because the meter is changing and a
    screenshot would go stale the moment it does. */
-.hype-media, .companion-media { display: flex; align-items: center; justify-content: center; }
-.hype-media svg, .companion-media svg { width: 100%; max-width: 520px; height: auto; }
+.companion-media { display: flex; align-items: center; justify-content: center; }
+.companion-media svg { width: 100%; max-width: 520px; height: auto; }
 /* 520px was sized for a half-width column. In a showcase these sit in the full
    container, and an SVG capped at 520 in a 1110px card reads as a small graphic
    floating in a large empty box. */
-.feature--showcase .hype-media svg,
 .feature--showcase .companion-media svg { max-width: 900px; }
 
 /* ---------- hover, focus, and the reduced-motion guard ---------- */
@@ -1353,32 +1357,6 @@ input:focus-visible {
 }
 
 /* ---------- showpiece: the Hype Meter fills ---------- */
-/* The section's whole argument is "make the room erupt on cue" and the graphic
-   was a static SVG with the bar hard-coded at 268 of 444. Transform and opacity
-   only: transform-box:fill-box gives the rect its own coordinate space so a
-   left-origin scaleX grows it from its own edge, the same technique the admin
-   map's blips use. */
-.hm-fill {
-  transform-box: fill-box;
-  transform-origin: left center;
-  transform: scaleX(0);
-}
-.hype-media.is-live .hm-fill {
-  animation: hmFill 1400ms var(--ease-out) 120ms forwards;
-}
-@keyframes hmFill { to { transform: scaleX(1); } }
-
-/* The countdown breathes rather than blinks -- a blink reads as an error state,
-   and this is a prompt. */
-.hype-media.is-live .hm-clock { animation: hmPulse 1800ms ease-in-out 900ms infinite; }
-@keyframes hmPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.55; } }
-
-@media (prefers-reduced-motion: reduce) {
-  .hm-fill { transform: scaleX(1); }
-  .hype-media.is-live .hm-fill,
-  .hype-media.is-live .hm-clock { animation: none; }
-}
-
 /* ---------- showpiece: the board fills itself ---------- */
 /* The board screenshot above it is a board BEFORE a break starts -- every spot
    open. This is the part a still cannot carry: spots being claimed one at a

@@ -212,42 +212,6 @@ document.querySelectorAll('.stagger').forEach((group) => {
   });
 });
 
-// The Hype Meter runs itself once, when it is first seen. The bar and the
-// countdown are pure CSS off an .is-live class; only the participation count
-// needs JS, because it is a number being tallied rather than a property being
-// tweened. Reduced motion gets the finished state with no animation at all.
-document.querySelectorAll('.hype-media').forEach((media) => {
-  const count = media.querySelector('.hm-count');
-  const to = count ? Number(count.dataset.to) || 0 : 0;
-  const settle = () => { if (count) count.textContent = to + ' joining in'; };
-
-  if (REDUCED || !('IntersectionObserver' in window)) {
-    media.classList.add('is-live');
-    settle();
-    return;
-  }
-
-  const run = () => {
-    media.classList.add('is-live');
-    if (!count) return;
-    const DURATION = 1400;
-    const started = performance.now();
-    const step = (now) => {
-      const t = Math.min(1, (now - started) / DURATION);
-      // Same ease-out shape the bar uses, so the number lands with the fill
-      // rather than racing ahead of it.
-      const eased = 1 - Math.pow(1 - t, 3);
-      count.textContent = Math.round(to * eased) + ' joining in';
-      if (t < 1) requestAnimationFrame(step); else settle();
-    };
-    requestAnimationFrame(step);
-  };
-
-  new IntersectionObserver((entries, obs) => {
-    entries.forEach((e) => { if (e.isIntersecting) { run(); obs.disconnect(); } });
-  }, { threshold: 0.4 }).observe(media);
-});
-
 // Scroll-reveal
 const revealEls = document.querySelectorAll('.reveal');
 if ('IntersectionObserver' in window && revealEls.length) {

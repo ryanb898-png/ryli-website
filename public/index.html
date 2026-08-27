@@ -333,54 +333,21 @@
             </ul>
             <p class="feature__note">Runs from a hotkey or straight from the RYLI panel inside your Whatnot window — no Stream Deck needed. Whatnot has never published a link between any single action and For You placement, and RYLI never simulates engagement: every tap and message is a real viewer.</p>
           </div>
-          <div class="feature__media hype-media">
-            <svg viewBox="0 0 520 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The RYLI Hype Meter mid-run: a bar filled to about sixty percent, a forty-seven person participation count, a countdown at twelve seconds, and dollar tiers from one to one hundred" style="font-family: var(--body);">
-              <defs>
-                <linearGradient id="hm-fill" x1="0" y1="0" x2="1" y2="0">
-                  <stop offset="0%" stop-color="var(--purple)" />
-                  <stop offset="55%" stop-color="var(--blue)" />
-                  <stop offset="100%" stop-color="var(--cyan)" />
-                </linearGradient>
-                <linearGradient id="hm-edge" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stop-color="var(--blue)" />
-                  <stop offset="100%" stop-color="var(--purple)" />
-                </linearGradient>
-              </defs>
-
-              <rect x="8" y="8" width="504" height="244" rx="18" fill="#0d1117" stroke="url(#hm-edge)" stroke-width="2" />
-
-              <text x="34" y="58" fill="#8da2d3" font-size="15" font-weight="700" letter-spacing="2.4">🔥 HYPE METER</text>
-              <text class="hm-count" x="286" y="58" fill="var(--purple)" font-size="15" font-weight="700" text-anchor="end" data-to="47">0 joining in</text>
-              <text x="392" y="62" fill="var(--cyan)" font-size="30" font-weight="800" text-anchor="end">$20</text>
-              <rect x="404" y="38" width="74" height="30" rx="7" fill="#161c26" stroke="#2b3147" />
-              <text class="hm-clock" x="441" y="59" fill="#ffd166" font-size="19" font-weight="800" text-anchor="middle">0:12</text>
-
-              <rect x="34" y="92" width="444" height="30" rx="15" fill="#161c26" />
-              <rect class="hm-fill" x="34" y="92" width="268" height="30" rx="15" fill="url(#hm-fill)" />
-
-              <g fill="#39405c">
-                <rect x="106" y="92" width="2" height="30" />
-                <rect x="180" y="92" width="2" height="30" />
-                <rect x="254" y="92" width="2" height="30" />
-                <rect x="328" y="92" width="2" height="30" />
-                <rect x="402" y="92" width="2" height="30" />
-              </g>
-
-              <g font-size="13" font-weight="700" text-anchor="middle">
-                <text x="107" y="145" fill="var(--cyan)">$1</text>
-                <text x="181" y="145" fill="var(--cyan)">$5</text>
-                <text x="255" y="145" fill="var(--cyan)">$10</text>
-                <text x="329" y="145" fill="var(--cyan)">$20</text>
-                <text x="403" y="145" fill="#5c6b7f">$50</text>
-                <text x="470" y="145" fill="#5c6b7f">$100</text>
-              </g>
-
-              <text x="256" y="182" fill="#afbad2" font-size="15" font-weight="700" letter-spacing="1.6" text-anchor="middle">SPAM EMOJIS TO FILL IT!</text>
-
-              <rect x="34" y="200" width="444" height="1" fill="#1b2431" />
-              <text x="34" y="228" fill="#8da2d3" font-size="13">🪙 lahar88 sent x50</text>
-              <text x="478" y="228" fill="#3ddc97" font-size="13" font-weight="700" text-anchor="end">LOCKS IN AT 0:00</text>
-            </svg>
+          <div class="feature__media feature__media--wide stream-shot stream-shot--hype">
+            <!-- The real meter over a real stream, same treatment as the jumbotron
+                 and the board. This replaces a hand-drawn SVG whose fill bar was a
+                 hard-coded number -- it now shows the meter actually climbing as
+                 chat piles in, captured from the running overlay. This clip is much
+                 wider than the other two (3.07:1 against 2.54 and 2.07), so it needs
+                 no inset: at full width it is already the shortest of the three. -->
+            <img class="stream-shot__bg" src="assets/images/hype-shot-v1.webp"
+                 width="1400" height="828" loading="lazy" decoding="async" alt="" aria-hidden="true" />
+            <video class="overlay-clip stream-shot__clip" width="1400" height="456" muted loop playsinline
+                   preload="auto" poster="assets/video/overlay-hype-v1.webp"
+                   aria-label="The RYLI Hype Meter running over a live card stream: the bar climbing tier by tier as viewers join in, then locking at a prize level">
+              <source src="assets/video/overlay-hype-v1.webm" type="video/webm" />
+              <source src="assets/video/overlay-hype-v1.mp4" type="video/mp4" />
+            </video>
           </div>
         </div>
       </div>
