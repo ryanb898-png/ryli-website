@@ -23,7 +23,8 @@
 import fs from 'fs';
 import path from 'path';
 
-const ROOT = path.join(import.meta.dirname, '..');
+// Only ./public is served, so only ./public is checked. See wrangler.jsonc.
+const ROOT = path.join(import.meta.dirname, '..', 'public');
 const PAGES = ['index.html', 'changelog.html', 'setup-guide.html',
   'privacy.html', 'terms.html', 'thank-you.html'];
 
