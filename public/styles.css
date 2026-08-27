@@ -554,14 +554,17 @@ section { padding: 96px 0; position: relative; }
           mask-image: linear-gradient(to bottom,
     transparent 0%, #000 5%, #000 86%, rgba(0,0,0,0.28) 95%, transparent 100%);
 }
-/* 18.29% is where the badge/viewer-count row ends in the source frame. As a
+/* Derived, not dialled in: the circle logo's bottom edge measures at source
+   y 163, so the bezel is placed at y 172 -- almost touching it. The value
+   below backs out the padding the capture bakes around the bezel, so it is
+   the VISIBLE frame that lands there rather than the video's box. As a
    PERCENTAGE it holds at every width: both layers scale with the container, so
    the clip lands under the chrome on a phone exactly as it does on a desktop. */
 .stream-shot__clip {
   position: absolute;
   left: 0;
   right: 0;
-  top: 18.29%;
+  top: 17.24%;
 }
 
 .overlay-clip {
