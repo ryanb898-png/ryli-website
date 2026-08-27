@@ -218,55 +218,9 @@
       </div>
     </div>
   </section>
-
-  <div class="strip">
-    Built by <strong>live sellers</strong> on Whatnot &nbsp;·&nbsp; Runs on <strong>OBS</strong>, so it goes where OBS goes
-  </div>
-
-  <!-- WHO IT'S FOR — sits here deliberately. It reframes every feature section
-       below it BEFORE the reader reaches "buyers go back and forth". Static
-       side-by-side rather than a toggle: a toggle hides half the positioning
-       behind a click, and .showcase-panel is display:none so the hidden half
-       would be invisible to anyone screenshotting the page. -->
-  <section id="who-its-for">
-    <div class="container">
-      <div class="section-head reveal">
-        <span class="eyebrow-badge"><span class="dot"></span>Who it&rsquo;s for</span>
-        <h2>One overlay. <span class="grad-text">Two kinds of live.</span></h2>
-        <p>RYLI runs as an OBS browser source, so it goes wherever OBS goes. What changes is how much of your show she can read.</p>
-      </div>
-      <div class="audience-grid reveal stagger">
-        <div class="audience-card card">
-          <div class="feature__eyebrow"><span class="icon-badge">&#128722;</span>You sell live</div>
-          <h3>Whatnot sellers</h3>
-          <p class="desc">RYLI reads your own show and reacts to it as it happens &mdash; the full toolkit.</p>
-          <ul class="checklist">
-            <li>Bids, sales and buyer names tracked live from your own Whatnot show</li>
-            <li>Leaderboards, bid battles and milestone celebrations that fire on real sales</li>
-            <li>Insights, Breaker Tools, the Hype Meter and instant label printing</li>
-            <li>Everything in the streamer column, too</li>
-          </ul>
-          <p class="feature__note"><strong>One thing to know:</strong> start your show with RYLI&rsquo;s own launch button. She can only read a window she opened herself &mdash; a show you start in your own browser is invisible to her.</p>
-        </div>
-        <div class="audience-card card">
-          <div class="feature__eyebrow"><span class="icon-badge">&#127909;</span>You stream, but don&rsquo;t sell</div>
-          <h3>Twitch, YouTube, anywhere</h3>
-          <p class="desc">Pick &ldquo;I stream, but don&rsquo;t sell live&rdquo; during setup and the sales pages stay out of your way. Nothing to connect.</p>
-          <ul class="checklist">
-            <li>The full jumbotron overlay, your camera framed inside it, and your own bezel artwork</li>
-            <li>Every theme, sound pack and Stream Store effect</li>
-            <li>Ryli&rsquo;s voice &mdash; ask her anything, hands-free, and she answers out loud <span class="tag pro">PRO</span></li>
-            <li>The ticker rail and jumbotron cards, running on your own schedule</li>
-          </ul>
-          <p class="feature__note"><strong>Being straight with you:</strong> RYLI can&rsquo;t read Twitch chat yet, so live-reacting leaderboards and celebrations have nothing to feed on. That connection is what we&rsquo;re building next. Everything above works today.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- FEATURE 1: jumbotron -->
   <section id="features">
-    <div class="container feature reveal">
+    <div class="container feature feature--showcase reveal">
       <div class="feature__copy">
         <div class="feature__eyebrow"><span class="icon-badge">📡</span>Live Overlay</div>
         <h2>Add an interactive Jumbotron to your shows.</h2>
@@ -279,78 +233,59 @@
           <li>Rotating promotional banners between lots <span class="tag pro">PRO</span></li>
         </ul>
       </div>
-      <!-- REAL FOOTAGE OF THE REAL OVERLAY, not a mockup.
-           Captured by desktop/scripts/shoot-overlay.js, which drives
-           overlays/overlay.html over CDP and records what comes out. The five
-           slides this replaces were phone screenshots of the OLD overlay --
-           July pixels, taken before frame-v3 and Broadcast Glass shipped.
-
-           webm carries real alpha, so the clip floats on the page gradient with
-           no box around it. The mp4 fallback cannot (h264 has no alpha) and is
-           flattened onto --slate at capture time, so it still sits seamlessly.
-           The poster is WebP, which keeps alpha too, so the frame before play
-           matches the frame after it. -->
-      <div class="carousel carousel--clip reveal" data-carousel data-autoplay="10000">
-        <div class="carousel__track">
-          <div class="carousel__slide">
-            <video class="overlay-clip" width="1200" height="474" muted loop playsinline
-                   preload="metadata" poster="assets/video/overlay-bidwar-v1.webp"
-                   aria-label="Three buyers bidding against each other, the leader card escalating with each bid">
-              <source src="assets/video/overlay-bidwar-v1.webm" type="video/webm" />
-              <source src="assets/video/overlay-bidwar-v1.mp4" type="video/mp4" />
-            </video>
-          </div>
-          <div class="carousel__slide">
-            <video class="overlay-clip" width="1200" height="474" muted loop playsinline
-                   preload="metadata" poster="assets/video/overlay-lotwon-v1.webp"
-                   aria-label="A lot closing: confetti fires and the LOT WON card names the winner">
-              <source src="assets/video/overlay-lotwon-v1.webm" type="video/webm" />
-              <source src="assets/video/overlay-lotwon-v1.mp4" type="video/mp4" />
-            </video>
-          </div>
-        </div>
-        <div class="carousel__dots"></div>
-        <button class="carousel__arrow carousel__arrow--prev" aria-label="Previous">&lsaquo;</button>
-        <button class="carousel__arrow carousel__arrow--next" aria-label="Next">&rsaquo;</button>
-      </div>
-      <div class="feature__media waveform-media">
-        <svg viewBox="0 0 500 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Voice waveform">
-          <defs>
-            <linearGradient id="wave-grad" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%" stop-color="#6AAEFF" />
-              <stop offset="50%" stop-color="#7DE7FF" />
-              <stop offset="100%" stop-color="#B388FF" />
-            </linearGradient>
-          </defs>
-          <path d="M0,150 C40,80 70,220 110,150 C140,100 160,200 190,150 C220,60 250,240 280,150 C310,90 340,210 370,150 C400,110 430,190 460,150 C480,130 490,150 500,150"
-                fill="none" stroke="url(#wave-grad)" stroke-width="4" stroke-linecap="round" opacity="0.9" />
-          <path d="M0,150 C50,120 90,180 130,150 C170,120 210,180 250,150 C290,120 330,180 370,150 C410,120 450,180 500,150"
-                fill="none" stroke="url(#wave-grad)" stroke-width="2" stroke-linecap="round" opacity="0.4" />
-        </svg>
+      <!-- ONE clip, not a carousel of two. Two clips meant the same jumbotron
+           appeared twice showing different features, and the second one was
+           behind a click. This runs the whole arc in a single take: bids
+           escalating, the milestone, the win, and the overlay's own wipe back
+           to the live lot -- which is also what lets it loop without a jump.
+           Captured from the real overlay by desktop/scripts/shoot-overlay.js. -->
+      <div class="feature__media feature__media--wide">
+        <video class="overlay-clip" width="1400" height="552" muted loop playsinline
+               preload="auto" poster="assets/video/overlay-jumbotron-v2.webp"
+               aria-label="A live lot: bids escalating between three buyers, a milestone celebration, then the LOT WON card naming the winner">
+          <source src="assets/video/overlay-jumbotron-v2.webm" type="video/webm" />
+          <source src="assets/video/overlay-jumbotron-v2.mp4" type="video/mp4" />
+        </video>
       </div>
     </div>
   </section>
-
-  <!-- INSIGHTS -->
-  <section>
-    <div class="container feature reveal">
+  <!-- THERMALFLOW -->
+  <!-- BREAKER TOOLS. Sits after Live Control ("two tools you run mid-show")
+       because that is exactly what it is, and before ThermalFlow, which stays
+       last as the most niche seller feature. Plain .feature, not .flip:
+       ThermalFlow is already flipped and two in a row breaks the alternation. -->
+  <section id="breaker">
+    <div class="container feature feature--showcase reveal">
       <div class="feature__copy">
-        <div class="feature__eyebrow"><span class="icon-badge">📊</span>Insights</div>
-        <h2>Real Time <span class="grad-text">Progress Tracking</span></h2>
-        <p class="desc">After every show, RYLI turns raw sales into a plan — so you can stay connected to your community, not just track a number. All-time performance and live show stats are free forever; the people behind those numbers are a Pro upgrade away.</p>
+        <div class="feature__eyebrow"><span class="icon-badge">🃏</span>Breaker Tools <span class="tag pro">PRO</span> <span class="tag">BETA</span></div>
+        <h2>Run a break the whole room can <span class="grad-text">read at a glance.</span></h2>
+        <p class="desc">A live board of every spot in your break, on your stream. Who has what, what is still open, and who just landed the Cowboys &mdash; without anyone having to ask.</p>
         <ul class="checklist">
-          <li>All-time performance and live show stats — free, always</li>
-          <li>Top buyers and lifetime spender leaderboards — Pro</li>
-          <li>Suggested outreach: VIPs who've gone quiet, loyal light spenders worth a nudge, new fans worth a thank-you — Pro</li>
-          <li>Computed locally from your own show history — nothing leaves your PC</li>
+          <li>Pick a league and every spot arrives with the real team names and colours &mdash; football, basketball, baseball, hockey, soccer, divisions included</li>
+          <li>Upload your own team logos, and they stay with that team on every board you build afterwards</li>
+          <li>Mini-game signs on screen: Stash or Pass, See 2 Pick 1, Pick Your Team and Random Team</li>
+          <li>Ryli calls it out loud &mdash; &ldquo;@buyer is on the Cleveland Browns&rdquo; &mdash; the moment a spot settles</li>
+          <li>A decision clock that prompts without cutting anyone off: at zero the sign says TIME and stays up until you clear it</li>
+          <li>Assign, clear and re-roll from your dashboard &mdash; and if you let her, RYLI does it on Whatnot for you</li>
         </ul>
+        <p class="feature__note">Already built your break on Whatnot? RYLI will match your board to it &mdash; the teams, the spot count, and everyone who has already bought in.</p>
       </div>
-      <div class="feature__media insights-media">
-        <img src="assets/images/screenshot-insights-v4.png" width="1600" height="685" loading="lazy" decoding="async" alt="RYLI Insights showing all-time performance and the sales trend chart" />
+      <div class="feature__media feature__media--wide breaker-media">
+        <!-- The real board, filling. This replaces two things: an illustration
+             of a board before a break starts, and an eight-tile CSS mock-up
+             whose own comment said it existed to show "the thing a picture
+             cannot show". It now shows the actual product doing it -- captured
+             by desktop/scripts/shoot-overlay.js against overlays/overlay.html,
+             so it stays true every time the board changes. -->
+        <video class="overlay-clip" width="1400" height="676" muted loop playsinline
+               preload="auto" poster="assets/video/overlay-breaker-v2.webp"
+               aria-label="A 32-spot breaker board filling in real time as buyers claim team tiles">
+          <source src="assets/video/overlay-breaker-v2.webm" type="video/webm" />
+          <source src="assets/video/overlay-breaker-v2.mp4" type="video/mp4" />
+        </video>
       </div>
     </div>
   </section>
-
   <!-- HYPE METER + COMPANION -->
   <section id="live-control">
     <div class="container">
@@ -366,7 +301,7 @@
       </div>
 
       <div class="showcase-panel is-active" data-panel="hype">
-        <div class="feature reveal">
+        <div class="feature feature--showcase reveal">
           <div class="feature__copy">
             <div class="feature__eyebrow"><span class="icon-badge">🔥</span>Hype Meter <span class="tag pro">PRO</span></div>
             <h2>Whatnot is watching your room. <span class="grad-text">Give it something to see.</span></h2>
@@ -434,7 +369,7 @@
       </div>
 
       <div class="showcase-panel" data-panel="companion">
-        <div class="feature reveal">
+        <div class="feature feature--showcase reveal">
           <div class="feature__copy">
             <div class="feature__eyebrow"><span class="icon-badge">🎛️</span>Ryli Companion</div>
             <h2>Run the whole show <span class="grad-text">without ever leaving it.</span></h2>
@@ -516,141 +451,6 @@
       </div>
     </div>
   </section>
-
-  <!-- THERMALFLOW -->
-  <!-- BREAKER TOOLS. Sits after Live Control ("two tools you run mid-show")
-       because that is exactly what it is, and before ThermalFlow, which stays
-       last as the most niche seller feature. Plain .feature, not .flip:
-       ThermalFlow is already flipped and two in a row breaks the alternation. -->
-  <section id="breaker">
-    <div class="container feature reveal">
-      <div class="feature__copy">
-        <div class="feature__eyebrow"><span class="icon-badge">🃏</span>Breaker Tools <span class="tag pro">PRO</span> <span class="tag">BETA</span></div>
-        <h2>Run a break the whole room can <span class="grad-text">read at a glance.</span></h2>
-        <p class="desc">A live board of every spot in your break, on your stream. Who has what, what is still open, and who just landed the Cowboys &mdash; without anyone having to ask.</p>
-        <ul class="checklist">
-          <li>Pick a league and every spot arrives with the real team names and colours &mdash; football, basketball, baseball, hockey, soccer, divisions included</li>
-          <li>Upload your own team logos, and they stay with that team on every board you build afterwards</li>
-          <li>Mini-game signs on screen: Stash or Pass, See 2 Pick 1, Pick Your Team and Random Team</li>
-          <li>Ryli calls it out loud &mdash; &ldquo;@buyer is on the Cleveland Browns&rdquo; &mdash; the moment a spot settles</li>
-          <li>A decision clock that prompts without cutting anyone off: at zero the sign says TIME and stays up until you clear it</li>
-          <li>Assign, clear and re-roll from your dashboard &mdash; and if you let her, RYLI does it on Whatnot for you</li>
-        </ul>
-        <p class="feature__note">Already built your break on Whatnot? RYLI will match your board to it &mdash; the teams, the spot count, and everyone who has already bought in.</p>
-      </div>
-      <div class="feature__media breaker-media">
-        <!-- The real board, filling. This replaces two things: an illustration
-             of a board before a break starts, and an eight-tile CSS mock-up
-             whose own comment said it existed to show "the thing a picture
-             cannot show". It now shows the actual product doing it -- captured
-             by desktop/scripts/shoot-overlay.js against overlays/overlay.html,
-             so it stays true every time the board changes. -->
-        <video class="overlay-clip" width="1200" height="578" muted loop playsinline
-               preload="metadata" poster="assets/video/overlay-breaker-v1.webp"
-               aria-label="A 32-spot breaker board filling in real time as buyers claim team tiles">
-          <source src="assets/video/overlay-breaker-v1.webm" type="video/webm" />
-          <source src="assets/video/overlay-breaker-v1.mp4" type="video/mp4" />
-        </video>
-      </div>
-    </div>
-  </section>
-
-  <section>
-    <div class="container feature flip reveal">
-      <div class="feature__copy">
-        <div class="feature__eyebrow"><span class="icon-badge">🖨️</span>ThermalFlow <span class="tag pro">PRO</span></div>
-        <h2>Every sale, <span class="grad-text">printed instantly.</span></h2>
-        <p class="desc">The moment a lot sells, ThermalFlow sends a ready-to-pack label straight to your printer — lot number, item, buyer, and price, no keyboard, no breaking your flow.</p>
-        <ul class="checklist">
-          <li>Prints automatically the instant a real sale confirms — no manual entry</li>
-          <li>Add your shop logo and a short note or contact line to every label</li>
-          <li>Works with any printer your Windows PC already recognizes — DYMO, Zebra, Rollo, iDPRT, and more</li>
-          <li>Also supports compact direct-USB thermal label printers — no driver hunting</li>
-        </ul>
-        <p class="feature__note">Requires a connected label printer. Off by default — turn it on anytime in Settings. Windows only.</p>
-      </div>
-      <div class="feature__media thermalflow-media">
-        <svg viewBox="0 0 320 480" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Sample ThermalFlow label showing a lot number, item name, buyer, and price" style="font-family: var(--body);">
-          <defs>
-            <linearGradient id="tf-border" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stop-color="var(--blue)" />
-              <stop offset="100%" stop-color="var(--purple)" />
-            </linearGradient>
-            <linearGradient id="tf-card" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="var(--slate-3)" />
-              <stop offset="100%" stop-color="var(--slate-2)" />
-            </linearGradient>
-            <linearGradient id="tf-price" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%" stop-color="var(--blue)" />
-              <stop offset="100%" stop-color="var(--purple)" />
-            </linearGradient>
-          </defs>
-
-          <rect x="4" y="4" width="312" height="472" rx="20" fill="url(#tf-card)" stroke="url(#tf-border)" stroke-width="2" />
-
-          <circle cx="48" cy="54" r="24" fill="none" stroke="url(#tf-border)" stroke-width="2" />
-          <circle cx="48" cy="54" r="4" fill="var(--cyan)" />
-          <text x="48" y="94" text-anchor="middle" font-size="10" letter-spacing="1.5" fill="var(--ink-faint)">LOGO</text>
-
-          <rect x="228" y="30" width="64" height="32" rx="8" fill="url(#tf-border)" />
-          <text x="260" y="51" text-anchor="middle" font-size="13" font-weight="700" fill="#0a0e14">LOT 14</text>
-
-          <line x1="24" y1="96" x2="296" y2="96" stroke="var(--line)" stroke-width="1.5" />
-
-          <text x="24" y="134" font-size="22" font-weight="700" fill="var(--ink)">
-            <tspan x="24">Charizard Base Set</tspan>
-            <tspan x="24" dy="26">— PSA 9</tspan>
-          </text>
-
-          <text x="24" y="188" font-size="15" fill="var(--cyan)">@cardcollector22</text>
-
-          <line x1="24" y1="212" x2="296" y2="212" stroke="var(--line)" stroke-width="1.5" stroke-dasharray="4 4" />
-
-          <text x="24" y="240" font-size="11" letter-spacing="2" fill="var(--ink-faint)">TOTAL</text>
-          <text x="24" y="284" font-size="44" font-weight="800" fill="url(#tf-price)">$186.00</text>
-
-          <text x="24" y="326" font-size="14" font-style="italic" fill="var(--ink-dim)">Thanks for shopping the show!</text>
-
-          <line x1="24" y1="436" x2="296" y2="436" stroke="var(--line)" stroke-width="1.5" />
-          <text x="24" y="458" font-size="12" fill="var(--ink-faint)">yourshop.com &nbsp;·&nbsp; @yourshop</text>
-        </svg>
-      </div>
-    </div>
-  </section>
-
-  <!-- HOW IT WORKS -->
-  <section id="how-it-works">
-    <div class="container">
-      <div class="section-head reveal">
-        <span class="eyebrow-badge"><span class="dot"></span>Setup</span>
-        <h2>Live in under 5 minutes.</h2>
-        <p>No technical setup, no manual OBS configuration — the onboarding wizard does it for you.</p>
-      </div>
-      <div class="steps reveal stagger">
-        <div class="step">
-          <span class="num">01</span>
-          <h3>Activate</h3>
-          <p>Start your 10-day free trial, no credit card gymnastics.</p>
-        </div>
-        <div class="step">
-          <span class="num">02</span>
-          <h3>Connect OBS</h3>
-          <p>One tap auto-creates the RYLI overlay source in OBS for you.</p>
-        </div>
-        <div class="step">
-          <span class="num">03</span>
-          <h3>Pick a theme</h3>
-          <p>Visual quality and voice auto-tune to your PC's hardware.</p>
-        </div>
-        <div class="step">
-          <span class="num">04</span>
-          <h3>Go live</h3>
-          <p>RYLI reacts to your show in real time from here on out.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- THEMES + STREAM STORE -->
   <section id="themes">
     <div class="container">
@@ -730,7 +530,194 @@
     </div>
     </div>
   </section>
+  <!-- INSIGHTS -->
+  <section>
+    <div class="container feature feature--showcase reveal">
+      <div class="feature__copy">
+        <div class="feature__eyebrow"><span class="icon-badge">📊</span>Insights</div>
+        <h2>Real Time <span class="grad-text">Progress Tracking</span></h2>
+        <p class="desc">After every show, RYLI turns raw sales into a plan — so you can stay connected to your community, not just track a number. All-time performance and live show stats are free forever; the people behind those numbers are a Pro upgrade away.</p>
+        <ul class="checklist">
+          <li>All-time performance and live show stats — free, always</li>
+          <li>Top buyers and lifetime spender leaderboards — Pro</li>
+          <li>Suggested outreach: VIPs who've gone quiet, loyal light spenders worth a nudge, new fans worth a thank-you — Pro</li>
+          <li>Computed locally from your own show history — nothing leaves your PC</li>
+        </ul>
+      </div>
+      <div class="feature__media insights-media">
+        <img src="assets/images/screenshot-insights-v4.png" width="1600" height="685" loading="lazy" decoding="async" alt="RYLI Insights showing all-time performance and the sales trend chart" />
+      </div>
+    </div>
+  </section>
+  <!-- FEATURE: Ryli voice co-host. The copy here was lost when the carousel
+       replacement over-consumed a closing tag and swallowed the section
+       boundary; recovered verbatim from the previous commit. -->
+  <section>
+    <div class="container feature flip reveal">
+      <div class="feature__copy">
+        <div class="feature__eyebrow"><span class="icon-badge">&#127897;&#65039;</span>Ryli &middot; Audible Intelligence</div>
+        <h2>Hands-free show intel, <span class="grad-text">on command.</span></h2>
+        <p class="desc">Press a hotkey and ask Ryli anything about tonight&rsquo;s show &mdash; she answers instantly from your real tracked data, not a guess. She&rsquo;ll also save a spoken note (&ldquo;remind me to&hellip;&rdquo;) and read it back whenever you ask.</p>
+        <ul class="checklist">
+          <li>Hotkey-triggered &mdash; reliable, no fumbling for a phone or keyboard</li>
+          <li>&ldquo;How many lots sold tonight?&rdquo; &ldquo;Who&rsquo;s my top spender?&rdquo; &mdash; answered live, from your actual numbers, zero guesswork</li>
+          <li>Voice notes: &ldquo;Hey Ryli, remind me to&hellip;&rdquo; &mdash; saved and read back on request</li>
+          <li>Optional: connect your own research key so Ryli can look up real product and market info live on air</li>
+          <li>Experimental spoken &ldquo;Hey Ryli&rdquo; wake word, layered on top of the hotkey &mdash; currently in beta</li>
+        </ul>
+      </div>
+      <div class="feature__media waveform-media">
+        <svg viewBox="0 0 500 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Voice waveform">
+          <defs>
+            <linearGradient id="wave-grad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#6AAEFF" />
+              <stop offset="50%" stop-color="#7DE7FF" />
+              <stop offset="100%" stop-color="#B388FF" />
+            </linearGradient>
+          </defs>
+          <path d="M0,150 C40,80 70,220 110,150 C140,100 160,200 190,150 C220,60 250,240 280,150 C310,90 340,210 370,150 C400,110 430,190 460,150 C480,130 490,150 500,150"
+                fill="none" stroke="url(#wave-grad)" stroke-width="4" stroke-linecap="round" opacity="0.9" />
+          <path d="M0,150 C50,120 90,180 130,150 C170,120 210,180 250,150 C290,120 330,180 370,150 C410,120 450,180 500,150"
+                fill="none" stroke="url(#wave-grad)" stroke-width="2" stroke-linecap="round" opacity="0.4" />
+        </svg>
+      </div>
+    </div>
+  </section>
 
+  <section>
+    <div class="container feature flip reveal">
+      <div class="feature__copy">
+        <div class="feature__eyebrow"><span class="icon-badge">🖨️</span>ThermalFlow <span class="tag pro">PRO</span></div>
+        <h2>Every sale, <span class="grad-text">printed instantly.</span></h2>
+        <p class="desc">The moment a lot sells, ThermalFlow sends a ready-to-pack label straight to your printer — lot number, item, buyer, and price, no keyboard, no breaking your flow.</p>
+        <ul class="checklist">
+          <li>Prints automatically the instant a real sale confirms — no manual entry</li>
+          <li>Add your shop logo and a short note or contact line to every label</li>
+          <li>Works with any printer your Windows PC already recognizes — DYMO, Zebra, Rollo, iDPRT, and more</li>
+          <li>Also supports compact direct-USB thermal label printers — no driver hunting</li>
+        </ul>
+        <p class="feature__note">Requires a connected label printer. Off by default — turn it on anytime in Settings. Windows only.</p>
+      </div>
+      <div class="feature__media thermalflow-media">
+        <svg viewBox="0 0 320 480" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Sample ThermalFlow label showing a lot number, item name, buyer, and price" style="font-family: var(--body);">
+          <defs>
+            <linearGradient id="tf-border" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="var(--blue)" />
+              <stop offset="100%" stop-color="var(--purple)" />
+            </linearGradient>
+            <linearGradient id="tf-card" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="var(--slate-3)" />
+              <stop offset="100%" stop-color="var(--slate-2)" />
+            </linearGradient>
+            <linearGradient id="tf-price" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="var(--blue)" />
+              <stop offset="100%" stop-color="var(--purple)" />
+            </linearGradient>
+          </defs>
+
+          <rect x="4" y="4" width="312" height="472" rx="20" fill="url(#tf-card)" stroke="url(#tf-border)" stroke-width="2" />
+
+          <circle cx="48" cy="54" r="24" fill="none" stroke="url(#tf-border)" stroke-width="2" />
+          <circle cx="48" cy="54" r="4" fill="var(--cyan)" />
+          <text x="48" y="94" text-anchor="middle" font-size="10" letter-spacing="1.5" fill="var(--ink-faint)">LOGO</text>
+
+          <rect x="228" y="30" width="64" height="32" rx="8" fill="url(#tf-border)" />
+          <text x="260" y="51" text-anchor="middle" font-size="13" font-weight="700" fill="#0a0e14">LOT 14</text>
+
+          <line x1="24" y1="96" x2="296" y2="96" stroke="var(--line)" stroke-width="1.5" />
+
+          <text x="24" y="134" font-size="22" font-weight="700" fill="var(--ink)">
+            <tspan x="24">Charizard Base Set</tspan>
+            <tspan x="24" dy="26">— PSA 9</tspan>
+          </text>
+
+          <text x="24" y="188" font-size="15" fill="var(--cyan)">@cardcollector22</text>
+
+          <line x1="24" y1="212" x2="296" y2="212" stroke="var(--line)" stroke-width="1.5" stroke-dasharray="4 4" />
+
+          <text x="24" y="240" font-size="11" letter-spacing="2" fill="var(--ink-faint)">TOTAL</text>
+          <text x="24" y="284" font-size="44" font-weight="800" fill="url(#tf-price)">$186.00</text>
+
+          <text x="24" y="326" font-size="14" font-style="italic" fill="var(--ink-dim)">Thanks for shopping the show!</text>
+
+          <line x1="24" y1="436" x2="296" y2="436" stroke="var(--line)" stroke-width="1.5" />
+          <text x="24" y="458" font-size="12" fill="var(--ink-faint)">yourshop.com &nbsp;·&nbsp; @yourshop</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+  <!-- WHO IT'S FOR — sits here deliberately. It reframes every feature section
+       below it BEFORE the reader reaches "buyers go back and forth". Static
+       side-by-side rather than a toggle: a toggle hides half the positioning
+       behind a click, and .showcase-panel is display:none so the hidden half
+       would be invisible to anyone screenshotting the page. -->
+  <section id="who-its-for">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow-badge"><span class="dot"></span>Who it&rsquo;s for</span>
+        <h2>One overlay. <span class="grad-text">Two kinds of live.</span></h2>
+        <p>RYLI runs as an OBS browser source, so it goes wherever OBS goes. What changes is how much of your show she can read.</p>
+      </div>
+      <div class="audience-grid reveal stagger">
+        <div class="audience-card card">
+          <div class="feature__eyebrow"><span class="icon-badge">&#128722;</span>You sell live</div>
+          <h3>Whatnot sellers</h3>
+          <p class="desc">RYLI reads your own show and reacts to it as it happens &mdash; the full toolkit.</p>
+          <ul class="checklist">
+            <li>Bids, sales and buyer names tracked live from your own Whatnot show</li>
+            <li>Leaderboards, bid battles and milestone celebrations that fire on real sales</li>
+            <li>Insights, Breaker Tools, the Hype Meter and instant label printing</li>
+            <li>Everything in the streamer column, too</li>
+          </ul>
+          <p class="feature__note"><strong>One thing to know:</strong> start your show with RYLI&rsquo;s own launch button. She can only read a window she opened herself &mdash; a show you start in your own browser is invisible to her.</p>
+        </div>
+        <div class="audience-card card">
+          <div class="feature__eyebrow"><span class="icon-badge">&#127909;</span>You stream, but don&rsquo;t sell</div>
+          <h3>Twitch, YouTube, anywhere</h3>
+          <p class="desc">Pick &ldquo;I stream, but don&rsquo;t sell live&rdquo; during setup and the sales pages stay out of your way. Nothing to connect.</p>
+          <ul class="checklist">
+            <li>The full jumbotron overlay, your camera framed inside it, and your own bezel artwork</li>
+            <li>Every theme, sound pack and Stream Store effect</li>
+            <li>Ryli&rsquo;s voice &mdash; ask her anything, hands-free, and she answers out loud <span class="tag pro">PRO</span></li>
+            <li>The ticker rail and jumbotron cards, running on your own schedule</li>
+          </ul>
+          <p class="feature__note"><strong>Being straight with you:</strong> RYLI can&rsquo;t read Twitch chat yet, so live-reacting leaderboards and celebrations have nothing to feed on. That connection is what we&rsquo;re building next. Everything above works today.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- HOW IT WORKS -->
+  <section id="how-it-works">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow-badge"><span class="dot"></span>Setup</span>
+        <h2>Live in under 5 minutes.</h2>
+        <p>No technical setup, no manual OBS configuration — the onboarding wizard does it for you.</p>
+      </div>
+      <div class="steps reveal stagger">
+        <div class="step">
+          <span class="num">01</span>
+          <h3>Activate</h3>
+          <p>Start your 10-day free trial, no credit card gymnastics.</p>
+        </div>
+        <div class="step">
+          <span class="num">02</span>
+          <h3>Connect OBS</h3>
+          <p>One tap auto-creates the RYLI overlay source in OBS for you.</p>
+        </div>
+        <div class="step">
+          <span class="num">03</span>
+          <h3>Pick a theme</h3>
+          <p>Visual quality and voice auto-tune to your PC's hardware.</p>
+        </div>
+        <div class="step">
+          <span class="num">04</span>
+          <h3>Go live</h3>
+          <p>RYLI reacts to your show in real time from here on out.</p>
+        </div>
+      </div>
+    </div>
+  </section>
   <!-- PRICING -->
   <section id="pricing">
     <div class="container">
@@ -784,7 +771,6 @@
       </div>
     </div>
   </section>
-
   <!-- FAQ -->
   <section id="faq">
     <div class="container">
@@ -832,7 +818,6 @@
       </div>
     </div>
   </section>
-
   <!-- FINAL CTA -->
   <section class="final-cta">
     <div class="container reveal">

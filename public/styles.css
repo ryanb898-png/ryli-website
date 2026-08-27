@@ -354,6 +354,20 @@ section { padding: 96px 0; position: relative; }
   gap: 64px;
   align-items: center;
 }
+/* SHOWCASE: the loud features get the full container, not half of it.
+   A 1fr 1fr grid caps the media at ~50% of the page, which is fine for a
+   screenshot beside a paragraph and far too small for the thing someone came
+   to look at. Copy stacks above, media runs full width underneath. */
+.feature--showcase {
+  grid-template-columns: 1fr;
+  gap: 34px;
+}
+.feature--showcase .feature__copy { max-width: 820px; }
+/* Single column, so the flip order is meaningless here and would only fight
+   the stack. */
+.feature--showcase .feature__copy,
+.feature--showcase .feature__media { order: 0; }
+
 .feature.flip .feature__copy { order: 2; }
 .feature.flip .feature__media { order: 1; }
 .feature__eyebrow {
@@ -370,6 +384,17 @@ section { padding: 96px 0; position: relative; }
   border: 1px solid var(--line);
   box-shadow: var(--shadow);
   background: var(--slate-2);
+}
+
+/* Wide media holds a transparent clip, so it must not paint a card behind it:
+   a --slate-2 fill, a border and overflow:hidden would put a box around a
+   non-rectangular shape and clip the bezel's glow. */
+.feature__media--wide {
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
 }
 .feature__media img { width: 100%; height: auto; display: block; }
 /* Ryli's waveform and the Insights screenshot sit in matching bubbles. A shared
@@ -1194,6 +1219,11 @@ section { padding: 96px 0; position: relative; }
    screenshot would go stale the moment it does. */
 .hype-media, .companion-media { display: flex; align-items: center; justify-content: center; }
 .hype-media svg, .companion-media svg { width: 100%; max-width: 520px; height: auto; }
+/* 520px was sized for a half-width column. In a showcase these sit in the full
+   container, and an SVG capped at 520 in a 1110px card reads as a small graphic
+   floating in a large empty box. */
+.feature--showcase .hype-media svg,
+.feature--showcase .companion-media svg { max-width: 900px; }
 
 /* ---------- hover, focus, and the reduced-motion guard ---------- */
 
