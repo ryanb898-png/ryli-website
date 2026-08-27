@@ -222,30 +222,27 @@
   <section id="features">
     <div class="container feature feature--showcase reveal">
       <div class="feature__copy">
+
         <div class="feature__eyebrow"><span class="icon-badge">📡</span>Live Overlay</div>
         <h2>Add an interactive Jumbotron to your shows.</h2>
         <p class="desc">Your OBS canvas becomes a live jumbotron that reacts in real time — dropped straight into your stream, no scene-building required.</p>
-        <ul class="checklist">
-          <li>Bid battle animations that escalate as buyers go back and forth</li>
-          <li>Milestone celebrations — confetti and coin bursts at your own dollar thresholds</li>
-          <li>A live hype meter that visualizes the energy of the room <span class="tag pro">PRO</span></li>
-          <li>Your own camera feed, framed right inside the jumbotron</li>
-          <li>Rotating promotional banners between lots <span class="tag pro">PRO</span></li>
-        </ul>
       </div>
-      <!-- ONE clip, not a carousel of two. Two clips meant the same jumbotron
-           appeared twice showing different features, and the second one was
-           behind a click. This runs the whole arc in a single take: bids
-           escalating, the milestone, the win, and the overlay's own wipe back
-           to the live lot -- which is also what lets it loop without a jump.
-           Captured from the real overlay by desktop/scripts/shoot-overlay.js. -->
-      <div class="feature__media feature__media--wide">
+<div class="feature__media feature__media--wide">
         <video class="overlay-clip" width="1400" height="552" muted loop playsinline
                preload="auto" poster="assets/video/overlay-jumbotron-v2.webp"
                aria-label="A live lot: bids escalating between three buyers, a milestone celebration, then the LOT WON card naming the winner">
           <source src="assets/video/overlay-jumbotron-v2.webm" type="video/webm" />
           <source src="assets/video/overlay-jumbotron-v2.mp4" type="video/mp4" />
         </video>
+      </div>
+      <div class="feature__copy feature__copy--tail">
+<ul class="checklist">
+          <li>Bid battle animations that escalate as buyers go back and forth</li>
+          <li>Milestone celebrations — confetti and coin bursts at your own dollar thresholds</li>
+          <li>A live hype meter that visualizes the energy of the room <span class="tag pro">PRO</span></li>
+          <li>Your own camera feed, framed right inside the jumbotron</li>
+          <li>Rotating promotional banners between lots <span class="tag pro">PRO</span></li>
+        </ul>
       </div>
     </div>
   </section>
@@ -257,20 +254,12 @@
   <section id="breaker">
     <div class="container feature feature--showcase reveal">
       <div class="feature__copy">
+
         <div class="feature__eyebrow"><span class="icon-badge">🃏</span>Breaker Tools <span class="tag pro">PRO</span> <span class="tag">BETA</span></div>
         <h2>Run a break the whole room can <span class="grad-text">read at a glance.</span></h2>
         <p class="desc">A live board of every spot in your break, on your stream. Who has what, what is still open, and who just landed the Cowboys &mdash; without anyone having to ask.</p>
-        <ul class="checklist">
-          <li>Pick a league and every spot arrives with the real team names and colours &mdash; football, basketball, baseball, hockey, soccer, divisions included</li>
-          <li>Upload your own team logos, and they stay with that team on every board you build afterwards</li>
-          <li>Mini-game signs on screen: Stash or Pass, See 2 Pick 1, Pick Your Team and Random Team</li>
-          <li>Ryli calls it out loud &mdash; &ldquo;@buyer is on the Cleveland Browns&rdquo; &mdash; the moment a spot settles</li>
-          <li>A decision clock that prompts without cutting anyone off: at zero the sign says TIME and stays up until you clear it</li>
-          <li>Assign, clear and re-roll from your dashboard &mdash; and if you let her, RYLI does it on Whatnot for you</li>
-        </ul>
-        <p class="feature__note">Already built your break on Whatnot? RYLI will match your board to it &mdash; the teams, the spot count, and everyone who has already bought in.</p>
       </div>
-      <div class="feature__media feature__media--wide breaker-media">
+<div class="feature__media feature__media--wide breaker-media">
         <!-- The real board, filling. This replaces two things: an illustration
              of a board before a break starts, and an eight-tile CSS mock-up
              whose own comment said it existed to show "the thing a picture
@@ -283,6 +272,17 @@
           <source src="assets/video/overlay-breaker-v2.webm" type="video/webm" />
           <source src="assets/video/overlay-breaker-v2.mp4" type="video/mp4" />
         </video>
+      </div>
+      <div class="feature__copy feature__copy--tail">
+<ul class="checklist">
+          <li>Pick a league and every spot arrives with the real team names and colours &mdash; football, basketball, baseball, hockey, soccer, divisions included</li>
+          <li>Upload your own team logos, and they stay with that team on every board you build afterwards</li>
+          <li>Mini-game signs on screen: Stash or Pass, See 2 Pick 1, Pick Your Team and Random Team</li>
+          <li>Ryli calls it out loud &mdash; &ldquo;@buyer is on the Cleveland Browns&rdquo; &mdash; the moment a spot settles</li>
+          <li>A decision clock that prompts without cutting anyone off: at zero the sign says TIME and stays up until you clear it</li>
+          <li>Assign, clear and re-roll from your dashboard &mdash; and if you let her, RYLI does it on Whatnot for you</li>
+        </ul>
+        <p class="feature__note">Already built your break on Whatnot? RYLI will match your board to it &mdash; the teams, the spot count, and everyone who has already bought in.</p>
       </div>
     </div>
   </section>
@@ -303,20 +303,13 @@
       <div class="showcase-panel is-active" data-panel="hype">
         <div class="feature feature--showcase reveal">
           <div class="feature__copy">
+
             <div class="feature__eyebrow"><span class="icon-badge">🔥</span>Hype Meter <span class="tag pro">PRO</span></div>
             <h2>Whatnot is watching your room. <span class="grad-text">Give it something to see.</span></h2>
             <p class="desc">Whatnot's own engineering team has published that user actions — <strong>including chats and reactions</strong> — are counted in real time and fed to the service that ranks which livestreams get promoted. In their words, they want to &ldquo;promote livestreams to our users when the most exciting things are happening at that moment.&rdquo;</p>
             <p class="desc"><strong>The Hype Meter is how you make that moment happen on cue.</strong></p>
-            <ul class="checklist">
-              <li>Press one key — a bar and a countdown appear on your stream</li>
-              <li>Chat fills it by spamming emojis. The higher it climbs, the bigger the giveaway</li>
-              <li>A live counter shows how many different people are joining in. Whatnot counts distinct users, so that's the number that matters</li>
-              <li>At zero it locks itself in and Ryli announces the prize out loud</li>
-              <li>No giveaway budget? Run it in hype-only mode and just get the room loud</li>
-            </ul>
-            <p class="feature__note">Runs from a hotkey or straight from the RYLI panel inside your Whatnot window — no Stream Deck needed. Whatnot has never published a link between any single action and For You placement, and RYLI never simulates engagement: every tap and message is a real viewer.</p>
           </div>
-          <div class="feature__media hype-media">
+<div class="feature__media hype-media">
             <svg viewBox="0 0 520 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The RYLI Hype Meter mid-run: a bar filled to about sixty percent, a forty-seven person participation count, a countdown at twelve seconds, and dollar tiers from one to one hundred" style="font-family: var(--body);">
               <defs>
                 <linearGradient id="hm-fill" x1="0" y1="0" x2="1" y2="0">
@@ -365,25 +358,28 @@
               <text x="478" y="228" fill="#3ddc97" font-size="13" font-weight="700" text-anchor="end">LOCKS IN AT 0:00</text>
             </svg>
           </div>
+          <div class="feature__copy feature__copy--tail">
+<ul class="checklist">
+              <li>Press one key — a bar and a countdown appear on your stream</li>
+              <li>Chat fills it by spamming emojis. The higher it climbs, the bigger the giveaway</li>
+              <li>A live counter shows how many different people are joining in. Whatnot counts distinct users, so that's the number that matters</li>
+              <li>At zero it locks itself in and Ryli announces the prize out loud</li>
+              <li>No giveaway budget? Run it in hype-only mode and just get the room loud</li>
+            </ul>
+            <p class="feature__note">Runs from a hotkey or straight from the RYLI panel inside your Whatnot window — no Stream Deck needed. Whatnot has never published a link between any single action and For You placement, and RYLI never simulates engagement: every tap and message is a real viewer.</p>
+          </div>
         </div>
       </div>
 
       <div class="showcase-panel" data-panel="companion">
         <div class="feature feature--showcase reveal">
           <div class="feature__copy">
+
             <div class="feature__eyebrow"><span class="icon-badge">🎛️</span>Ryli Companion</div>
             <h2>Run the whole show <span class="grad-text">without ever leaving it.</span></h2>
             <p class="desc">While you stream you're watching your own Whatnot page — not the RYLI app in another window. So RYLI puts her controls where you're already looking: a small panel drawn straight into your Whatnot tab. <strong>Only you can see it.</strong> It's painted locally in your browser, so nothing reaches Whatnot and viewers never see a thing.</p>
-            <ul class="checklist">
-              <li>Launch the Hype Meter, fire a chat announcement, or mute Ryli — one tap, eyes still on your show</li>
-              <li>A green dot on every automation that's currently armed, so you can see what's running at a glance</li>
-              <li>No Stream Deck and nothing to memorise — the buttons do exactly what the hotkeys do</li>
-              <li>Drag it anywhere, collapse it to a single orb, or switch it to a slim bar that stays out of your way</li>
-              <li>If RYLI ever stops responding it greys itself out, rather than showing you a green light that's lying</li>
-            </ul>
-            <p class="feature__note">Included with RYLI. Pro automations stay Pro — but muting Ryli is always free, because you have to be able to silence anything playing over your own show.</p>
           </div>
-          <div class="feature__media companion-media">
+<div class="feature__media companion-media">
             <svg viewBox="0 0 520 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The RYLI Companion drawn inside the host's own Whatnot browser tab: a small draggable control panel with six one-tap buttons, green dots marking which automations are armed, and a note that viewers cannot see it" style="font-family: var(--body);">
               <defs>
                 <linearGradient id="cp-edge" x1="0" y1="0" x2="1" y2="1">
@@ -446,6 +442,16 @@
               <rect x="248" y="200" width="104" height="24" rx="12" fill="#161c26" stroke="#2b3147" />
               <text x="300" y="216" fill="#8da2d3" font-size="10.5" text-anchor="middle">Only you see this</text>
             </svg>
+          </div>
+          <div class="feature__copy feature__copy--tail">
+<ul class="checklist">
+              <li>Launch the Hype Meter, fire a chat announcement, or mute Ryli — one tap, eyes still on your show</li>
+              <li>A green dot on every automation that's currently armed, so you can see what's running at a glance</li>
+              <li>No Stream Deck and nothing to memorise — the buttons do exactly what the hotkeys do</li>
+              <li>Drag it anywhere, collapse it to a single orb, or switch it to a slim bar that stays out of your way</li>
+              <li>If RYLI ever stops responding it greys itself out, rather than showing you a green light that's lying</li>
+            </ul>
+            <p class="feature__note">Included with RYLI. Pro automations stay Pro — but muting Ryli is always free, because you have to be able to silence anything playing over your own show.</p>
           </div>
         </div>
       </div>
@@ -534,18 +540,21 @@
   <section>
     <div class="container feature feature--showcase reveal">
       <div class="feature__copy">
+
         <div class="feature__eyebrow"><span class="icon-badge">📊</span>Insights</div>
         <h2>Real Time <span class="grad-text">Progress Tracking</span></h2>
         <p class="desc">After every show, RYLI turns raw sales into a plan — so you can stay connected to your community, not just track a number. All-time performance and live show stats are free forever; the people behind those numbers are a Pro upgrade away.</p>
-        <ul class="checklist">
+      </div>
+<div class="feature__media insights-media">
+        <img src="assets/images/screenshot-insights-v4.png" width="1600" height="685" loading="lazy" decoding="async" alt="RYLI Insights showing all-time performance and the sales trend chart" />
+      </div>
+      <div class="feature__copy feature__copy--tail">
+<ul class="checklist">
           <li>All-time performance and live show stats — free, always</li>
           <li>Top buyers and lifetime spender leaderboards — Pro</li>
           <li>Suggested outreach: VIPs who've gone quiet, loyal light spenders worth a nudge, new fans worth a thank-you — Pro</li>
           <li>Computed locally from your own show history — nothing leaves your PC</li>
         </ul>
-      </div>
-      <div class="feature__media insights-media">
-        <img src="assets/images/screenshot-insights-v4.png" width="1600" height="685" loading="lazy" decoding="async" alt="RYLI Insights showing all-time performance and the sales trend chart" />
       </div>
     </div>
   </section>
