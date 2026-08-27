@@ -282,14 +282,18 @@
         </ul>
         <p class="feature__note">Already built your break on Whatnot? RYLI will match your board to it &mdash; the teams, the spot count, and everyone who has already bought in.</p>
       </div>
-      <div class="feature__media feature__media--wide breaker-media stream-shot stream-shot--portrait">
+      <div class="feature__media feature__media--wide breaker-media stream-shot stream-shot--inset">
         <!-- Same treatment as the jumbotron: the board over a real stream frame,
              seller chrome on top, the box and hands running out the bottom.
-             This source is PORTRAIT and only 941px wide, so the block is capped
-             at that width rather than stretched across the container -- a
-             portrait stream is tall, and upscaling it would just be blur. -->
-        <img class="stream-shot__bg" src="assets/images/break-shot-v1.webp"
-             width="941" height="950" loading="lazy" decoding="async" alt="" aria-hidden="true" />
+             The board is INSET to 80% of the frame rather than spanning it:
+             it is a wider-than-tall widget with a taller aspect than the
+             jumbotron (2.07:1 against 2.54:1), so at full width it would eat
+             the whole block and leave no room for the chrome or the hands.
+             Inset, both heroes come out the same height -- and a board that
+             does not reach the edges reads as sitting ON the video rather
+             than replacing it. -->
+        <img class="stream-shot__bg" src="assets/images/break-shot-v2.webp"
+             width="1400" height="828" loading="lazy" decoding="async" alt="" aria-hidden="true" />
         <video class="overlay-clip stream-shot__clip" width="1400" height="676" muted loop playsinline
                preload="auto" poster="assets/video/overlay-breaker-v3.webp"
                aria-label="The RYLI breaker board running over a live box break: a 32-spot board filling in real time as buyers claim team tiles">

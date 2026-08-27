@@ -536,24 +536,28 @@ section { padding: 96px 0; position: relative; }
    The fade is a mask rather than a gradient overlay because the page behind is
    itself a gradient -- painting a --slate wash over the photo would leave a
    visible rectangle wherever the page is not exactly that colour. */
+
+.overlay-clip {
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  display: block;
+  filter: drop-shadow(0 26px 42px rgba(0, 0, 0, 0.5))
+          drop-shadow(0 6px 16px rgba(106, 174, 255, 0.15));
+}
+
 /* --clip-top is per-frame: it backs out the padding the capture bakes around
    the bezel so the VISIBLE frame lands just under that stream's logo, and it
    is a percentage so both layers stay in step at every width. */
-.stream-shot { position: relative; --clip-top: 17.24%; }
-/* A portrait source is tall and this one is only 941px wide. Capping it there
-   keeps the block from dominating the page and stops a 941px image being
-   stretched across a 1112px container, which is blur rather than detail. */
-.stream-shot--portrait {
-  --clip-top: 12.73%;
-  /* width:100% IS load-bearing. margin-inline:auto on a grid item switches it to
-     shrink-to-fit, and this block's only in-flow child is an image with CSS
-     width:100% -- so before that lazy image loads its content size is 0 and the
-     whole thing collapses to nothing. Measured: 0x0 on a phone, where the image
-     had not been scrolled into view yet, while desktop looked fine purely
-     because it had. Declaring the width stops the shrink-to-fit entirely. */
-  width: 100%;
-  max-width: 920px;
-  margin-inline: auto;
+.stream-shot { position: relative; --clip-top: 17.24%; --clip-inset: 0%; }
+/* The breaker board has a TALLER aspect than the jumbotron clip (2.07:1 against
+   2.54:1), so spanning the frame it would be 537px against the jumbotron's 438
+   and swallow the whole block. Inset to 80% it lands at 419 -- the two heroes
+   read as the same size -- and a board that stops short of the edges looks like
+   an overlay sitting on the video rather than replacing it. */
+.stream-shot--inset {
+  --clip-top: 13.39%;
+  --clip-inset: 10%;
 }
 .stream-shot__bg {
   display: block;
@@ -578,20 +582,17 @@ section { padding: 96px 0; position: relative; }
    the VISIBLE frame that lands there rather than the video's box. As a
    PERCENTAGE it holds at every width: both layers scale with the container, so
    the clip lands under the chrome on a phone exactly as it does on a desktop. */
+/* THE WIDTH IS COMPUTED, NOT LEFT TO left/right.
+   A <video> is a REPLACED element, and for an absolutely positioned replaced
+   box `width: auto` resolves to the INTRINSIC width -- so left and right
+   over-constrain, right is dropped, and the inset silently does nothing.
+   Measured that exactly: left and right both computed to 111px while width
+   stayed at the full 1112. Stating the width is the only thing that works. */
 .stream-shot__clip {
   position: absolute;
-  left: 0;
-  right: 0;
   top: var(--clip-top);
-}
-
-.overlay-clip {
-  width: 100%;
-  height: auto;
-  max-width: 100%;
-  display: block;
-  filter: drop-shadow(0 26px 42px rgba(0, 0, 0, 0.5))
-          drop-shadow(0 6px 16px rgba(106, 174, 255, 0.15));
+  left: var(--clip-inset);
+  width: calc(100% - var(--clip-inset) * 2);
 }
 /* CONTROLS BELOW THE ARTWORK, NEVER ON IT.
    The boxed carousel could float arrows over a slide because the slide was an
