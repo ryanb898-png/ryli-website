@@ -93,6 +93,11 @@ document.querySelectorAll('[data-carousel]').forEach((carousel) => {
 
   function setActive(index) {
     dots.forEach((d, i) => d.classList.toggle('is-active', i === index));
+    // Which slide is current is known only here. Stamping it on the slide lets
+    // the overlay-clip logic below stay ignorant of carousels -- and stops the
+    // off-screen slide's clip decoding forever in the background.
+    slides.forEach((sl, i) => { sl.dataset.active = i === index ? '1' : '0'; });
+    if (window.__syncOverlayClips) window.__syncOverlayClips();
   }
   setActive(0);
 
@@ -243,42 +248,6 @@ document.querySelectorAll('.hype-media').forEach((media) => {
   }, { threshold: 0.4 }).observe(media);
 });
 
-// The breaker board claims its spots once, when first seen. Everything visual
-// is CSS off .is-running; JS only sets the per-tile delay and tallies the
-// counter, which is a number rather than a property.
-document.querySelectorAll('.bk-live').forEach((board) => {
-  const tiles = Array.from(board.querySelectorAll('.bk-tile'));
-  const counter = board.querySelector('.bk-live__count');
-  const taken = tiles.filter((t) => !t.classList.contains('is-open')).length;
-  const STEP = 190;
-
-  const finish = () => { if (counter) counter.textContent = taken + ' / ' + tiles.length; };
-
-  if (REDUCED || !('IntersectionObserver' in window)) {
-    board.classList.add('is-running');
-    finish();
-    return;
-  }
-
-  tiles.forEach((t, i) => t.style.setProperty('--d', (i * STEP) + 'ms'));
-
-  new IntersectionObserver((entries, obs) => {
-    entries.forEach((e) => {
-      if (!e.isIntersecting) return;
-      obs.disconnect();
-      board.classList.add('is-running');
-      // The counter climbs in step with the tiles rather than jumping at the
-      // end, so the number and the picture tell the same story.
-      let n = 0;
-      tiles.forEach((t, i) => {
-        if (t.classList.contains('is-open')) return;
-        setTimeout(() => { n += 1; if (counter) counter.textContent = n + ' / ' + tiles.length; }, i * STEP + 260);
-      });
-      setTimeout(finish, tiles.length * STEP + 400);
-    });
-  }, { threshold: 0.35 }).observe(board);
-});
-
 // Scroll-reveal
 const revealEls = document.querySelectorAll('.reveal');
 if ('IntersectionObserver' in window && revealEls.length) {
@@ -297,3 +266,61 @@ if ('IntersectionObserver' in window && revealEls.length) {
 } else {
   revealEls.forEach((el) => el.classList.add('is-visible'));
 }
+
+/* ---------- overlay clips: play only what is actually being looked at ----------
+   These are real captures of the running overlay, so they are the heaviest
+   things on the page. Three rules decide whether one runs, and all three have
+   to agree:
+
+     1. it is on screen,
+     2. it is not a carousel slide that has scrolled out of view,
+     3. the visitor has not asked for reduced motion.
+
+   Decoding a clip nobody can see costs the same as decoding one they can, and
+   a carousel keeps every slide in the DOM -- so without (2) both clips in the
+   feature carousel would decode continuously, forever, on every page load.
+
+   Under reduced motion nothing ever plays; the poster is a real frame of the
+   same clip with the same alpha, so the page still shows the product. */
+(function () {
+  const clips = Array.from(document.querySelectorAll('.overlay-clip'));
+  if (!clips.length) return;
+
+  const onScreen = new WeakSet();
+
+  function wants(v) {
+    if (REDUCED || document.hidden) return false;
+    if (!onScreen.has(v)) return false;
+    const slide = v.closest('.carousel__slide');
+    return !slide || slide.dataset.active === '1';
+  }
+
+  function sync(v) {
+    if (wants(v)) {
+      // play() rejects when the tab backgrounds mid-call, or on a browser that
+      // refuses muted autoplay. Neither is worth an unhandled rejection; the
+      // poster stays up and the page still reads correctly.
+      const p = v.play();
+      if (p && p.catch) p.catch(() => {});
+    } else if (!v.paused) {
+      v.pause();
+    }
+  }
+
+  window.__syncOverlayClips = () => clips.forEach(sync);
+
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) onScreen.add(e.target); else onScreen.delete(e.target);
+        sync(e.target);
+      });
+    }, { threshold: 0.4 });
+    clips.forEach((v) => io.observe(v));
+  } else {
+    clips.forEach((v) => { onScreen.add(v); sync(v); });
+  }
+
+  document.addEventListener('visibilitychange', window.__syncOverlayClips);
+})();
+

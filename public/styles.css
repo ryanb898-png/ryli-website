@@ -484,6 +484,66 @@ section { padding: 96px 0; position: relative; }
 @media (max-width: 720px) {
   .carousel--tall .carousel__slide { height: 440px; }
 }
+/* CLIP VARIANT: landscape overlay footage, floating unboxed.
+   The clips carry real alpha, so the container must NOT paint a background --
+   a --slate-2 fill behind them would put the clip in a box and throw away the
+   transparency the capture pipeline exists to produce. The drop-shadow goes on
+   the video itself for the same reason: on the container it would trace a
+   rectangle around a shape that is not rectangular. */
+.carousel--clip {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  overflow: visible;   /* the bezel glow extends past the video box */
+}
+.carousel--clip .carousel__slide {
+  aspect-ratio: 1200 / 474;
+  background: transparent;
+  display: flex;
+  align-items: center;
+}
+.overlay-clip {
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  display: block;
+  filter: drop-shadow(0 26px 42px rgba(0, 0, 0, 0.5))
+          drop-shadow(0 6px 16px rgba(106, 174, 255, 0.15));
+}
+/* CONTROLS BELOW THE ARTWORK, NEVER ON IT.
+   The boxed carousel could float arrows over a slide because the slide was an
+   opaque rectangle. These clips are a transparent, non-rectangular shape, so a
+   centred arrow lands directly on the bezel. Everything moves into one control
+   row under the clip: arrows flanking the dots, all sharing a 26px band so they
+   line up without magic numbers. */
+.carousel--clip .carousel__dots {
+  position: static;
+  margin-top: 20px;
+  min-height: 26px;
+  align-items: center;
+}
+.carousel--clip .carousel__arrow {
+  top: auto;
+  bottom: 0;
+  transform: none;
+  width: 26px;
+  height: 26px;
+  font-size: 15px;
+  backdrop-filter: none;   /* nothing to blur against a flat ground; saves a layer */
+}
+.carousel--clip .carousel__arrow--prev { left: calc(50% - 70px); right: auto; }
+.carousel--clip .carousel__arrow--next { right: calc(50% - 70px); left: auto; }
+
+/* The pause pill is 12px tall to sit inline with 8px dots inside a card. Out
+   here on the page ground at that size it reads as a broken third dot rather
+   than a control, so it gets real dimensions. */
+.carousel--clip .carousel__pause {
+  height: 18px;
+  min-width: 36px;
+  padding: 0 9px;
+  font-size: 10px;
+}
+
 .carousel__dots {
   position: absolute;
   bottom: 16px;
@@ -1236,81 +1296,6 @@ input:focus-visible {
    time with a buyer's name landing on each. Transform and opacity only, and it
    runs once, when the section is first seen. */
 .breaker-media { display: block; padding: 0; }
-.breaker-media img { border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
-
-.bk-live {
-  padding: 14px 16px 16px;
-  border-top: 1px solid var(--line);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent);
-}
-.bk-live__head {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  margin-bottom: 10px;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 1.1px;
-  text-transform: uppercase;
-  color: var(--ink-faint);
-}
-.bk-live__count { color: var(--blue); font-variant-numeric: tabular-nums; }
-.bk-live__grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 6px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.bk-tile {
-  position: relative;
-  overflow: hidden;
-  padding: 7px 8px 7px 11px;
-  border: 1px solid var(--line);
-  border-radius: 9px;
-  background: rgba(255, 255, 255, 0.02);
-}
-/* The team's own colour as a left edge -- the same device the real board uses,
-   and what makes a 32-spot board scannable at a glance. */
-.bk-tile::before {
-  content: "";
-  position: absolute;
-  left: 0; top: 0; bottom: 0;
-  width: 3px;
-  background: var(--team);
-  transform: scaleY(0);
-  transform-origin: bottom;
-  transition: transform 320ms var(--ease-out) var(--d, 0s);
-}
-.bk-live.is-running .bk-tile::before { transform: scaleY(1); }
-
-.bk-tile__team {
-  display: block;
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--ink);
-}
-.bk-tile__who {
-  display: block;
-  font-size: 10px;
-  color: var(--ink-dim);
-  opacity: 0;
-  transform: translateY(4px);
-  transition: opacity 260ms var(--ease-out) var(--d, 0s),
-              transform 260ms var(--ease-out) var(--d, 0s);
-}
-.bk-live.is-running .bk-tile__who { opacity: 1; transform: none; }
-/* A spot nobody has taken stays visibly open -- that is the information. */
-.bk-tile.is-open .bk-tile__who { color: var(--ink-faint); font-style: italic; }
-.bk-tile.is-open::before { opacity: 0.35; }
-
-@media (max-width: 520px) { .bk-live__grid { grid-template-columns: repeat(2, 1fr); } }
-
-@media (prefers-reduced-motion: reduce) {
-  .bk-tile::before { transform: scaleY(1); }
-  .bk-tile__who { opacity: 1; transform: none; }
-}
 
 /* ---------- what a phone can actually do ---------- */
 /* RYLI is a Windows desktop app. On a phone, "Download Now" is an instruction

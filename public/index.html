@@ -279,48 +279,39 @@
           <li>Rotating promotional banners between lots <span class="tag pro">PRO</span></li>
         </ul>
       </div>
-      <!-- One unified carousel, all 5 slides in the same spot, same
-           unboxed floating treatment (drop-shadow, no card background) —
-           phone first (real alpha cutout), then the 4 screenshots. -->
-      <div class="carousel carousel--tall reveal" data-carousel data-autoplay="4500">
+      <!-- REAL FOOTAGE OF THE REAL OVERLAY, not a mockup.
+           Captured by desktop/scripts/shoot-overlay.js, which drives
+           overlays/overlay.html over CDP and records what comes out. The five
+           slides this replaces were phone screenshots of the OLD overlay --
+           July pixels, taken before frame-v3 and Broadcast Glass shipped.
+
+           webm carries real alpha, so the clip floats on the page gradient with
+           no box around it. The mp4 fallback cannot (h264 has no alpha) and is
+           flattened onto --slate at capture time, so it still sits seamlessly.
+           The poster is WebP, which keeps alpha too, so the frame before play
+           matches the frame after it. -->
+      <div class="carousel carousel--clip reveal" data-carousel data-autoplay="10000">
         <div class="carousel__track">
           <div class="carousel__slide">
-            <img class="phone-cutout" src="assets/images/hero-phone.png" width="896" height="1756" decoding="async" alt="RYLI overlay running live on a Whatnot stream, viewed on a phone" />
+            <video class="overlay-clip" width="1200" height="474" muted loop playsinline
+                   preload="metadata" poster="assets/video/overlay-bidwar-v1.webp"
+                   aria-label="Three buyers bidding against each other, the leader card escalating with each bid">
+              <source src="assets/video/overlay-bidwar-v1.webm" type="video/webm" />
+              <source src="assets/video/overlay-bidwar-v1.mp4" type="video/mp4" />
+            </video>
           </div>
           <div class="carousel__slide">
-            <img src="assets/images/carousel-1-lotwon-v3.png" width="414" height="736" decoding="async" loading="lazy" alt="A LOT WON celebration card with confetti over a live card auction" />
-          </div>
-          <div class="carousel__slide">
-            <img src="assets/images/carousel-2-livecamera-v3.png" width="414" height="736" decoding="async" loading="lazy" alt="The seller's camera feed framed inside the jumbotron, above a welcome-to-the-board card" />
-          </div>
-          <div class="carousel__slide">
-            <img src="assets/images/carousel-3-recentwins-v3.png" width="414" height="736" decoding="async" loading="lazy" alt="The Recent Winners board over a live apparel show" />
-          </div>
-          <div class="carousel__slide">
-            <img src="assets/images/carousel-4-taphearts-v3.png" width="414" height="736" decoding="async" loading="lazy" alt="Today's top bidder and a tap-for-hearts prompt over a live coin auction" />
+            <video class="overlay-clip" width="1200" height="474" muted loop playsinline
+                   preload="metadata" poster="assets/video/overlay-lotwon-v1.webp"
+                   aria-label="A lot closing: confetti fires and the LOT WON card names the winner">
+              <source src="assets/video/overlay-lotwon-v1.webm" type="video/webm" />
+              <source src="assets/video/overlay-lotwon-v1.mp4" type="video/mp4" />
+            </video>
           </div>
         </div>
         <div class="carousel__dots"></div>
-        <button class="carousel__arrow carousel__arrow--prev" aria-label="Previous">‹</button>
-        <button class="carousel__arrow carousel__arrow--next" aria-label="Next">›</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- FEATURE 2: Ryli voice co-host -->
-  <section>
-    <div class="container feature flip reveal">
-      <div class="feature__copy">
-        <div class="feature__eyebrow"><span class="icon-badge">🎙️</span>Ryli · Audible Intelligence</div>
-        <h2>Hands-free show intel, <span class="grad-text">on command.</span></h2>
-        <p class="desc">Press a hotkey and ask Ryli anything about tonight's show — she answers instantly from your real tracked data, not a guess. She'll also save a spoken note ("remind me to...") and read it back whenever you ask.</p>
-        <ul class="checklist">
-          <li>Hotkey-triggered — reliable, no fumbling for a phone or keyboard</li>
-          <li>"How many lots sold tonight?" "Who's my top spender?" — answered live, from your actual numbers, zero guesswork</li>
-          <li>Voice notes: "Hey Ryli, remind me to..." — saved and read back on request</li>
-          <li>Optional: connect your own research key so Ryli can look up real product and market info live on air</li>
-          <li>Experimental spoken "Hey Ryli" wake word, layered on top of the hotkey — currently in beta</li>
-        </ul>
+        <button class="carousel__arrow carousel__arrow--prev" aria-label="Previous">&lsaquo;</button>
+        <button class="carousel__arrow carousel__arrow--next" aria-label="Next">&rsaquo;</button>
       </div>
       <div class="feature__media waveform-media">
         <svg viewBox="0 0 500 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Voice waveform">
@@ -548,23 +539,18 @@
         <p class="feature__note">Already built your break on Whatnot? RYLI will match your board to it &mdash; the teams, the spot count, and everyone who has already bought in.</p>
       </div>
       <div class="feature__media breaker-media">
-        <img src="assets/images/breaker-board-v4.png" width="1200" height="877" loading="lazy" decoding="async"
-             alt="The RYLI breaker board on a live stream: a grid of NFL team tiles with a spots-filled counter, a SPOTS OPEN prompt and a Stash or Pass sign" />
-        <!-- The picture above is a board before the break starts. This is the
-             thing a picture cannot show: spots being claimed, live. -->
-        <div class="bk-live" aria-hidden="true">
-          <div class="bk-live__head"><span>WATCH IT FILL</span><span class="bk-live__count">0 / 8</span></div>
-          <ul class="bk-live__grid">
-            <li class="bk-tile" style="--team:#FF3C00"><span class="bk-tile__team">Browns</span><span class="bk-tile__who">@cardking93</span></li>
-            <li class="bk-tile" style="--team:#241773"><span class="bk-tile__team">Ravens</span><span class="bk-tile__who">@whaleshark</span></li>
-            <li class="bk-tile" style="--team:#E31837"><span class="bk-tile__team">Chiefs</span><span class="bk-tile__who">@rookie_r</span></li>
-            <li class="bk-tile" style="--team:#FFB612"><span class="bk-tile__team">Packers</span><span class="bk-tile__who">@lealboys</span></li>
-            <li class="bk-tile" style="--team:#041E42"><span class="bk-tile__team">Cowboys</span><span class="bk-tile__who">@dcollector</span></li>
-            <li class="bk-tile" style="--team:#AA0000"><span class="bk-tile__team">49ers</span><span class="bk-tile__who">@bayarea_b</span></li>
-            <li class="bk-tile is-open" style="--team:#C83803"><span class="bk-tile__team">Bears</span><span class="bk-tile__who">open</span></li>
-            <li class="bk-tile is-open" style="--team:#0076B6"><span class="bk-tile__team">Lions</span><span class="bk-tile__who">open</span></li>
-          </ul>
-        </div>
+        <!-- The real board, filling. This replaces two things: an illustration
+             of a board before a break starts, and an eight-tile CSS mock-up
+             whose own comment said it existed to show "the thing a picture
+             cannot show". It now shows the actual product doing it -- captured
+             by desktop/scripts/shoot-overlay.js against overlays/overlay.html,
+             so it stays true every time the board changes. -->
+        <video class="overlay-clip" width="1200" height="578" muted loop playsinline
+               preload="metadata" poster="assets/video/overlay-breaker-v1.webp"
+               aria-label="A 32-spot breaker board filling in real time as buyers claim team tiles">
+          <source src="assets/video/overlay-breaker-v1.webm" type="video/webm" />
+          <source src="assets/video/overlay-breaker-v1.mp4" type="video/mp4" />
+        </video>
       </div>
     </div>
   </section>
