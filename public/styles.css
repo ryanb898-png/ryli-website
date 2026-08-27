@@ -1384,3 +1384,51 @@ input:focus-visible {
     color: var(--ink-faint);
   }
 }
+
+/* ---------- breaker-tools page ---------- */
+/* Two compact grids. .card is a bare shell here -- background, border, radius
+   and no padding -- so anything sitting in it supplies its own, the same way
+   .audience-card does. */
+.league-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+@media (max-width: 900px) { .league-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 460px) { .league-grid { grid-template-columns: 1fr; } }
+.league-card {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 16px 18px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.015));
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  transition: transform var(--dur-1) var(--ease-out), border-color var(--dur-1) var(--ease-out);
+}
+.league-card:hover {
+  transform: translateY(var(--lift));
+  border-color: var(--line-hot);   /* the hover border every other card here uses */
+}
+.league-card strong { font-size: 18px; letter-spacing: 0.2px; }
+.league-card__sport {
+  font-size: 10px; font-weight: 700; letter-spacing: 1px;
+  text-transform: uppercase; color: var(--accent);
+}
+.league-card__n { font-size: 12px; color: var(--ink-dim); }
+
+.mini-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+}
+.mini-card { padding: 26px 24px; }
+.mini-card__icon { font-size: 26px; line-height: 1; margin-bottom: 12px; }
+.mini-card h3 { font-size: 19px; margin-bottom: 8px; }
+.mini-card p { color: var(--ink-dim); font-size: 15px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .league-card { transition: none; }
+  .league-card:hover { transform: none; }
+}
+#scales .checklist strong { white-space: nowrap; }
