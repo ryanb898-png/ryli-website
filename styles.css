@@ -1311,3 +1311,24 @@ input:focus-visible {
   .bk-tile::before { transform: scaleY(1); }
   .bk-tile__who { opacity: 1; transform: none; }
 }
+
+/* ---------- what a phone can actually do ---------- */
+/* RYLI is a Windows desktop app. On a phone, "Download Now" is an instruction
+   the device cannot carry out -- it hands over a 188MB .exe that iOS will not
+   open. The button stays (people do send themselves the link) but it says what
+   it is, and a line under the hero explains rather than leaving a dead end. */
+.cta-narrow { display: none; }
+.hero__pcnote { display: none; }
+
+@media (max-width: 720px) {
+  .cta-wide { display: none; }
+  .cta-narrow { display: inline; }
+  .hero__pcnote {
+    display: block;
+    margin: 14px 0 0;
+    max-width: 42ch;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--ink-faint);
+  }
+}

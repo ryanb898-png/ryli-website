@@ -66,11 +66,26 @@ document.querySelectorAll('[data-carousel]').forEach((carousel) => {
     return;
   }
 
+  // SCROLL THE TRACK, NOT THE PAGE.
+  //
+  // This used to call slide.scrollIntoView(), and scrollIntoView walks UP the
+  // tree scrolling every scrollable ancestor it finds -- including the document.
+  // block:'nearest' reduces that but does not prevent it, and iOS Safari is
+  // especially eager. The symptom was reported from a real phone: scrolling the
+  // page vertically would periodically snap back to the carousel, because an
+  // autoplay tick fired mid-scroll and the browser obligingly moved the PAGE to
+  // bring the next slide into view.
+  //
+  // scrollTo on the track itself cannot move anything but the track.
+  function scrollTrackTo(slide) {
+    track.scrollTo({ left: slide.offsetLeft, behavior: 'smooth' });
+  }
+
   const dots = slides.map((_, i) => {
     const dot = document.createElement('button');
     dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
     dot.addEventListener('click', () => {
-      slides[i].scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
+      scrollTrackTo(slides[i]);
     });
     dotsWrap.appendChild(dot);
     return dot;
@@ -94,7 +109,7 @@ document.querySelectorAll('[data-carousel]').forEach((carousel) => {
 
   function goTo(idx) {
     const clamped = Math.max(0, Math.min(slides.length - 1, idx));
-    slides[clamped].scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
+    scrollTrackTo(slides[clamped]);
   }
 
   let scrollTimeout;
