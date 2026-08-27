@@ -101,6 +101,8 @@ console.log('\n  IMAGES');
     'carousel-3-recentwins-v3.png', 'carousel-4-taphearts-v3.png', 'hero-phone.png',
     // The board illustration, replaced by real footage of the board filling.
     'breaker-board-v4.png',
+    // Hero portrait, now served as WebP at a quarter the size.
+    'hero-ryli-live.png',
   ]);
 
   const orphans = files.filter((f) => !sources.includes(f) && !GRACE.has(f));
