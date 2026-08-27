@@ -200,7 +200,18 @@ document.querySelectorAll('.showcase-toggle__btn').forEach((btn) => {
     // in one would deactivate the other's tabs and blank its panel.
     const scope = btn.closest('section') || document;
     scope.querySelectorAll('.showcase-toggle__btn').forEach((b) => b.classList.toggle('is-active', b === btn));
-    scope.querySelectorAll('.showcase-panel').forEach((p) => p.classList.toggle('is-active', p.dataset.panel === target));
+    scope.querySelectorAll('.showcase-panel').forEach((p) => {
+      const on = p.dataset.panel === target;
+      p.classList.toggle('is-active', on);
+      // REVEAL ON OPEN, do not wait for the observer. A .reveal inside a
+      // display:none panel has no box, so it never intersects -- and the
+      // observer below is one-shot, unobserving on first hit. Measured: the
+      // Stream Store tab opened onto an 860px panel whose content was still at
+      // opacity 0. Showing the panel is itself the cue.
+      if (!on) return;
+      if (p.classList.contains('reveal')) p.classList.add('is-visible');
+      p.querySelectorAll('.reveal').forEach((el) => el.classList.add('is-visible'));
+    });
   });
 });
 

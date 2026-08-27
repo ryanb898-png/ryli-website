@@ -1445,3 +1445,43 @@ input:focus-visible {
   color: var(--accent);
   margin-bottom: 10px;
 }
+
+/* ---------- cross-page transitions ---------- */
+/* Only worth having now that there are real pages to move between. The browser
+   cross-fades the old document into the new one instead of flashing white, and
+   anything with a view-transition-name is matched across the two documents and
+   animated from one position to the other rather than being torn down.
+   Unsupported browsers simply navigate as before -- there is nothing to
+   feature-detect and no fallback to maintain.
+
+   NOT VERIFIED END TO END. Everything checkable checks out: the rule parses
+   into the sheet, both names compute on their elements, the browser supports
+   view-transition-name, prefers-reduced-motion does not match, and a
+   SAME-document transition runs and resolves. But a cross-document one never
+   fired in headless Chrome 151 -- with a scripted click or a real synthesized
+   mouse press -- so this is configured correctly and observed working only up
+   to that last step. Check it by clicking between two pages in a real browser.
+   It is kept because the downside is nil: a browser that does not run it just
+   navigates the way it did before. */
+@view-transition { navigation: auto; }
+
+/* The chrome is the same element on both sides, so naming it means it holds
+   still while the content underneath changes. That single detail is most of
+   what makes a multi-page site feel like one app rather than seven documents. */
+.nav { view-transition-name: site-nav; }
+.footer { view-transition-name: site-footer; }
+
+::view-transition-old(root),
+::view-transition-new(root) { animation-duration: var(--dur-2); }
+/* Named parts cross-fade faster than the page body, so the nav does not appear
+   to lag behind the content it sits above. */
+::view-transition-old(site-nav),
+::view-transition-new(site-nav),
+::view-transition-old(site-footer),
+::view-transition-new(site-footer) { animation-duration: var(--dur-1); }
+
+@media (prefers-reduced-motion: reduce) {
+  /* A page-level cross-fade is exactly the kind of motion this preference is
+     asking us not to do, so the navigation goes back to a plain load. */
+  @view-transition { navigation: none; }
+}

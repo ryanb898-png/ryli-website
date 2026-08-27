@@ -103,6 +103,8 @@ console.log('\n  IMAGES');
     'breaker-board-v4.png',
     // Hero portrait, now served as WebP at a quarter the size.
     'hero-ryli-live.png',
+    // Superseded by the OBS-badge version; eBay Live is not supported.
+    'hero-ryli-live-v2.webp',
   ]);
 
   const orphans = files.filter((f) => !sources.includes(f) && !GRACE.has(f));
