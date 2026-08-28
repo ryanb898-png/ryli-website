@@ -29,6 +29,15 @@ try {
   }).catch(() => {});
 } catch {}
 
+// A phone tap on a download button shares the link instead of downloading a
+// Windows installer the phone cannot run. Both the tracker below and the share
+// handler further down consult this ONE predicate: they are both on
+// document+capture, so whichever registers first wins, and a share must never
+// be counted as a download whichever way that falls.
+function ryliSharesInsteadOfDownloading() {
+  try { return window.matchMedia('(max-width: 720px)').matches; } catch { return false; }
+}
+
 // Download intent. Visits and installs were the only two numbers here, which
 // makes "hundreds of visits, a handful of installs" impossible to read -- a
 // traffic problem and a page problem look identical. This is the step between
@@ -37,7 +46,7 @@ try {
 try {
   document.addEventListener('click', (e) => {
     const a = e.target && e.target.closest && e.target.closest('a[href*="releases/latest/download"]');
-    if (!a) return;
+    if (!a || ryliSharesInsteadOfDownloading()) return;
     try { fetch('/api/download-click', { method: 'POST', keepalive: true }).catch(() => {}); } catch {}
   }, { capture: true });
 } catch {}
@@ -299,3 +308,66 @@ if ('IntersectionObserver' in window && revealEls.length) {
   document.addEventListener('visibilitychange', window.__syncOverlayClips);
 })();
 
+/* ---------- on a phone, the download button sends the link instead ----------
+   95% of this site's traffic is mobile, almost all of it from Meta, and RYLI is
+   a Windows desktop app. "Download Now" on a phone hands over an .exe the device
+   cannot open -- a dead end for nineteen visitors in twenty.
+
+   So below the same 720px breakpoint where the label already changes, the button
+   opens the OS share sheet instead. One tap, then Mail, Messages, Notes, Slack
+   -- whatever they can open on the PC. Nothing is captured and nothing is sent
+   to this server; the share happens entirely on their device.
+
+   Capture phase, and stopImmediatePropagation, specifically so the
+   download-click tracker above never sees it. A share is not a download, and
+   counting it as one would quietly corrupt the only conversion number there is. */
+(function () {
+  const DL = 'a[href*="releases/latest/download"]';
+  const SHARE_URL = 'https://ryli.app/';
+  const SHARE_TEXT = 'RYLI — the OBS overlay and voice co-host for live shows. '
+    + 'Open this on your PC to install it.';
+
+  // Keyed off the SAME breakpoint as .cta-narrow, so the button can never say
+  // "Get RYLI for PC" while still behaving like a download, or the reverse.
+  const isPhone = ryliSharesInsteadOfDownloading;
+
+  function flash(btn, msg) {
+    const label = btn.querySelector('.cta-narrow') || btn;
+    const was = label.textContent;
+    label.textContent = msg;
+    setTimeout(() => { label.textContent = was; }, 2600);
+  }
+
+  document.addEventListener('click', (e) => {
+    const a = e.target && e.target.closest && e.target.closest(DL);
+    if (!a || !isPhone()) return;
+
+    e.preventDefault();
+    e.stopImmediatePropagation();
+
+    if (navigator.share) {
+      // A dismissed share sheet rejects with AbortError. That is a person
+      // changing their mind, not a failure, so it must not fall through to a
+      // clipboard write they did not ask for.
+      navigator.share({ title: 'RYLI', text: SHARE_TEXT, url: SHARE_URL })
+        .catch(() => {});
+      return;
+    }
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(SHARE_URL)
+        .then(() => flash(a, 'Link copied — open it on your PC'))
+        .catch(() => { window.location.href = mailto(); });
+      return;
+    }
+
+    window.location.href = mailto();
+  }, true);
+
+  function mailto() {
+    // Last resort: their own mail app, addressed to nobody. They fill in their
+    // own address, which is the point -- we never see it.
+    return 'mailto:?subject=' + encodeURIComponent('RYLI for my PC')
+      + '&body=' + encodeURIComponent(SHARE_TEXT + '\n\n' + SHARE_URL);
+  }
+})();
