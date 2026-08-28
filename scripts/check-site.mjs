@@ -23,8 +23,9 @@
 import fs from 'fs';
 import path from 'path';
 
-const ROOT = path.join(import.meta.dirname, '..');
-const PAGES = ['index.html', 'changelog.html', 'setup-guide.html',
+// Only ./public is served, so only ./public is checked. See wrangler.jsonc.
+const ROOT = path.join(import.meta.dirname, '..', 'public');
+const PAGES = ['index.html', 'engagement.html', 'breaker-tools.html', 'pricing.html', 'system-requirements.html', 'changelog.html', 'setup-guide.html',
   'privacy.html', 'terms.html', 'thank-you.html'];
 
 let fails = 0;
@@ -91,7 +92,22 @@ console.log('\n  IMAGES');
 
   // Superseded files are kept for exactly one deploy so cached HTML pointing at
   // the old name does not 404. List them here and delete them next time.
-  const GRACE = new Set(['og-cover.png', 'screenshot-themes-v2.png', 'screenshot-insights-v2.png', 'ryliring.png']);
+  const GRACE = new Set([
+    'og-cover.png', 'screenshot-themes-v2.png', 'screenshot-insights-v2.png', 'ryliring.png',
+    // Superseded by real overlay footage in assets/video (shoot-overlay.js).
+    // These were phone screenshots of the OLD overlay -- July pixels, from
+    // before frame-v3 and Broadcast Glass shipped. DELETE NEXT DEPLOY.
+    'carousel-1-lotwon-v3.png', 'carousel-2-livecamera-v3.png',
+    'carousel-3-recentwins-v3.png', 'carousel-4-taphearts-v3.png', 'hero-phone.png',
+    // The board illustration, replaced by real footage of the board filling.
+    'breaker-board-v4.png',
+    // Hero portrait, now served as WebP at a quarter the size.
+    'hero-ryli-live.png',
+    // Superseded by the OBS-badge version; eBay Live is not supported.
+    'hero-ryli-live-v2.webp',
+    // Superseded by a current, seeded capture of the real store grid.
+    'store-screenshot-v3.png',
+  ]);
 
   const orphans = files.filter((f) => !sources.includes(f) && !GRACE.has(f));
   const mb = orphans.reduce((n, f) => n + fs.statSync(path.join(dir, f)).size, 0) / 1048576;
@@ -102,6 +118,46 @@ console.log('\n  IMAGES');
   for (const m of sources.matchAll(/assets\/images\/([A-Za-z0-9._-]+)/g)) referenced.add(m[1]);
   const missing = [...referenced].filter((f) => !fs.existsSync(path.join(dir, f)));
   ok('every referenced image exists', missing.length === 0, missing.join(', '));
+}
+
+// ---- 2b. video: the same two checks, for assets/video -------------------
+// A missing clip is exactly as invisible as a missing image was, and the edge
+// caches a 404 that the API token available here cannot purge.
+console.log('\n  VIDEO');
+{
+  const dir = path.join(ROOT, 'assets', 'video');
+  if (!fs.existsSync(dir)) {
+    ok('assets/video exists', false, 'directory missing');
+  } else {
+    const files = fs.readdirSync(dir);
+    const sources = [...PAGES, 'styles.css', 'script.js']
+      .filter((f) => fs.existsSync(path.join(ROOT, f)))
+      .map(read).join('\n');
+
+    const orphans = files.filter((f) => !sources.includes(f));
+    const mb = orphans.reduce((n, f) => n + fs.statSync(path.join(dir, f)).size, 0) / 1048576;
+    ok('no orphaned video', orphans.length === 0,
+      orphans.length ? mb.toFixed(1) + 'MB: ' + orphans.join(', ') : '');
+
+    const referenced = new Set();
+    for (const m of sources.matchAll(/assets\/video\/([A-Za-z0-9._-]+)/g)) referenced.add(m[1]);
+    const missing = [...referenced].filter((f) => !fs.existsSync(path.join(dir, f)));
+    ok('every referenced clip exists', missing.length === 0, missing.join(', '));
+
+    // The webm is the real asset -- it carries the alpha the capture pipeline
+    // exists to produce. h264 cannot, so the mp4 is there precisely for the
+    // browsers that will not play the webm. Shipping one without the other is
+    // a silently blank slide for somebody.
+    const html = read('index.html');
+    const webms = [...html.matchAll(/assets\/video\/(overlay-[a-z]+-v\d+)\.webm/g)].map((m) => m[1]);
+    const unpaired = webms.filter((b) => !html.includes(b + '.mp4'));
+    ok('every webm has an mp4 fallback', unpaired.length === 0, unpaired.join(', '));
+
+    // Without a poster the slide is empty until the clip decodes its first
+    // frame, which on a cold load is a visible hole where the product should be.
+    const noPoster = [...html.matchAll(/<video[^>]*>/g)].filter((m) => !m[0].includes('poster=')).length;
+    ok('every video has a poster', noPoster === 0, noPoster + ' without');
+  }
 }
 
 // ---- 3. claims that went stale before ----------------------------------

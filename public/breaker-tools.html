@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Breaker Tools — A Live Break Board on Your Stream | RYLI</title>
+<meta name="description" content="Run box breaks with a live board on screen: every spot, who owns it, and what is still open. 13 league presets, your own team logos, four mini-game signs, and Ryli calling each team out loud the moment a spot settles." />
+<link rel="canonical" href="https://ryli.app/breaker-tools" />
+
+<!-- Open Graph / Twitter: without these, every link shared into a Discord,
+     a Facebook seller group or X renders as a bare URL with no picture. -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="RYLI" />
+<meta property="og:title" content="Breaker Tools — A Live Break Board on Your Stream | RYLI" />
+<meta property="og:description" content="Run box breaks with a live board on screen: every spot, who owns it, and what is still open. 13 league presets, your own team logos, four mini-game signs, and Ryli calling each team out loud." />
+<meta property="og:url" content="https://ryli.app/breaker-tools" />
+<meta property="og:image" content="https://ryli.app/assets/images/og-cover-v2.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="RYLI — the OBS overlay and AI voice co-host for live sellers and streamers" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Breaker Tools — A Live Break Board on Your Stream | RYLI" />
+<meta name="twitter:description" content="Run box breaks with a live board on screen: every spot, who owns it, and what is still open. 13 league presets, your own team logos, four mini-game signs, and Ryli calling each team out loud." />
+<meta name="twitter:image" content="https://ryli.app/assets/images/og-cover-v2.png" />
+
+<link rel="icon" type="image/x-icon" href="assets/favicon/favicon.ico" />
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png" />
+<link rel="apple-touch-icon" href="assets/favicon/apple-touch-icon.png" />
+<link rel="manifest" href="assets/favicon/site.webmanifest" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<header class="nav">
+  <div class="nav__inner">
+    <a class="nav__brand" href="index.html#top">
+      <img src="assets/images/ryliring-64.png" width="26" height="26" alt="RYLI" />
+      <span>RYLI</span>
+    </a>
+    <nav class="nav__links">
+      <a href="index.html#features">Features</a>
+      <a href="engagement">Engagement</a>
+      <a href="breaker-tools" aria-current="page">Breaker Tools</a>
+      <a href="index.html#themes">Themes</a>
+      <a href="pricing">Pricing</a>
+      <a href="setup-guide">Setup Guide</a>
+      <a href="index.html#faq">FAQ</a>
+    </nav>
+    <div class="nav__cta">
+      <a class="btn btn-primary" href="index.html#pricing">Download Now</a>
+    </div>
+    <button class="nav__toggle" aria-label="Toggle menu">☰</button>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO. Same three-band composite as the homepage: seller chrome on top,
+       the real board across the middle, the box and hands running out the
+       bottom. Captured from the running overlay by shoot-overlay.js. -->
+  <section id="breaker-hero">
+    <div class="container feature feature--showcase reveal">
+      <div class="feature__copy">
+        <div class="feature__eyebrow"><span class="icon-badge">🃏</span>Breaker Tools <span class="tag pro">PRO</span> <span class="tag">BETA</span></div>
+        <h2>Run a break the whole room can <span class="grad-text">read at a glance.</span></h2>
+        <p class="desc">A live board of every spot in your break, on your stream. Who has what, what is still open, and who just landed the Cowboys &mdash; without anyone having to ask, and without you reading the list out again.</p>
+        <ul class="checklist">
+          <li>Every spot on screen, claimed and open, updating as buyers land</li>
+          <li>Ryli calls each team out loud the moment a spot settles</li>
+          <li>Four mini-game signs for the moments a break needs a bit of theatre</li>
+          <li>Runs from your dashboard &mdash; or from inside your Whatnot tab</li>
+        </ul>
+      </div>
+      <div class="feature__media feature__media--wide breaker-media stream-shot stream-shot--inset">
+        <img class="stream-shot__bg" src="assets/images/break-shot-v2.webp"
+             width="1400" height="828" fetchpriority="high" decoding="async" alt="" aria-hidden="true" />
+        <video class="overlay-clip stream-shot__clip" width="1400" height="676" muted loop playsinline
+               preload="auto" poster="assets/video/overlay-breaker-v3.webp"
+               aria-label="The RYLI breaker board running over a live box break: a 32-spot board filling in real time as buyers claim team tiles">
+          <source src="assets/video/overlay-breaker-v3.webm" type="video/webm" />
+          <source src="assets/video/overlay-breaker-v3.mp4" type="video/mp4" />
+        </video>
+      </div>
+    </div>
+  </section>
+
+  <!-- LEAGUES. The count is the sell here: 13 presets is the thing a breaker
+       checks for before anything else, because a preset they do not have is a
+       night of typing team names. -->
+  <section id="leagues">
+    <div class="container">
+      <div class="section-head reveal">
+        <h2>Pick a league. The board <span class="grad-text">builds itself.</span></h2>
+        <p class="sub">Thirteen presets across seven sports. Every spot arrives with the real team name, the real abbreviation and the real colours &mdash; so a board is about ten seconds of setup, not an evening of typing.</p>
+      </div>
+      <div class="league-grid stagger reveal">
+        <div class="league-card"><span class="league-card__sport">Football</span><strong>NFL</strong><span class="league-card__n">32 teams · divisions too</span></div>
+        <div class="league-card"><span class="league-card__sport">Basketball</span><strong>NBA</strong><span class="league-card__n">30 teams · divisions too</span></div>
+        <div class="league-card"><span class="league-card__sport">Baseball</span><strong>MLB</strong><span class="league-card__n">30 teams · divisions too</span></div>
+        <div class="league-card"><span class="league-card__sport">Hockey</span><strong>NHL</strong><span class="league-card__n">32 teams · divisions too</span></div>
+        <div class="league-card"><span class="league-card__sport">Soccer</span><strong>EU Clubs</strong><span class="league-card__n">35 clubs</span></div>
+        <div class="league-card"><span class="league-card__sport">Soccer</span><strong>World Cup</strong><span class="league-card__n">33 countries</span></div>
+        <div class="league-card"><span class="league-card__sport">F1</span><strong>Teams &amp; Drivers</strong><span class="league-card__n">10 teams · 20 drivers</span></div>
+        <div class="league-card"><span class="league-card__sport">UFC</span><strong>Weight Classes</strong><span class="league-card__n">12 divisions</span></div>
+      </div>
+      <p class="feature__note reveal">Running a divisions break instead of a full team break? Football, basketball, baseball and hockey each have a divisions preset, so an 8-spot or 6-spot board is one click rather than a manual rebuild.</p>
+    </div>
+  </section>
+
+  <!-- THE THING NOBODY ELSE MENTIONS. Real behaviour from breakerPresets.js's
+       tier table -- the board changes what a tile SHOWS as the spot count
+       climbs, because a buyer name that is legible at 12 spots is a smudge at
+       72 on a phone. -->
+  <section id="scales">
+    <div class="container feature flip reveal">
+      <div class="feature__copy">
+        <div class="feature__eyebrow"><span class="icon-badge">📐</span>Reads on a phone</div>
+        <h2>A 12-spot board and a 72-spot board are <span class="grad-text">not the same picture.</span></h2>
+        <p class="desc">Most of your room is watching on a phone, through a stream that has already been re-compressed once. So the board changes what each tile shows as the spot count climbs, instead of shrinking the same layout until nothing is readable.</p>
+        <ul class="checklist">
+          <li><strong>Up to 12 spots</strong> &mdash; full tiles: team, abbreviation and the buyer's name on every one</li>
+          <li><strong>Up to 20</strong> &mdash; a tighter list that still names who owns each spot</li>
+          <li><strong>Up to 72</strong> &mdash; compact team tokens, because a name at that size is a smudge</li>
+          <li><strong>Beyond that</strong> &mdash; a live counter, and the roster moves to its own card</li>
+        </ul>
+        <p class="feature__note">You do not pick any of this. It follows the size of the break you built.</p>
+      </div>
+      <div class="feature__media">
+        <img src="assets/images/screenshot-breaker-setup-v1.webp" width="1280" height="962" loading="lazy" decoding="async"
+             alt="Breaker Tools in RYLI: naming the box, picking NFL teams, setting the spot count, and the team list showing who has claimed what" />
+      </div>
+    </div>
+  </section>
+
+  <!-- MINI-GAMES. Four, named exactly as they appear in the app. -->
+  <section id="mini-games">
+    <div class="container">
+      <div class="section-head reveal">
+        <h2>Four signs for the moments a break <span class="grad-text">needs a bit of theatre.</span></h2>
+        <p class="sub">Each one goes up on the board, runs a clock, and settles the spot when the buyer decides. You drive it; Ryli announces the result.</p>
+      </div>
+      <div class="mini-grid stagger reveal">
+        <div class="card mini-card">
+          <div class="mini-card__icon">🎲</div>
+          <h3>Stash or Pass</h3>
+          <p>They keep the team they landed, or hand it back for the next one. One decision, on the clock, in front of everybody.</p>
+        </div>
+        <div class="card mini-card">
+          <div class="mini-card__icon">🎯</div>
+          <h3>See 2 · Pick 1</h3>
+          <p>Two teams go up, they take one. The one they leave goes back in the pool.</p>
+        </div>
+        <div class="card mini-card">
+          <div class="mini-card__icon">👆</div>
+          <h3>Pick Your Team</h3>
+          <p>Open choice from whatever is still on the board &mdash; the premium spot, and the one people wait for.</p>
+        </div>
+        <div class="card mini-card">
+          <div class="mini-card__icon">🎰</div>
+          <h3>Random Team</h3>
+          <p>The board spins and lands it for them. Fastest way to fill a big break without stalling.</p>
+        </div>
+      </div>
+      <p class="feature__note reveal">The decision clock defaults to 20 seconds and prompts rather than punishes: at zero the sign says <strong>TIME</strong> and stays up until you clear it, so nobody gets cut off mid-sentence because their stream was buffering.</p>
+    </div>
+  </section>
+
+  <!-- VOICE + AUTOMATION. -->
+  <section id="breaker-voice">
+    <div class="container feature reveal">
+      <div class="feature__copy">
+        <div class="feature__eyebrow"><span class="icon-badge">🎙️</span>Ryli calls it</div>
+        <h2>You keep ripping. <span class="grad-text">She keeps the room informed.</span></h2>
+        <p class="desc">The moment a spot settles, Ryli says it out loud &mdash; &ldquo;@buyer is on the Cleveland Browns&rdquo; &mdash; so you are not narrating a spreadsheet between packs. It is the same voice that runs the rest of your show, and it stays out of the way of your regular auction announcements.</p>
+        <ul class="checklist">
+          <li>Every settled spot announced by name, without you stopping</li>
+          <li>Assign, clear and re-roll from the dashboard mid-break</li>
+          <li>Let her drive Whatnot for you, or keep every action manual &mdash; both are switches you own</li>
+          <li>Already built the break on Whatnot? RYLI matches your board to it: the teams, the spot count, and everyone who has already bought in</li>
+        </ul>
+        <p class="feature__note"><strong>Being straight with you:</strong> Breaker Tools is in beta. It works, it has been through a full audit, and it is in real hosts' hands &mdash; but the automated Whatnot actions are the newest part of it, and they are a switch you turn on rather than something that happens to you.</p>
+      </div>
+      <div class="feature__media">
+        <img src="assets/images/screenshot-breaker-whatnot-v1.webp" width="1280" height="986" loading="lazy" decoding="async"
+             alt="Breaker Tools matched to a Whatnot show: the Whatnot source toggle, Build from Whatnot, the RYLI can control Whatnot switch, and a line reading Matched 32 spots from your show, 7 already sold" />
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="final-cta">
+    <div class="container">
+      <h2>Your next break can <span class="grad-text">explain itself.</span></h2>
+      <p class="sub">Breaker Tools is part of RYLI Pro, alongside the jumbotron overlay, the Hype Meter and Ryli's voice. The free tier is free forever, and every Pro feature is unlocked for the first 10 days.</p>
+      <div class="hero__cta">
+        <a class="btn btn-primary btn-lg" href="index.html#pricing">Download Now</a>
+        <a class="btn btn-ghost btn-lg" href="setup-guide">Read the Setup Guide</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer__top">
+      <div>
+        <div class="footer__brand">
+          <img src="assets/images/ryliring-64.png" width="26" height="26" alt="RYLI" />
+          <span>RYLI</span>
+        </div>
+        <p class="footer__tagline">Run your live intelligently.</p>
+      </div>
+      <div class="footer__links">
+        <a href="index.html#features">Features</a>
+        <a href="pricing">Pricing</a>
+        <a href="system-requirements">System Requirements</a>
+        <a href="changelog">Changelog</a>
+        <a href="privacy">Privacy</a>
+        <a href="terms">Terms</a>
+        <a href="mailto:hello@ryli.app">Contact</a>
+      </div>
+    </div>
+    <div class="footer__bottom">© 2026 RYLI. Built for the people behind the stream.</div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

@@ -2,11 +2,27 @@
   "name": "ryli-website",
   "compatibility_date": "2025-01-01",
   "main": "src/index.js",
+
+  // ONLY ./public IS SERVED. Everything else in this repo -- .git, src/,
+  // node_modules/, scripts/, .claude/ -- is unreachable by construction.
+  //
+  // This used to be "./" (the whole repo root) guarded by a growing
+  // .assetsignore denylist, and that denylist leaked three times: .git/config
+  // (2026-07-16), src/index.js (2026-07-20) and .claude/ (2026-08-11) were each
+  // publicly fetchable at the live URL until someone noticed. A denylist fails
+  // open -- anything new at the root was served until it was remembered.
+  //
+  // It also made `wrangler dev` unusable: wrangler writes .wrangler/tmp/dev-*/
+  // while watching "./", so its own output retriggered its watcher and the
+  // local server reload-looped forever without ever answering a request.
+  //
+  // If you add a new public page, put it in public/. Nothing else needs doing.
   "assets": {
-    "directory": "./",
+    "directory": "./public",
     "not_found_handling": "404-page",
     "binding": "ASSETS"
   },
+
   "kv_namespaces": [
     {
       "binding": "USAGE_KV",

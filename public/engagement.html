@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Engagement Tools — Make the Room React on Cue | RYLI</title>
+<meta name="description" content="A Hype Meter chat fills by spamming emojis, four scheduled chat announcements, viewer questions read aloud, and a control panel that lives inside your own stream tab. Run your whole show without leaving it." />
+<link rel="canonical" href="https://ryli.app/engagement" />
+
+<!-- Open Graph / Twitter: without these, every link shared into a Discord,
+     a Facebook seller group or X renders as a bare URL with no picture. -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="RYLI" />
+<meta property="og:title" content="Engagement Tools — Make the Room React on Cue | RYLI" />
+<meta property="og:description" content="A Hype Meter chat fills by spamming emojis, four scheduled chat announcements, viewer questions read aloud, and a control panel that lives inside your own stream tab." />
+<meta property="og:url" content="https://ryli.app/engagement" />
+<meta property="og:image" content="https://ryli.app/assets/images/og-cover-v2.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="RYLI — the OBS overlay and AI voice co-host for live sellers and streamers" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Engagement Tools — Make the Room React on Cue | RYLI" />
+<meta name="twitter:description" content="A Hype Meter chat fills by spamming emojis, four scheduled chat announcements, viewer questions read aloud, and a control panel that lives inside your own stream tab." />
+<meta name="twitter:image" content="https://ryli.app/assets/images/og-cover-v2.png" />
+
+<link rel="icon" type="image/x-icon" href="assets/favicon/favicon.ico" />
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png" />
+<link rel="apple-touch-icon" href="assets/favicon/apple-touch-icon.png" />
+<link rel="manifest" href="assets/favicon/site.webmanifest" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<header class="nav">
+  <div class="nav__inner">
+    <a class="nav__brand" href="index.html#top">
+      <img src="assets/images/ryliring-64.png" width="26" height="26" alt="RYLI" />
+      <span>RYLI</span>
+    </a>
+    <nav class="nav__links">
+      <a href="index.html#features">Features</a>
+      <a href="engagement" aria-current="page">Engagement</a>
+      <a href="breaker-tools">Breaker Tools</a>
+      <a href="index.html#themes">Themes</a>
+      <a href="pricing">Pricing</a>
+      <a href="setup-guide">Setup Guide</a>
+      <a href="index.html#faq">FAQ</a>
+    </nav>
+    <div class="nav__cta">
+      <a class="btn btn-primary" href="index.html#pricing">Download Now</a>
+    </div>
+    <button class="nav__toggle" aria-label="Toggle menu">☰</button>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO: the Hype Meter, real footage over a real stream. -->
+  <section id="engagement-hero">
+    <div class="container feature feature--showcase reveal">
+      <div class="feature__copy">
+        <div class="feature__eyebrow"><span class="icon-badge">🔥</span>Engagement Tools</div>
+        <h2>A quiet room is a <span class="grad-text">solvable problem.</span></h2>
+        <p class="desc">Four things that make a stream react, all of them driven by what the room is actually doing rather than by you asking twice. A meter chat fills on cue, announcements that fire on their own, viewer questions read out loud, and a control panel that lives inside your own stream tab.</p>
+        <ul class="checklist">
+          <li>The Hype Meter &mdash; one key, and chat has something to push at <span class="tag pro">PRO</span></li>
+          <li>Four scheduled announcements, on hotkeys or timers <span class="tag pro">PRO</span></li>
+          <li>Viewer questions read aloud, filtered and rate-limited <span class="tag pro">PRO</span></li>
+          <li>Every control, inside the tab you are already looking at</li>
+        </ul>
+      </div>
+      <div class="feature__media feature__media--wide stream-shot stream-shot--hype">
+        <img class="stream-shot__bg" src="assets/images/hype-shot-v1.webp"
+             width="1400" height="828" fetchpriority="high" decoding="async" alt="" aria-hidden="true" />
+        <video class="overlay-clip stream-shot__clip" width="1400" height="456" muted loop playsinline
+               preload="auto" poster="assets/video/overlay-hype-v1.webp"
+               aria-label="The RYLI Hype Meter running over a live card stream: the bar climbing tier by tier as viewers join in, then locking at a prize level">
+          <source src="assets/video/overlay-hype-v1.webm" type="video/webm" />
+          <source src="assets/video/overlay-hype-v1.mp4" type="video/mp4" />
+        </video>
+      </div>
+    </div>
+  </section>
+
+  <!-- HYPE METER in depth. -->
+  <section id="hype">
+    <div class="container feature flip reveal">
+      <div class="feature__copy">
+        <div class="feature__eyebrow"><span class="icon-badge">📈</span>Hype Meter <span class="tag pro">PRO</span></div>
+        <h2>Give the room <span class="grad-text">something to push at.</span></h2>
+        <p class="desc">Press one key and a bar and a countdown appear on your stream. Chat fills it by spamming emojis; the higher it climbs, the bigger the giveaway. At zero it locks itself in and Ryli announces the prize out loud.</p>
+        <ul class="checklist">
+          <li>Six prize tiers by default &mdash; $1, $5, $10, $20, $50, $100 &mdash; and they are yours to change</li>
+          <li>A live counter of how many <em>different</em> people are joining in, which is the number that matters</li>
+          <li>45 seconds by default, on a clock the whole room can see</li>
+          <li>No giveaway budget? Run it in hype-only mode and just get the room loud</li>
+          <li>Two hotkeys &mdash; start it, and lock it early when the moment peaks</li>
+        </ul>
+        <p class="feature__note">Whatnot's own engineering team has published that user actions, including chats and reactions, are counted in real time and feed the service that ranks which livestreams get promoted. RYLI never simulates any of it &mdash; every tap and message is a real viewer.</p>
+      </div>
+      <div class="feature__media">
+        <img src="assets/images/screenshot-hype-setup-v1.webp" width="1280" height="939" loading="lazy" decoding="async"
+             alt="The Hype Meter settings page in RYLI: prize tiers, duration, reward mode and the two hotkeys" />
+      </div>
+    </div>
+  </section>
+
+  <!-- AUTO CHAT. Four slots is the specific, checkable claim. -->
+  <section id="auto-chat">
+    <div class="container">
+      <div class="section-head reveal">
+        <h2>Four announcements that <span class="grad-text">fire without you.</span></h2>
+        <p class="sub">The things you say every show &mdash; follow the page, the giveaway rules, where the shipping tiers are &mdash; posted into your own chat as a real announcement. Each of the four is independent: its own message, its own hotkey, its own timer.</p>
+      </div>
+      <div class="mini-grid stagger reveal">
+        <div class="card mini-card">
+          <div class="mini-card__icon">⌨️</div>
+          <h3>On a key</h3>
+          <p>Bind any slot to a hotkey and post it the moment it is relevant, without tabbing away from your show.</p>
+        </div>
+        <div class="card mini-card">
+          <div class="mini-card__icon">⏱️</div>
+          <h3>Or on a timer</h3>
+          <p>Every 5, 10, 15, 20, 30, 45 or 60 minutes. Presets only, deliberately &mdash; there is no setting here that lets you spam your own room.</p>
+        </div>
+        <div class="card mini-card">
+          <div class="mini-card__icon">🔊</div>
+          <h3>Said out loud too</h3>
+          <p>Optionally Ryli reads the same line, so the people not watching chat still hear it.</p>
+        </div>
+        <div class="card mini-card">
+          <div class="mini-card__icon">🛡️</div>
+          <h3>Never back to back</h3>
+          <p>A 60-second floor between any two sends, whichever slot fired. Two timers landing together cannot double-post.</p>
+        </div>
+      </div>
+      <p class="feature__note reveal">Messages are capped at 150 characters &mdash; Whatnot's own limit, not one we invented.</p>
+    </div>
+  </section>
+
+  <!-- QUESTION READER. The honest one: this speaks viewer text on a live show. -->
+  <section id="questions">
+    <div class="container feature reveal">
+      <div class="feature__copy">
+        <div class="feature__eyebrow"><span class="icon-badge">💬</span>Questions read aloud <span class="tag pro">PRO</span></div>
+        <h2>The question you missed <span class="grad-text">gets asked anyway.</span></h2>
+        <p class="desc">Chat moves faster than you can read it while you are holding a card up to a camera. RYLI picks the questions out and Ryli reads them &mdash; so the viewer who asked gets heard instead of scrolling past.</p>
+        <ul class="checklist">
+          <li>Choose who gets read: everyone, buyers only, or buyers and returning viewers</li>
+          <li>A profanity filter on both the message <em>and</em> the username, plus your own blocked words</li>
+          <li>Whatnot's own moderation verdict is respected absolutely &mdash; a muted viewer is never read</li>
+          <li>Questions aimed at another viewer by @-mention are skipped</li>
+          <li>One read at most every 90 seconds, and a question older than 30 seconds is dropped rather than banked</li>
+        </ul>
+        <p class="feature__note"><strong>Being straight with you:</strong> this is the one feature that speaks a viewer's words out loud on your show, so it ships off by default and stays a deliberate choice. Measured against 32 hours of real captured shows it reads about <strong>five questions an hour</strong> &mdash; and every one has a mute control on your dashboard. A word list catches words, not intent; the eligibility gate, the rate limit and your own veto are what carry the rest.</p>
+      </div>
+      <div class="feature__media">
+        <img src="assets/images/screenshot-questions-v1.webp" width="560" height="360" loading="lazy" decoding="async"
+             alt="The question-reading settings in RYLI: who gets read, the blocked-words list, and the toggle that ships off by default" />
+      </div>
+    </div>
+  </section>
+
+  <!-- The rest of Automated Tasks. Same settings page as Auto Chat and the
+       question reader, so leaving them out made this page quietly incomplete. -->
+  <section id="automations">
+    <div class="container">
+      <div class="section-head reveal">
+        <h2>Jobs she does <span class="grad-text">while you are on camera.</span></h2>
+        <p class="sub">Each one is off until you turn it on, each can be flipped mid-show from a key or the Companion, and Ryli says out loud when it turns on or off &mdash; so you never have to look away to check what is running.</p>
+      </div>
+      <div class="mini-grid stagger reveal">
+        <div class="card mini-card">
+          <div class="mini-card__icon">🔁</div>
+          <h3>Auto auctions</h3>
+          <p>Re-runs the same listing after it sells, on your own settings. It stops itself the first time a lot gets no bids, rather than grinding on into a dead room.</p>
+        </div>
+        <div class="card mini-card">
+          <div class="mini-card__icon">🎁</div>
+          <h3>Auto giveaways</h3>
+          <p>Opens the next round for you the moment a winner is drawn, so the run keeps its rhythm while you are still talking.</p>
+        </div>
+        <div class="card mini-card">
+          <div class="mini-card__icon">🔔</div>
+          <h3>Offer alerts</h3>
+          <p>Ryli tells you out loud when an offer lands. Accepting it stays yours &mdash; she never does that part.</p>
+        </div>
+      </div>
+      <div class="feature__media reveal" style="margin-top: 26px;">
+        <img src="assets/images/screenshot-automation-v1.webp" width="1060" height="250" loading="lazy" decoding="async"
+             alt="Auto giveaways and Auto auctions in RYLI's Automated Tasks settings, each with its own on/off switch and hotkey field" />
+      </div>
+      <p class="feature__note reveal">The dollar figure on an offer is deliberately not spoken &mdash; it plays out loud while you are on camera, so the amount stays in your dashboard where only you see it.</p>
+    </div>
+  </section>
+
+  <!-- COMPANION. -->
+  <section id="companion">
+    <div class="container feature flip reveal">
+      <div class="feature__copy">
+        <div class="feature__eyebrow"><span class="icon-badge">🎛️</span>The Companion</div>
+        <h2>Run the whole show without <span class="grad-text">ever leaving it.</span></h2>
+        <p class="desc">A small panel that sits inside your own stream tab, draggable anywhere. Because during a show you are watching your customer-facing view &mdash; not the RYLI window, and not OBS.</p>
+        <ul class="checklist">
+          <li>Auto Auctions, Auto Giveaways, Lot Printing, Voice, Sounds, Hey Ryli and Scan Card &mdash; all one tap</li>
+          <li>Armed automations show a live indicator, so you can see what is running before you walk away</li>
+          <li>Mutes are free for everyone: you can always silence RYLI over your own show</li>
+          <li>Pick its shape &mdash; a block of controls, or a slim bar of icons that covers less of your own page</li>
+          <li>Your viewers see none of it &mdash; it is drawn in your browser and never reaches the platform</li>
+        </ul>
+        <p class="feature__note">It also acts as a soft Stream Deck. Every button routes to the same code the hotkey does, so a host with no extra hardware and no bindings still gets every control.</p>
+      </div>
+      <div class="feature__media">
+        <img src="assets/images/screenshot-companion-v1.webp" width="530" height="290" loading="lazy" decoding="async"
+             alt="RYLI's Companion panel and its settings: the controls it exposes and where it sits inside the stream tab" />
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="final-cta">
+    <div class="container">
+      <h2>Give the room a reason <span class="grad-text">to make noise.</span></h2>
+      <p class="sub">The Companion and every mute are free forever. The Hype Meter, Auto Chat and question reading are part of RYLI Pro &mdash; unlocked for your first 10 days along with everything else.</p>
+      <div class="hero__cta">
+        <a class="btn btn-primary btn-lg" href="index.html#pricing">Download Now</a>
+        <a class="btn btn-ghost btn-lg" href="breaker-tools">See Breaker Tools</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer__top">
+      <div>
+        <div class="footer__brand">
+          <img src="assets/images/ryliring-64.png" width="26" height="26" alt="RYLI" />
+          <span>RYLI</span>
+        </div>
+        <p class="footer__tagline">Run your live intelligently.</p>
+      </div>
+      <div class="footer__links">
+        <a href="index.html#features">Features</a>
+        <a href="pricing">Pricing</a>
+        <a href="system-requirements">System Requirements</a>
+        <a href="changelog">Changelog</a>
+        <a href="privacy">Privacy</a>
+        <a href="terms">Terms</a>
+        <a href="mailto:hello@ryli.app">Contact</a>
+      </div>
+    </div>
+    <div class="footer__bottom">© 2026 RYLI. Built for the people behind the stream.</div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
