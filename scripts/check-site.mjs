@@ -91,23 +91,15 @@ console.log('\n  IMAGES');
     .map(read).join('\n');
 
   // Superseded files are kept for exactly one deploy so cached HTML pointing at
-  // the old name does not 404. List them here and delete them next time.
-  const GRACE = new Set([
-    'og-cover.png', 'screenshot-themes-v2.png', 'screenshot-insights-v2.png', 'ryliring.png',
-    // Superseded by real overlay footage in assets/video (shoot-overlay.js).
-    // These were phone screenshots of the OLD overlay -- July pixels, from
-    // before frame-v3 and Broadcast Glass shipped. DELETE NEXT DEPLOY.
-    'carousel-1-lotwon-v3.png', 'carousel-2-livecamera-v3.png',
-    'carousel-3-recentwins-v3.png', 'carousel-4-taphearts-v3.png', 'hero-phone.png',
-    // The board illustration, replaced by real footage of the board filling.
-    'breaker-board-v4.png',
-    // Hero portrait, now served as WebP at a quarter the size.
-    'hero-ryli-live.png',
-    // Superseded by the OBS-badge version; eBay Live is not supported.
-    'hero-ryli-live-v2.webp',
-    // Superseded by a current, seeded capture of the real store grid.
-    'store-screenshot-v3.png',
-  ]);
+  // the old name does not 404, then deleted. This list is EMPTY because the
+  // last batch has been removed.
+  //
+  // Worth knowing before the next one: Cloudflare serves this site's HTML with
+  // "max-age=0, must-revalidate", so a browser cannot hold a stale page at all
+  // -- measured on the live domain. The grace period is therefore about social
+  // and search caches that hotlink an old asset URL, not about browsers, and it
+  // is shorter than it looks.
+  const GRACE = new Set([]);
 
   const orphans = files.filter((f) => !sources.includes(f) && !GRACE.has(f));
   const mb = orphans.reduce((n, f) => n + fs.statSync(path.join(dir, f)).size, 0) / 1048576;
