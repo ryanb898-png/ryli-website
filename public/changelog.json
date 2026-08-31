@@ -1,5 +1,21 @@
 [
   {
+    "version": "1.0.47",
+    "date": "2026-08-30",
+    "highlights": [
+      "🃏 Your break board is now ON the dashboard. A Layout / Breaker Board switch sits above the preview — flip to Breaker Board and the board fills the pane, full size and clickable.",
+      "Click a tile to edit it. Name the team, put a buyer on it, clear it, or delete it, right there. + Spot adds one. No more hopping to the Breaker Tools page mid-show.",
+      "🔗 One switch syncs your board with Whatnot. Turn it on and your board and your break become the same thing: what you do on the board really happens on Whatnot, and what you do on Whatnot shows up on the board.",
+      "Sold spots look sold. The tile dims and takes a SOLD chip along the bottom, so a glance tells you what is still open.",
+      "The board keeps itself in step with your real break, so a sale can no longer go missing from it.",
+      "Rename a team on Whatnot and the board picks it up on its own.",
+      "🏷️ ThermalFlow — choose what goes on the label. Turn the lot number, item, buyer, price, your logo and your contact line on or off individually.",
+      "💬 Ryli answers a question while it is still worth answering.",
+      "Fixed: the launch button could stick on \"Opening…\". Fixed: a buyer could be left showing as still deciding for the rest of a show. Fixed: a camera unplugged mid-show now comes back on its own.",
+      "Various reliability and performance improvements throughout."
+    ]
+  },
+  {
     "version": "1.0.46",
     "date": "2026-08-26",
     "highlights": [
