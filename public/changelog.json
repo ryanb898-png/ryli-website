@@ -1,5 +1,18 @@
 [
   {
+    "version": "1.0.48",
+    "date": "2026-08-31",
+    "highlights": [
+      "📷 Your face cam is HD. Four times the detail on the jumbotron, and smoother with it — the same camera, finally asked for everything it can give.",
+      "It also keeps running while Ryli talks — her answers no longer pause the picture.",
+      "🏷️ ThermalFlow now takes ANY label size. Type your roll in inches or millimetres and the label is built to fit it, instead of picking the nearest preset and hoping.",
+      "Bolder label text, on a switch. Some print heads lay down less ink than others — turn it on if yours comes out faint.",
+      "🔊 RYLI now watches OBS for you. If the overlay stops updating, or her audio goes missing from the scene you are streaming, she notices and puts it right without you touching anything.",
+      "Fixed: viewers could hear nothing from Ryli in any scene except the one your overlay was first set up in.",
+      "Various app improvements and general fixes."
+    ]
+  },
+  {
     "version": "1.0.47",
     "date": "2026-08-30",
     "highlights": [
