@@ -1,5 +1,13 @@
 [
   {
+    "version": "1.0.49",
+    "date": "2026-08-31",
+    "highlights": [
+      "Fixed: a face cam that is not widescreen — an OBS Virtual Camera, or a phone held upright — could show a cropped strip instead of the whole picture. You get all of it again.",
+      "Various app improvements and general fixes."
+    ]
+  },
+  {
     "version": "1.0.48",
     "date": "2026-08-31",
     "highlights": [
