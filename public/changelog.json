@@ -1,5 +1,19 @@
 [
   {
+    "version": "1.0.51",
+    "date": "2026-09-01",
+    "highlights": [
+      "🏷️ ThermalFlow buyer markers: labels can now carry a stamp for who the buyer is — a star for someone new, a repeat symbol for a returning buyer, and a whale once they pass a big-spender figure you set.",
+      "📦 ThermalFlow basket labels: an extra label on a buyer's first purchase of a show, carrying their name, their stamps and the time — for the box holding everything they win that night.",
+      "🎁 ThermalFlow giveaway labels: print a label when someone wins a giveaway, with your own banner wording. Off by default.",
+      "👋 A welcome note that prints only on a buyer's very first order from you.",
+      "The ThermalFlow page has been rebuilt — fewer, tidier panels, and the label preview now sits beside the settings that change it instead of at the bottom of the page.",
+      "Fixed: the jumbotron could stop rotating mid-show and sit on one card until the next lot started. It affects every HUD layout.",
+      "Fixed: a banner held on screen by Ryli could stay stuck there for the rest of the show.",
+      "Various app improvements and general fixes."
+    ]
+  },
+  {
     "version": "1.0.50",
     "date": "2026-09-01",
     "highlights": [
