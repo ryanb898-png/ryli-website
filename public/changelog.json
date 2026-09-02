@@ -1,5 +1,22 @@
 [
   {
+    "version": "1.0.52",
+    "date": "2026-09-02",
+    "highlights": [
+      "📋 The roster is one screen now. Every buyer and every team they own, grouped together, with no paging — a viewer can find their own name and see all of their teams in one look. It grows to fit however many buyers you have.",
+      "🏈 Ryli understands how you actually type team names. \"DL & Green Bay\", \"Lraiders + AF\", \"Alanta Falcons\" — shorthand, abbreviations and typos all land on the right tiles, and a lot naming several teams assigns all of them. Anything ambiguous is left alone rather than guessed at.",
+      "🎨 A team added to the board late now picks up its real logo and colours instead of coming up as a plain grey tile.",
+      "🎉 Sold out! When the last spot goes, the board says so — a full-screen moment over your finished board that clears itself.",
+      "🔗 The board lets go of a finished show. Ryli no longer opens still linked to last night's break, so you can build a new board or pull in a new break straight away.",
+      "🔒 Ryli now locks her overlay layer in OBS, so it can't be dragged out of place by accident.",
+      "🔊 Stream Store items with sound now arrive in OBS at a sensible level instead of full volume.",
+      "✨ Eight new Overlay Effects in the Stream Store.",
+      "Fixed: switching tiles between Logo, Both and Text did nothing while the roster was on screen.",
+      "Your break board, overlay layout and Ryli's notes are now included in backups.",
+      "Various app improvements and general fixes."
+    ]
+  },
+  {
     "version": "1.0.51",
     "date": "2026-09-01",
     "highlights": [

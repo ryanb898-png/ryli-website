@@ -1142,6 +1142,25 @@ async function handleCheckoutLicense(request, env) {
   // customer. Fine at this org's real scale (a handful of subscribers so far);
   // revisit with a benefit_id filter or a different lookup if that ever grows
   // into thousands of keys.
+  // THE KEY FROM *THIS* PURCHASE, not just any key this customer holds.
+  //
+  // A customer who buys a SECOND subscription -- a second machine, which is a
+  // real thing we sell -- already has a granted key, and `.find()` returned
+  // whichever the API happened to list first. That is very likely the key
+  // already activated on machine one, so the page handed them a key they could
+  // not use and said nothing about it.
+  //
+  // A license key carries created_at, and a key granted for this checkout must
+  // have been created at or after the checkout itself. So: take the customer's
+  // granted keys, keep the ones newer than this checkout, and answer with the
+  // newest of those. Nothing older can belong to this purchase.
+  //
+  // The important half is what happens when NONE qualify: that is not "give
+  // them an old key", it is "the webhook has not landed yet" -- which is the
+  // same 'processing' the client already retries on, and the same race the
+  // single-key case has always had.
+  const checkoutAt = Date.parse(checkout.created_at || '');
+  const mine = [];
   let page = 1;
   const limit = 100;
   for (;;) {
@@ -1156,12 +1175,43 @@ async function handleCheckoutLicense(request, env) {
     } catch {
       return jsonResponse({ ok: false, reason: 'license_lookup_failed' }, 502);
     }
-    const match = (data.items || []).find((k) => k.customer_id === customerId);
-    if (match) return jsonResponse({ ok: true, key: match.key });
+    for (const k of (data.items || [])) if (k.customer_id === customerId) mine.push(k);
     const maxPage = (data.pagination && data.pagination.max_page) || 1;
     if (page >= maxPage) break;
     page++;
   }
+
+  if (mine.length) {
+    // Without a usable checkout timestamp there is nothing to date keys
+    // against. One key is still unambiguous; several are not, and guessing is
+    // what this whole block exists to stop -- so fall back to the portal, where
+    // they are all listed and told apart properly.
+    if (!Number.isFinite(checkoutAt)) {
+      if (mine.length === 1) return jsonResponse({ ok: true, key: mine[0].key });
+      return jsonResponse({ ok: false, reason: 'multiple' });
+    }
+    // A second of slack: both timestamps come from Polar's own clock, so this
+    // is for equal-second rounding rather than for skew.
+    const dated = mine
+      .map((k) => ({ k, at: Date.parse(k.created_at || '') }))
+      .filter((x) => Number.isFinite(x.at));
+    // If Polar ever stops sending created_at on a license key, dating them is
+    // impossible -- and failing CLOSED here would mean a first-time buyer polls
+    // and never sees their key at all, breaking the common case to protect the
+    // rare one. Fall back to the older, safe behaviour instead.
+    if (!dated.length) {
+      if (mine.length === 1) return jsonResponse({ ok: true, key: mine[0].key });
+      return jsonResponse({ ok: false, reason: 'multiple' });
+    }
+    const fresh = dated
+      .filter((x) => x.at >= checkoutAt - 1000)
+      .sort((a2, b2) => b2.at - a2.at);
+    if (fresh.length) return jsonResponse({ ok: true, key: fresh[0].k.key });
+    // Every key this customer holds predates the checkout -- so this purchase's
+    // key does not exist yet. Fall through to 'processing' below and let the
+    // client retry, exactly as it does for a first purchase.
+  }
+
   // Checkout succeeded but Polar hasn't provisioned the license key yet (it's
   // granted via webhook shortly after payment, not synchronously) — a real,
   // expected race in the first few seconds. The client retries; this is never
