@@ -1,12 +1,19 @@
 [
   {
+    "version": "1.0.54",
+    "date": "2026-09-03",
+    "highlights": [
+      "Polish and reliability fixes."
+    ]
+  },
+  {
     "version": "1.0.53",
     "date": "2026-09-03",
     "highlights": [
       "🖨️ Print your roster. A clean one-page sheet of every buyer and the teams they hold — with team logos — straight to any printer. While the roster is up, look for the Print roster button on your preview.",
       "🏆 Auction wins now hit the board the instant they happen — the tile fills and the team gets called — just like a Buy-It-Now. Before, only Buy-It-Nows moved the board.",
       "🗣️ Fixed a case where Ryli could go quiet right after answering you. She stays responsive now.",
-      "🔀 Ryli now tells you when a different break starts selling on your show, so you know to switch your board over to it.",
+      "🔀 When your break sells out, Ryli now reminds you to build your next break from Whatnot — a quick heads-up right when you are ready to move on.",
       "🏈 Switching your board to a break in another sport now shows the correct teams for that league.",
       "Various app improvements and general fixes."
     ]
