@@ -1,5 +1,13 @@
 [
   {
+    "version": "1.0.55",
+    "date": "2026-09-03",
+    "highlights": [
+      "🖨️ The printed roster is tighter and fits the page cleanly, and it now opens as a preview so you can check it before you print.",
+      "🗣️ When a break spot sells, Ryli now says \"@buyer now owns the [team]\" (was \"is on the\")."
+    ]
+  },
+  {
     "version": "1.0.54",
     "date": "2026-09-03",
     "highlights": [
