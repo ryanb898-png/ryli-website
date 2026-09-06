@@ -28,5 +28,12 @@
       "binding": "USAGE_KV",
       "id": "5c7ae15287af4cff9e3bfd9dcdc0bbfb"
     }
-  ]
+  ],
+
+  // Workers AI powers the /api/support-chat FAQ bot. No account signup, no key,
+  // no cost to add the binding -- it draws on Cloudflare's free daily Neuron
+  // allocation and only bills (cheaply) past that. env.AI.run(model, {messages}).
+  "ai": {
+    "binding": "AI"
+  }
 }

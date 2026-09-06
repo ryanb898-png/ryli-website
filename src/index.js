@@ -38,6 +38,7 @@
 
 import US_PATHS from './us-paths.js';
 import US_BLIPS from './us-blips.js';
+import { SUPPORT_KB } from './supportKb.js';
 
 // Every `daily:` bucket is keyed to a calendar day in THIS timezone, not UTC.
 // Buckets were UTC until 2026-08-04, which meant the dashboard rolled over to
@@ -1090,6 +1091,251 @@ function jsonResponse(obj, status = 200) {
   return new Response(JSON.stringify(obj), { status, headers: { 'content-type': 'application/json' } });
 }
 
+// ---------------------------------------------------------------------------
+// SUPPORT CHATBOT + CONTACT FORM
+//
+// The website's help bubble (public/support-widget.js). Two endpoints:
+//   /api/support-chat     -- a FAQ bot answering ONLY from SUPPORT_KB, via
+//                            Cloudflare Workers AI (free daily allocation, no
+//                            key). Same-origin fetch from the widget, so no CORS.
+//   /api/support-contact  -- when the bot can't help, the visitor leaves a
+//                            name/email/message. ALWAYS stored in KV (so nothing
+//                            is ever lost), and emailed to hello@ryliapp.com via
+//                            Resend when RESEND_KEY is set.
+//   /api/support-inbox    -- admin-only (ADMIN_TOKEN) list of contact messages,
+//                            so they're retrievable even before Resend exists.
+// ---------------------------------------------------------------------------
+
+const SUPPORT_CHAT_MODEL = '@cf/meta/llama-3.3-70b-instruct-fp8-fast';
+const SUPPORT_TO_DEFAULT = 'hello@ryliapp.com';
+const SUPPORT_FROM_DEFAULT = 'RYLI Support <onboarding@resend.dev>';
+
+// Support intent: how-to, setup, and troubleshooting. When the latest message
+// matches this, we run in SUPPORT MODE and suppress all selling — a person with
+// a problem should never get a sales pitch. Purely commercial/curiosity
+// questions (price, plans, "is it worth it", "does it do X") don't match, so
+// they still get the friendly nudge. This gate is what decides, not the model.
+const SUPPORT_INTENT_RE = new RegExp([
+  'how (do|can|would|to) ', 'set ?up', 'connect', 'install', 'reinstall',
+  "isn'?t", 'is not', 'not working', "won'?t", 'will not', "can'?t", 'cannot',
+  'error', 'issue', 'problem', 'fix', 'broke', 'broken', 'crash', 'stuck',
+  'fail', "doesn'?t", 'does not', 'troubleshoot', 'reconnect', 'missing',
+  'black screen', 'no sound', 'no audio', 'lag', 'freeze', 'frozen', 'glitch',
+  "aren'?t", 'stopped', 'not show', 'unable', 'keeps? ', 'why is', 'why does',
+  'where (is|do|can|are)', 'not connect', 'blank', 'not load',
+].join('|'), 'i');
+
+// A friendly, self-contained system prompt. The KB is the ONLY ground truth;
+// anything outside it gets an honest "I don't know, want me to pass this to a
+// human?" instead of a guess. `sell` toggles the sales nudge (see the gate above).
+function supportSystemPrompt(sell) {
+  return 'You are the friendly support assistant for RYLI, a Windows app that '
+    + 'adds a live overlay and an AI voice co-host to live shows through OBS '
+    + '(for Whatnot sellers and streamers).\n\n'
+    + 'RULES:\n'
+    + '- Answer ONLY using the KNOWLEDGE BASE below. Do not invent features, '
+    + 'prices, steps, or facts that are not in it.\n'
+    + '- Keep answers short and practical: a sentence or two, or a few numbered '
+    + 'steps. Plain language, no markdown headings.\n'
+    + '- If the answer is not in the knowledge base, say you are not sure and '
+    + 'suggest they leave their email so a human can help. Do NOT make something up.\n'
+    + '- If asked about anything unrelated to RYLI, politely redirect to RYLI topics.\n'
+    + '- Never claim to be a human; you are RYLI\'s assistant.\n\n'
+    + (sell
+      ? 'SELLING (this looks like a pricing/interest question, so a warm nudge '
+        + 'is welcome — never pushy or repetitive):\n'
+        + '- Encourage them to start the FREE 10-day Pro trial (no card needed), '
+        + 'and mention new subscribers get 20 percent off their first month.\n'
+        + '- Include the link https://ryli.app/pricing (see plans + subscribe) and '
+        + 'note they can download RYLI free at ryliapp.com.\n'
+        + '- Keep it to ONE short sentence added after your helpful answer.\n\n'
+      : 'IMPORTANT — this person needs help, not a sales pitch. Just solve their '
+        + 'problem. Do NOT mention pricing, the trial, discounts, upgrading, or '
+        + 'links to plans unless they explicitly ask about buying.\n\n')
+    + '=== KNOWLEDGE BASE ===\n' + SUPPORT_KB;
+}
+
+// Detects an LLM degeneration / repetition loop (e.g. "of a of a of a" or a run
+// of "}}}}}") so a visitor never sees that garbage. Cheap string checks only.
+function looksDegenerate(t) {
+  if (!t) return true;
+  if (/(.)\1{11,}/.test(t)) return true; // same character 12+ times in a row
+  // a 1-3 word phrase repeated 5+ times back to back ("of a of a of a of a of a")
+  if (/(\b[\w']+\b(?:\s+\b[\w']+\b){0,2})(?:\s+\1){4,}/i.test(t)) return true;
+  const words = t.toLowerCase().match(/[a-z0-9']+/g) || [];
+  if (words.length >= 25 && new Set(words).size / words.length < 0.4) return true;
+  return false;
+}
+
+// Small, forgiving per-IP throttle backed by KV. Returns true if OK to proceed.
+async function supportRateOk(env, ip, bucket, limit, windowSecs) {
+  try {
+    const key = `srate:${bucket}:${ip || 'noip'}:${Math.floor(Date.now() / (windowSecs * 1000))}`;
+    const n = parseInt((await env.USAGE_KV.get(key)) || '0', 10) + 1;
+    await env.USAGE_KV.put(key, String(n), { expirationTtl: windowSecs + 60 });
+    return n <= limit;
+  } catch {
+    return true; // never let a KV hiccup block real support
+  }
+}
+
+async function handleSupportChat(request, env) {
+  if (request.method !== 'POST') return new Response('method not allowed', { status: 405 });
+  const ip = request.headers.get('cf-connecting-ip') || '';
+  if (!(await supportRateOk(env, ip, 'chat', 40, 600))) {
+    return jsonResponse({ reply: 'You\'re sending messages very quickly — give it a moment and try again.' });
+  }
+
+  let body;
+  try { body = await request.json(); } catch { return jsonResponse({ error: 'bad request' }, 400); }
+  const raw = Array.isArray(body && body.messages) ? body.messages : [];
+  // Sanitize + cap history: only user/assistant turns, trimmed, last 12.
+  const history = raw
+    .filter((m) => m && (m.role === 'user' || m.role === 'assistant') && typeof m.content === 'string')
+    .slice(-12)
+    .map((m) => ({ role: m.role, content: m.content.slice(0, 2000) }));
+  if (!history.length || history[history.length - 1].role !== 'user') {
+    return jsonResponse({ error: 'bad request' }, 400);
+  }
+
+  const CONTACT_FALLBACK = 'I\'m having trouble answering right now. You can '
+    + 'leave your email below and a human from the RYLI team will get back to you, '
+    + 'or email hello@ryliapp.com directly.';
+
+  if (!env.AI || typeof env.AI.run !== 'function') {
+    return jsonResponse({ reply: CONTACT_FALLBACK });
+  }
+  const REPHRASE = "Sorry — I didn't get that one right. Could you rephrase it? "
+    + 'Or leave your email and a human from the RYLI team will help.';
+  // Sell ONLY when the current question isn't a help/troubleshooting one.
+  const lastUser = history[history.length - 1].content;
+  const sys = supportSystemPrompt(!SUPPORT_INTENT_RE.test(lastUser));
+  // Up to 2 attempts: the sampling params below curb repetition loops, and
+  // looksDegenerate() catches the rare blow-up so we retry instead of shipping
+  // garbage. temperature is moderate (very low temp actually loops MORE).
+  let reply = '';
+  for (let attempt = 0; attempt < 2 && !reply; attempt++) {
+    try {
+      const out = await env.AI.run(SUPPORT_CHAT_MODEL, {
+        messages: [{ role: 'system', content: sys }, ...history],
+        max_tokens: 500,
+        temperature: 0.4,
+        repetition_penalty: 1.3,
+        frequency_penalty: 0.4,
+      });
+      const r = (out && (out.response || out.result || '')).toString().trim();
+      if (r && !looksDegenerate(r)) reply = r;
+      else console.error('support-chat degenerate/empty reply (attempt ' + attempt + '):', r.slice(0, 120));
+    } catch (e) {
+      console.error('support-chat AI error:', e && (e.stack || e.message || String(e)));
+    }
+  }
+  return jsonResponse({ reply: reply || REPHRASE });
+}
+
+async function handleSupportContact(request, env) {
+  if (request.method !== 'POST') return new Response('method not allowed', { status: 405 });
+  const ip = request.headers.get('cf-connecting-ip') || '';
+  if (!(await supportRateOk(env, ip, 'contact', 5, 3600))) {
+    return jsonResponse({ ok: false, reason: 'rate_limited' }, 429);
+  }
+
+  let body;
+  try { body = await request.json(); } catch { return jsonResponse({ ok: false, reason: 'bad_request' }, 400); }
+  const name = String((body && body.name) || '').trim().slice(0, 200);
+  const email = String((body && body.email) || '').trim().slice(0, 320);
+  const message = String((body && body.message) || '').trim().slice(0, 4000);
+  const page = String((body && body.page) || '').trim().slice(0, 300);
+  // Also accept the recent chat transcript for context (optional, capped).
+  const transcript = String((body && body.transcript) || '').trim().slice(0, 6000);
+
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || message.length < 2) {
+    return jsonResponse({ ok: false, reason: 'invalid' }, 400);
+  }
+
+  const record = {
+    name, email, message, page, transcript,
+    ts: new Date().toISOString(),
+    country: (request.cf && request.cf.country) || '',
+  };
+
+  // ALWAYS store in KV first — email is best-effort, this is the durable copy.
+  let stored = false;
+  try {
+    const key = `support:${Date.now()}:${crypto.randomUUID().slice(0, 8)}`;
+    await env.USAGE_KV.put(key, JSON.stringify(record), { expirationTtl: 60 * 60 * 24 * 120 });
+    stored = true;
+  } catch { stored = false; }
+
+  // Email via Resend when configured. reply_to = the visitor, so a reply in the
+  // inbox goes straight back to them.
+  if (env.RESEND_KEY) {
+    const to = (env.SUPPORT_TO || SUPPORT_TO_DEFAULT);
+    const from = (env.SUPPORT_FROM || SUPPORT_FROM_DEFAULT);
+    const text = 'New RYLI support request\n\n'
+      + 'Name: ' + (name || '(none)') + '\n'
+      + 'Email: ' + email + '\n'
+      + (page ? 'Page: ' + page + '\n' : '')
+      + (record.country ? 'Country: ' + record.country + '\n' : '')
+      + '\nMessage:\n' + message
+      + (transcript ? '\n\n--- Chat so far ---\n' + transcript : '');
+    try {
+      const rr = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: { Authorization: 'Bearer ' + env.RESEND_KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          from, to: [to], reply_to: email,
+          subject: 'RYLI support: ' + (name || email),
+          text,
+        }),
+      });
+      if (!rr.ok) console.error('resend send failed:', rr.status, (await rr.text()).slice(0, 300));
+    } catch (e2) { console.error('resend threw:', e2 && (e2.message || String(e2))); }
+  }
+
+  // Succeed as long as we durably captured it; the visitor should never see an
+  // error just because email delivery is still being set up.
+  return jsonResponse({ ok: stored });
+}
+
+// Admin-only list of contact submissions (same ADMIN_TOKEN + 404-on-miss model
+// as handleStats). Guarantees nothing is lost even before Resend is configured.
+async function handleSupportInbox(request, env) {
+  if (request.method !== 'GET') return new Response('method not allowed', { status: 405 });
+  const url = new URL(request.url);
+  const token = (url.searchParams.get('token') || '').trim();
+  const expected = (env.ADMIN_TOKEN || '').trim();
+  if (!expected || token !== expected) return new Response('not found', { status: 404 });
+
+  const items = [];
+  let cursor;
+  do {
+    const page = await env.USAGE_KV.list({ prefix: 'support:', cursor });
+    for (const k of page.keys) {
+      try { const v = JSON.parse((await env.USAGE_KV.get(k.name)) || '{}'); items.push(v); } catch { /* skip */ }
+    }
+    cursor = page.list_complete ? null : page.cursor;
+  } while (cursor);
+  items.reverse(); // newest first (keys are Date.now()-prefixed, i.e. ascending)
+
+  if ((url.searchParams.get('format') || '') === 'json') return jsonResponse({ count: items.length, items });
+
+  const esc = (s) => String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const rows = items.map((it) => '<article style="border:1px solid #2a2f45;border-radius:10px;padding:14px;margin:10px 0;background:#141726;">'
+    + '<div style="color:#8aa; font-size:12px;">' + esc(it.ts) + (it.country ? ' &middot; ' + esc(it.country) : '') + (it.page ? ' &middot; ' + esc(it.page) : '') + '</div>'
+    + '<div style="font-weight:700;margin:4px 0;">' + esc(it.name || '(no name)') + ' &lt;<a style="color:#6aaeff;" href="mailto:' + esc(it.email) + '">' + esc(it.email) + '</a>&gt;</div>'
+    + '<div style="white-space:pre-wrap;margin-top:6px;">' + esc(it.message) + '</div>'
+    + (it.transcript ? '<details style="margin-top:8px;"><summary style="color:#8aa;cursor:pointer;">chat transcript</summary><pre style="white-space:pre-wrap;color:#aab;font-size:12px;">' + esc(it.transcript) + '</pre></details>' : '')
+    + '</article>').join('');
+  const html = '<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
+    + '<title>RYLI support inbox</title>'
+    + '<body style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#0d1117;color:#e6e9f2;max-width:760px;margin:0 auto;padding:24px;">'
+    + '<h1 style="font-size:20px;">Support inbox <span style="color:#8aa;font-weight:400;">(' + items.length + ')</span></h1>'
+    + (rows || '<p style="color:#8aa;">No messages yet.</p>') + '</body>';
+  return new Response(html, { headers: { 'content-type': 'text/html; charset=utf-8' } });
+}
+
 // RYLI's own Polar organization id — same constant desktop/bridge/licenseStore.js
 // hardcodes for activate/validate/deactivate calls. Kept as an independent copy
 // here rather than a shared import (this is a separate repo/runtime), matching
@@ -1227,6 +1473,9 @@ export default {
     if (url.pathname === '/api/download-click') return handleDownloadClick(request, env);
     if (url.pathname === '/api/stats') return handleStats(request, env);
     if (url.pathname === '/api/checkout-license') return handleCheckoutLicense(request, env);
+    if (url.pathname === '/api/support-chat') return handleSupportChat(request, env);
+    if (url.pathname === '/api/support-contact') return handleSupportContact(request, env);
+    if (url.pathname === '/api/support-inbox') return handleSupportInbox(request, env);
     // Anything else reaching this script has no matching static file
     // (real pages are served automatically without ever invoking this
     // handler) — hand it to the asset server for the site's real 404 page.

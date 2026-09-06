@@ -1,5 +1,27 @@
 [
   {
+    "version": "1.0.57",
+    "date": "2026-09-06",
+    "highlights": [
+      "🖨️ ThermalFlow now prints a label when a break spot sells as Buy It Now — random team, pick-your, or any break item bought from the shop — not only when it goes to auction. Break spots always print when ThermalFlow is on, whatever your other label options are set to.",
+      "🛡️ RYLI only ever reacts to your own show. Finish streaming and go watch another seller, and their sales will not print labels, fire Ryli’s callouts, or land in your numbers — even before you have entered your Whatnot username. Add it under Settings → Platforms for the tightest fit.",
+      "🗣️ Ryli reads names and chat shorthand more clearly — she spells “lol” out as “L O L”, says “thank you” for “ty”, and skips the long string of numbers on the end of a username.",
+      "🏷️ Buyer “basket” labels fit narrow and custom label sizes cleanly now — the date line stays on the label instead of running off the edge."
+    ]
+  },
+  {
+    "version": "1.0.56",
+    "date": "2026-09-04",
+    "highlights": [
+      "🧩 Bundling now works end to end for card breaks. Combine any teams onto one lot — in any format, with any separator (+, &, /, or the word \"and\") — and every team in that bundle lands on the right buyer. Your break board stays a clean grid the whole time.",
+      "🗣️ When a bundled lot sells, Ryli calls out every team the buyer got in one go — and keeps it short (\"…and 4 other teams\") for big bundles.",
+      "🧹 After a bundled lot sells, RYLI clears the leftover open spots it covered, so a team can never be sold twice.",
+      "🟢 Your break board's status light now shows LIVE, SOLD OUT, or BREAKING at a glance.",
+      "🖼️ Put your own logo on your break board (Settings → Breaker Tools) — it shows up on your overlay right away.",
+      "📌 Pin a different break on your show and your break board switches to it for you."
+    ]
+  },
+  {
     "version": "1.0.55",
     "date": "2026-09-03",
     "highlights": [

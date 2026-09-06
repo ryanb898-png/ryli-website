@@ -371,3 +371,13 @@ if ('IntersectionObserver' in window && revealEls.length) {
       + '&body=' + encodeURIComponent(SHARE_TEXT + '\n\n' + SHARE_URL);
   }
 })();
+
+// Support help bubble -- loaded as its OWN file (public/support-widget.js) so a
+// bug in the widget can never take down the rest of this script (share button,
+// carousel, reveals). Deferred + tiny; runs on every page that loads script.js.
+(function () {
+  var s = document.createElement('script');
+  s.src = '/support-widget.js';
+  s.defer = true;
+  document.head.appendChild(s);
+})();
