@@ -1,5 +1,16 @@
 [
   {
+    "version": "1.0.58",
+    "date": "2026-09-08",
+    "highlights": [
+      "🖨️ New Pack Slip — while a show is running, tap Pack Slip on your dashboard to print your whole show's orders on one sheet, grouped by buyer with repeats counted (like “Gem Pack ×30”). Built for packing surprise sets, and it includes your shop sales and auction wins too. It shows what RYLI saw during your show, so give any refunds a quick check against Whatnot.",
+      "✨ Ryli's glowing ring now sits on top of a custom jumbotron bezel, so it's never hidden while she's talking.",
+      "🧹 Turning Breaker Tools off now clears the board from your stream right away — no restart needed. Turn it back on and your board comes right back.",
+      "🎯 Mini-games can automatically come off the board after one run — the toggle sits right above the decision timer.",
+      "🎥 “Webcam” is now “Face cam” across the app, with a tidier hotkey warning and other polish."
+    ]
+  },
+  {
     "version": "1.0.57",
     "date": "2026-09-06",
     "highlights": [
