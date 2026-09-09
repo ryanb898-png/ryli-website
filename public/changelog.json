@@ -1,5 +1,16 @@
 [
   {
+    "version": "1.0.61",
+    "date": "2026-09-09",
+    "highlights": [
+      "🎚️ New: set how fast your info cards move across the jumbotron. Slide toward Faster for a snappier cycle or Slower to let each card linger, under Settings → Info-Card Display. Your face cam keeps its own steady pace no matter where you set it, so quicker cards never mean a rushed camera.",
+      "🔄 Switching an info card off now takes it out of the rotation right away — no need to refresh your overlay in OBS. Turn it back on and it's back in the cycle.",
+      "📐 Your break board's mini-game takeovers — Stash or Pass, See 2 · Pick 1 and the rest — now scale to fit when you shrink the board down small, instead of spilling over the edges.",
+      "💲 The pricing board is easier to find and set up. It's now called \"Special Pricing Board,\" and it shows up in your layout the moment you switch it on — even before you've typed any prices — so you can drag it right where you want it first.",
+      "🗣️ When Ryli calls out someone just outside the top 3, it's clearer what she means — she names the leaderboard and how to climb it, so your viewers know exactly which board and what to do."
+    ]
+  },
+  {
     "version": "1.0.60",
     "date": "2026-09-09",
     "highlights": [
