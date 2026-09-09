@@ -143,21 +143,50 @@
       })
       .then(function (entries) {
         if (!Array.isArray(entries) || !entries.length) throw new Error('empty');
-        list.innerHTML = entries.map(function (e, i) {
+
+        function renderEntry(e, isLatest) {
           var items = (e.highlights || []).map(function (h) {
             return '<li>' + esc(h) + '</li>';
           }).join('');
-          return '<article class="changelog__entry' + (i === 0 ? ' is-latest' : '') + '">' +
+          return '<article class="changelog__entry' + (isLatest ? ' is-latest' : '') + '">' +
             '<div class="changelog__meta">' +
               '<h2 class="changelog__version">' + esc(e.version) + '</h2>' +
-              (i === 0 ? '<span class="changelog__badge">Latest</span>' : '') +
+              (isLatest ? '<span class="changelog__badge">Latest</span>' : '') +
               '<time class="changelog__date" datetime="' + esc(e.date) + '">' +
                 prettyDate(e.date) +
               '</time>' +
             '</div>' +
             '<ul class="changelog__items">' + items + '</ul>' +
           '</article>';
-        }).join('');
+        }
+
+        // The list keeps growing, so only the newest three are open by default;
+        // everything older tucks behind one toggle. The full history stays on
+        // the page (and in the DOM for search/SEO) — it's just collapsed.
+        var RECENT = 3;
+        var recent = entries.slice(0, RECENT);
+        var older = entries.slice(RECENT);
+
+        var html = recent.map(function (e, i) { return renderEntry(e, i === 0); }).join('');
+        if (older.length) {
+          var showText = 'Show ' + older.length + ' older update' + (older.length === 1 ? '' : 's');
+          html += '<div class="changelog__older" id="changelog-older" hidden>' +
+            older.map(function (e) { return renderEntry(e, false); }).join('') +
+          '</div>';
+          html += '<button type="button" class="changelog__more" id="changelog-more" aria-expanded="false">' + showText + '</button>';
+        }
+        list.innerHTML = html;
+
+        var moreBtn = document.getElementById('changelog-more');
+        if (moreBtn) {
+          moreBtn.addEventListener('click', function () {
+            var box = document.getElementById('changelog-older');
+            if (!box) return;
+            var opening = box.hasAttribute('hidden');
+            if (opening) { box.removeAttribute('hidden'); moreBtn.textContent = 'Hide older updates'; moreBtn.setAttribute('aria-expanded', 'true'); }
+            else { box.setAttribute('hidden', ''); moreBtn.textContent = showText; moreBtn.setAttribute('aria-expanded', 'false'); }
+          });
+        }
       })
       .catch(function () {
         // Never leave a bare spinner on screen — give a real way forward.

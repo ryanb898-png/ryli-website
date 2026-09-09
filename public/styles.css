@@ -1207,6 +1207,31 @@ section { padding: 96px 0; position: relative; }
   margin-top: 34px;
 }
 .changelog__loading { color: var(--ink-dim); }
+/* Older releases collapse behind one toggle so the page stays scannable as the
+   list grows; the newest three are always open. */
+.changelog__older {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+/* `display: flex` above outranks the UA `[hidden]` default, so restate it or the
+   collapsed history stays fully visible and only pushes the toggle far down. */
+.changelog__older[hidden] { display: none; }
+.changelog__more {
+  align-self: center;
+  margin-top: 6px;
+  padding: 10px 22px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--slate-2);
+  color: var(--ink);
+  font: inherit;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: border-color .15s ease, transform .15s ease;
+}
+.changelog__more:hover { border-color: var(--line-hot); transform: translateY(-1px); }
 .changelog__entry {
   background: var(--slate-2);
   border: 1px solid var(--line);
