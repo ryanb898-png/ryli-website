@@ -1,5 +1,16 @@
 [
   {
+    "version": "1.0.59",
+    "date": "2026-09-09",
+    "highlights": [
+      "📋 Your roster is its own display now, separate from your break board. Flip it between size presets right from the live preview with the new ◀ Roster View ▶ arrows — Standard, Compact, Wide, Portrait, Skinny, Tower and Big — and every view shows all your buyers at once, sized to read on a phone, with nobody paged or hidden.",
+      "🎯 Give your roster its own spot on the canvas. While it's showing, drag it wherever you want in the layout editor — it keeps its own size and position, and your break board grid stays exactly where you left it. Switch between the two and neither one resets the other.",
+      "💸 Your Break Pricing card gets out of the way now. When the roster is on screen, the pricing card slides clear so it never covers the roster, then goes right back to where you left it the moment you switch back to the board.",
+      "📐 Adjust your HUD's height without losing the edge-to-edge fill — click the padlock on the HUD in the live preview to unlock free height-and-width resizing, and your camera and cards scale to fit. It stays locked exactly as before until you unlock it.",
+      "🔄 One Reset View button puts every part of your overlay back to its shipped size and position in a single click — including anything you had locked."
+    ]
+  },
+  {
     "version": "1.0.58",
     "date": "2026-09-08",
     "highlights": [
