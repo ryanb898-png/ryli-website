@@ -1,5 +1,13 @@
 [
   {
+    "version": "1.0.60",
+    "date": "2026-09-09",
+    "highlights": [
+      "🎁 New Custom mode for the Hype Meter — name your own prize for each level (like \"optic pack\" or \"2 booster packs\") instead of dollar amounts. Your prizes print right along the bar and light up gold as chat unlocks them, Ryli calls out the one they hit, and the meter looks just like the giveaway version otherwise. Set it up under Settings → Hype Meter.",
+      "⬆️ Updates are easier to install. When a new version is ready, the dashboard banner now has a bold Install now button that updates and relaunches RYLI in one click — no more digging through Settings. \"See details\" opens the full changelog on the website."
+    ]
+  },
+  {
     "version": "1.0.59",
     "date": "2026-09-09",
     "highlights": [
