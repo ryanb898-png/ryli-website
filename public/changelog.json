@@ -1,5 +1,14 @@
 [
   {
+    "version": "1.0.62",
+    "date": "2026-09-10",
+    "highlights": [
+      "🎬 Your break mini-games have brand-new animations. Stash or Pass, See 2 · Pick 1, Pick Your Team and Random Team now each play a big, explosive video with sound when they trigger — floating front-and-center over your board, then clearing away on their own.",
+      "🚨 New raid alert. When another host raids you, a full-screen \"incoming raid\" cinematic plays over your stream with its own siren and callout. It's on by default and fires only when you're raided — never when you raid out. Preview it or turn it off under Settings → Appearance & FX.",
+      "🔥 The Hype Meter now fills from chat, not screen taps. Tell your room to spam emojis or W's in the chat and watch it climb — tapping the screen no longer counts, so the meter shows real crowd effort. The levels are tuned so it takes an appropriate push to fill for your room's size."
+    ]
+  },
+  {
     "version": "1.0.61",
     "date": "2026-09-09",
     "highlights": [
