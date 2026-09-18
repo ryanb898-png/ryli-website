@@ -1,5 +1,14 @@
 [
   {
+    "version": "1.0.64",
+    "date": "2026-09-18",
+    "highlights": [
+      "⚡ New: Purchase Hype Charge — a bar on your overlay that fills with every sale, then pops and launches the Hype Meter as a giveaway your chat earned. Fill it by lots or by dollars, rename it, and drag it where you want. Pro, off by default — turn it on under Settings → Hype Meter.",
+      "🏷️ ThermalFlow now prints the TEAM on break-spot labels. When a buyer wins or buys a break spot, the label shows the team they got (like “Buffalo Bills”) instead of the break's name — on both shop buys and auction wins.",
+      "🛠️ Plus reliability and polish across the app."
+    ]
+  },
+  {
     "version": "1.0.63",
     "date": "2026-09-17",
     "highlights": [
