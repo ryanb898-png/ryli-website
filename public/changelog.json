@@ -1,5 +1,36 @@
 [
   {
+    "version": "1.0.67",
+    "date": "2026-09-25",
+    "highlights": [
+      "🤝 New: Auto-accept offers (Pro). Have Ryli accept a “Make Offer” for you the instant it lands — on shop items and team spots — with an optional floor so she only takes offers at or above the % of asking you choose. Turn it on under Settings → Automated Tasks → Offer alerts.",
+      "🚨 Raid alerts now come in two styles. Keep the full “incoming raid” takeover, or switch to a calmer celebration — confetti and a welcome card while Ryli greets the raiders out loud. Pick yours under Settings → Appearance & FX.",
+      "🗣️ Ryli pronounces things more naturally — she now says “live” the right way whether you mean your livestream or where someone lives, and gets dozens of Pokémon names right.",
+      "📊 Fixes: Today's Leaders now updates the moment a shop purchase or accepted offer lands (not just on the next bid), and an accepted offer on a regular shop item now prints a ThermalFlow label and counts toward your sales, the same as a Buy It Now.",
+      "📷 More reliable virtual cameras on the jumbotron, especially when you're also running the breaker board's center camera feed.",
+      "🛠️ Plus reliability and polish across the app."
+    ]
+  },
+  {
+    "version": "1.0.66",
+    "date": "2026-09-23",
+    "highlights": [
+      "⚡ Ryli reads viewer questions much faster — near-instant instead of waiting a long beat, so she answers while the question is still fresh.",
+      "💬 Auto Chat timers now offer every minute from 1 to 15 (plus 20/30/45/60), so you can stagger your four scheduled messages exactly how you want them spaced.",
+      "✨ Moment pop-ups (giveaway winner, lot won, viewer questions and the rest) now size to their content instead of stretching across the strip with empty space — cleaner and easier to read at a glance.",
+      "🛠️ Plus reliability and polish across the app."
+    ]
+  },
+  {
+    "version": "1.0.65",
+    "date": "2026-09-21",
+    "highlights": [
+      "🧺 New for ThermalFlow: gift-basket numbering. Give each buyer a basket number the first time they buy, and it prints in front of their name on every item label — “(65) crickett13” — with a matching big number on their box label, so all of one buyer's items sort into the same basket. Numbers restart each show. Turn it on under Settings → ThermalFlow.",
+      "⚡ The Purchase Hype Charge now fills on every kind of sale — Buy It Now, auctions, and accepted offers — and when you bundle teams in a break, each team adds to the bar. So the giveaway you promised chat lands right on cue.",
+      "🛠️ Plus reliability and polish across the app."
+    ]
+  },
+  {
     "version": "1.0.64",
     "date": "2026-09-18",
     "highlights": [
