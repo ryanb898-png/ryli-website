@@ -157,6 +157,21 @@
 
     if (!checkoutId) { showFallback(); return; }
 
+    // OpenAI (ChatGPT) pixel — subscription conversion. A real Polar success
+    // redirect always carries checkout_id, so its presence means the purchase
+    // completed and the subscription was created, independent of whether the
+    // license-key fetch below succeeds. Guarded by checkout_id so reloading the
+    // thank-you page can never double-count the same sale.
+    try {
+      var _oaiqKey = 'oaiq_sub_' + checkoutId;
+      if (!localStorage.getItem(_oaiqKey)) {
+        oaiq('measure', 'subscription_created', { type: 'plan_enrollment' });
+        localStorage.setItem(_oaiqKey, '1');
+      }
+    } catch (e) {
+      try { oaiq('measure', 'subscription_created', { type: 'plan_enrollment' }); } catch (_) {}
+    }
+
     // The license key is provisioned by Polar shortly after a successful
     // checkout (webhook-driven, not instant) — a few short retries covers
     // that normal race before honestly falling back to "check your email"
