@@ -1360,7 +1360,11 @@ async function handleCheckoutLicense(request, env) {
   }
   const oat = env.POLAR_OAT;
   if (!oat) return jsonResponse({ ok: false, reason: 'not_configured' }, 500);
-  const authHeaders = { Authorization: `Bearer ${oat}`, Accept: 'application/json' };
+  // Pin the Polar API version so a quarterly "Current" bump (they release
+  // 2026-10, 2027-01, … the first week of Jan/Apr/Jul/Oct) can't silently shift
+  // the contract under this endpoint. 2026-10 is verified compatible with the
+  // fields we read here (checkout.customer_id, license-key customer_id/key/status).
+  const authHeaders = { Authorization: `Bearer ${oat}`, Accept: 'application/json', 'Polar-Version': '2026-10' };
 
   let checkout;
   try {
