@@ -1,5 +1,13 @@
 [
   {
+    "version": "1.0.69",
+    "date": "2026-09-29",
+    "highlights": [
+      "🎬 Sold Animations are now ON by default for breaks — the hype clip plays when a team spot sells right out of the box. Not your thing? Turn it off with the “Sold animations” switch, now sitting in your Break Center's Special Features panel next to Pricing Board.",
+      "🛠️ Plus reliability and polish across the app."
+    ]
+  },
+  {
     "version": "1.0.68",
     "date": "2026-09-29",
     "highlights": [
