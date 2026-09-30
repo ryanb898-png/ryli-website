@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.0.68",
+    "date": "2026-09-29",
+    "highlights": [
+      "🎬 New: Sold Animations for breaks (Pro). When a team spot sells, a full-screen hype clip takes over your overlay with the team's colors, SOLD, and the buyer's photo and name on top, then fades back to your board. Distinct clips for the first sale, the sold-out sale, and team bundles, plus a rotating set in between. Turn it on with the “Sold animations” switch right on your Break Center board.",
+      "🧾 Fixed: the Print Pack Slip button no longer disappears after your show ends — a pack slip is something you make once selling is done, so it now stays available with your show's items ready to print.",
+      "🧭 Clearer Break Center: when Breaker Tools is on but you haven't built a board yet, RYLI now points you to the button that opens it, instead of leaving you wondering where the Break Center went.",
+      "🛠️ Plus reliability and polish across the app."
+    ]
+  },
+  {
     "version": "1.0.67",
     "date": "2026-09-25",
     "highlights": [
