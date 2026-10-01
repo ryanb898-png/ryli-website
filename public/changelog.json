@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.0.70",
+    "date": "2026-09-30",
+    "highlights": [
+      "🎬 Sold Animations now always show the correct team and buyer for the sale that just happened — across every sale type: auctions, Buy It Now, accepted offers, and mini-game picks like Stash or Pass.",
+      "📦 A bundle sale plays one celebration showing all the teams the buyer landed.",
+      "🛡️ Your break board always refreshes on every update, including right after you pin a break.",
+      "🛠️ Plus reliability and polish across the app."
+    ]
+  },
+  {
     "version": "1.0.69",
     "date": "2026-09-29",
     "highlights": [
