@@ -1,5 +1,18 @@
 [
   {
+    "version": "1.0.71",
+    "date": "2026-10-09",
+    "highlights": [
+      "🏈 Every NFL team now has its own unique Sold Animation. When a team spot sells, that team's one-of-a-kind hype clip plays — with the team's colors glowing around the logo and the buyer's photo and name on top.",
+      "🎛️ New board bar to pick how your Sold Animation plays: full-screen takeover, board-level (plays right over your break board), or off. Everyone starts on full-screen.",
+      "🏆 When your board sells out, the final team's clip plays and then rolls straight into a full-screen \"Break is Sold\" finale — always full-screen, so the whole break ends on a high note.",
+      "🎰 The randomizer now spins the tiles like a revolving door and bursts an electric spark on the one it lands on — and a spark also pops on any team spot the moment it sells.",
+      "🎮 More break games, and you pick which ones show. New See 3 Pick 1, See 3 Pick 2, See 4 Pick 2, and See 4 Pick 3 — and a new Favorites button on your Break Center lets you choose up to 6 games to keep on the control panel.",
+      "🧾 Basket numbers can now print on giveaway wins too, so a buyer's free prize sorts into the same basket as everything they bought. Turn it on next to basket numbering in ThermalFlow.",
+      "🛠️ Plus reliability and polish across the app."
+    ]
+  },
+  {
     "version": "1.0.70",
     "date": "2026-09-30",
     "highlights": [
